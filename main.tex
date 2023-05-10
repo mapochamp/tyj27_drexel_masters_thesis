@@ -180,36 +180,6 @@ headsepline, % Uncomment to get a line under the header
 \addchaptertocentry{\abstractname} % Add the abstract to the table of contents
 
 % TODO: add references to these papers in the abstract
-%There exists many deep learning compiler frameworks including: TVM, DeepTools, TensorFlow XLA, DLVM, nGraph, and Glow that all focus optimizing the performance of
-%runtime and training of deep learning workloads with the aim of being hardware agnostic for most. Some of these optimizations include parallelization, rescheduling,
-%operator fusion, and off chip memory accesses. 
-%
-%While the OnSRAM paper has demonstrated significant improvements in memory
-%efficiency and performance in deep learning accelerators (DLAs) through
-%optimized on-chip scratchpad management, it relies on a single monolithic
-%scratchpad. In this work, we present a novel approach that builds upon the
-%OnSRAM concept by implementing a dynamic scratchpad allocation scheme, enabling
-%further optimization and energy savings in DLAs.
-%
-%However, they largely overlook the potential for inter-node communication and
-%data reuse optimization within on-chip memory resources. Our implementation
-%addresses this gap by introducing a dynamic scratchpad allocation scheme that
-%allows for more fine-grained control over memory resources, further reducing
-%energy consumption and latency associated with inter-node data movement.
-%
-%Our work extends the OnSRAM approach by incorporating a dynamic scratchpad
-%allocation scheme, enabling a more flexible and efficient use of on-chip
-%memory resources in deep learning accelerators. This advancement has the
-%potential to significantly enhance the performance and energy efficiency of
-%various deep learning applications
-%
-%something something about how everyone uses graph compiling into IR or graph level optimizations
-%
-%inter node chip managemernt
-
-%----------------------------------------------------------------------------------
-%----------- Sorta the real section -----------------------------------------------
-%----------------------------------------------------------------------------------
 The landscape of deep learning compiler frameworks has evolved rapidly with the
 development of various tools, such as TVM, deeptools, TensorFlow, DLVM, nGraph,
 and Glow. These frameworks offer unique optimizations to address computation
@@ -221,27 +191,23 @@ optimizations that focus on increasing the performance of executing a scheduled
 operation in the graph and overlook the potential for inter-node data reuse
 optimizations within on-chip memory resources.
 
-OnSRAM, a novel approach, addresses this gap by focusing on internode
-scratchpad management in DLAs.
+OnSRAM, a scratchpad management framework build to work with deep learning
+compilers, addresses this gap by focusing on internode scratchpad management in
+DLAs. OnSRAM exploits the static graph representations of deep learning models
+by identifying data structures that can be pinned to on-chip memory based on their
+reuse rate and cost of transfer from main host memory. OnSRAM has been implemented
+and evaluated on single DLA that contains a monolithic scratchpad and is integrated
+as part of a custom deep learning compiler framework.
 
-%%% TODO REWRITE THIS ECTIOn
-It leverages data locality and temporal data
-reuse principles through a hierarchical memory allocation scheme, inter-node
-data prefetching mechanism, and dynamic memory reconfiguration mechanism. These
-components work together to minimize off-chip memory accesses and efficiently
-manage a single monolithic on-chip scratchpad, leading to significant
-improvements in energy consumption and latency.
-
-% TODO we can use our work to be used as an extension to existing graph level optimziations frameworks
-% and not necessarily have to be a standalone like OnSRAM
 In this work, we extend the capabilities of OnSRAM by introducing dynamic
 scratchpad allocation for static graph execution models using any number of
-scratchpads. This enhancement allows for more fine-grained control over on-chip
-memory resources, providing increased flexibility and adaptability to better
-accommodate diverse deep learning accelerators and memory access patterns. By
-optimizing inter-node data movement and storage across multiple scratchpads,
-our approach further reduces energy consumption and latency associated with
-inter-node communication.
+scratchpads and allowing the implementation to be interfaced as a compiler
+extension rather than a core part of a bespoke compiler. This enhancement
+allows for more fine-grained control over on-chip memory resources, providing
+increased flexibility and adaptability to better accommodate diverse deep
+learning accelerators and memory access patterns. By optimizing inter-node data
+movement and storage across multiple scratchpads, our approach further reduces
+energy consumption and latency associated with inter-node communication.
 
 \end{abstract}
 
@@ -265,46 +231,6 @@ The acknowledgments and the people to thank go here, don't forget to include you
 \listoftables % Prints the list of tables
 
 %----------------------------------------------------------------------------------------
-%	ABBREVIATIONS
-%----------------------------------------------------------------------------------------
-
-\begin{abbreviations}{ll} % Include a list of abbreviations (a table of two columns)
-
-\textbf{LAH} & \textbf{L}ist \textbf{A}bbreviations \textbf{H}ere\\
-\textbf{WSF} & \textbf{W}hat (it) \textbf{S}tands \textbf{F}or\\
-
-\end{abbreviations}
-
-%----------------------------------------------------------------------------------------
-%	PHYSICAL CONSTANTS/OTHER DEFINITIONS
-%----------------------------------------------------------------------------------------
-
-\begin{constants}{lr@{${}={}$}l} % The list of physical constants is a three column table
-
-% The \SI{}{} command is provided by the siunitx package, see its documentation for instructions on how to use it
-
-Speed of Light & $c_{0}$ & \SI{2.99792458e8}{\meter\per\second} (exact)\\
-%Constant Name & $Symbol$ & $Constant Value$ with units\\
-
-\end{constants}
-
-%----------------------------------------------------------------------------------------
-%	SYMBOLS
-%----------------------------------------------------------------------------------------
-
-\begin{symbols}{lll} % Include a list of Symbols (a three column table)
-
-$a$ & distance & \si{\meter} \\
-$P$ & power & \si{\watt} (\si{\joule\per\second}) \\
-%Symbol & Name & Unit \\
-
-\addlinespace % Gap to separate the Roman symbols from the Greek
-
-$\omega$ & angular frequency & \si{\radian} \\
-
-\end{symbols}
-
-%----------------------------------------------------------------------------------------
 %	DEDICATION
 %----------------------------------------------------------------------------------------
 
@@ -322,7 +248,7 @@ $\omega$ & angular frequency & \si{\radian} \\
 % Uncomment the lines as you write the chapters
 
 \include{Chapters/Chapter1}
-%\include{Chapters/Chapter2} 
+\include{Chapters/Chapter2} 
 %\include{Chapters/Chapter3}
 %\include{Chapters/Chapter4} 
 %\include{Chapters/Chapter5} 
@@ -336,7 +262,7 @@ $\omega$ & angular frequency & \si{\radian} \\
 % Include the appendices of the thesis as separate files from the Appendices folder
 % Uncomment the lines as you write the Appendices
 
-\include{Appendices/AppendixA}
+%\include{Appendices/AppendixA}
 %\include{Appendices/AppendixB}
 %\include{Appendices/AppendixC}
 
