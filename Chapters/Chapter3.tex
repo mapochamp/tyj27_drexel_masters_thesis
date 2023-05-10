@@ -1,0 +1,47 @@
+% Chapter Template
+
+\chapter{OnSRAM} % Main chapter title
+
+\label{Chapter3} % Change X to a consecutive number; for referencing this chapter elsewhere, use \ref{ChapterX}
+
+%----------------------------------------------------------------------------------------
+%	SECTION 1
+%----------------------------------------------------------------------------------------
+
+\section{Introduction}
+% do we need to talk about all the new accels that come out and why they are needed to run DL workloads instead of CPUs?
+
+OnSRAM introduces the notion of two types of optimizations that can be done on
+graph based compilers: intra-node and inter-node optimizations \cite{onsram}.
+Intra node optimizations are those that are focused on optimizing the operation
+that the node specifies. This means tiling in favorable sizes and across
+specific dimensions, loop ordering, and DMA pipelining
+between tiles \cite{Aladdin}.
+Inter node optimizations are optimizations concerning the overall structure and
+ordering of the nodes in the graph and their connections. This includes
+operator fusion and node reordering or rescheduling \cite{onsram}.
+OnSRAM focuses on internode optimizations, specifically in the domain of
+scratchpad memory management techniques for DLAs. OnSRAM exploits the 
+repeating useage of nodes in a graph -> some more detail on how graphs look like and why they're repeateable <-
+and identifies the nodes that can pinned to minimize memory transfers which increase inference time and decrease energy costs.
+
+
+%-----------------------------------
+%	SUBSECTION 1
+%-----------------------------------
+\subsection{Subsection 1}
+
+
+%-----------------------------------
+%	SUBSECTION 2
+%-----------------------------------
+
+\subsection{Subsection 2}
+
+
+%----------------------------------------------------------------------------------------
+%	SECTION 2
+%----------------------------------------------------------------------------------------
+
+\section{Generalizing To Multiple Scratchpads}
+
