@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022/Arch Linux) (preloaded format=pdflatex 2023.3.15)  9 MAY 2023 19:16
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022/Arch Linux) (preloaded format=pdflatex 2023.3.15)  9 MAY 2023 19:57
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -715,8 +715,8 @@ LaTeX Font Info:    Trying to load font information for T1+ppl on input line 90
 
 (/usr/share/texmf-dist/tex/latex/psnfss/t1ppl.fd
 File: t1ppl.fd 2001/06/04 font definitions for T1/ppl.
-)
-No file main.aux.
+) (./main.aux
+(./Chapters/Chapter1.aux) (./Appendices/AppendixA.aux))
 \openout1 = `main.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 90.
@@ -850,6 +850,8 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 LaTeX Info: Redefining \ref on input line 90.
 LaTeX Info: Redefining \pageref on input line 90.
 LaTeX Info: Redefining \nameref on input line 90.
+
+(./main.out) (./main.out)
 \@outlinefile=\write4
 \openout4 = `main.out'.
 
@@ -921,7 +923,15 @@ File: ot1zplm.fd 2002/09/08 Fontinst v1.914 font definitions for OT1/zplm.
 1: section
 [9] [10
 
-]
+] (./main.toc
+LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 1
+7.
+ (/usr/share/texmf-dist/tex/latex/base/t1cmtt.fd
+File: t1cmtt.fd 2019/12/16 v2.5j Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `T1/cmtt/bx/n' in size <10.95> not available
+(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 17.
+)
 \tf@toc=\write5
 \openout5 = `main.toc'.
 
@@ -929,7 +939,7 @@ File: ot1zplm.fd 2002/09/08 Fontinst v1.914 font definitions for OT1/zplm.
 1: section
 [11] [12
 
-]
+] (./main.lof)
 \tf@lof=\write6
 \openout6 = `main.lof'.
 
@@ -937,7 +947,7 @@ File: ot1zplm.fd 2002/09/08 Fontinst v1.914 font definitions for OT1/zplm.
 1: section
 [13] [14
 
-]
+] (./main.lot)
 \tf@lot=\write7
 \openout7 = `main.lot'.
 
@@ -970,30 +980,11 @@ File: ot1zplm.fd 2002/09/08 Fontinst v1.914 font definitions for OT1/zplm.
 
 (./Chapters/Chapter1.tex
 Chapter 1.
-LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 2
-9.
-(/usr/share/texmf-dist/tex/latex/base/t1cmtt.fd
-File: t1cmtt.fd 2019/12/16 v2.5j Standard LaTeX font definitions
-)
 1: section
 [1
 
 
 ]
-LaTeX Font Info:    Font shape `T1/cmtt/bx/n' in size <10.95> not available
-(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 58.
-
-
-LaTeX Warning: Reference `FillingFile' on page 2 undefined on input line 64.
-
-
-LaTeX Warning: Reference `FillingFile' on page 2 undefined on input line 64.
-
-
-LaTeX Warning: Reference `ThesisConventions' on page 2 undefined on input line 
-64.
-
-
 Overfull \hbox (12.15245pt too wide) in paragraph at lines 72--74
 \T1/ppl/m/n/10.95 site, here: [][]$\T1/cmtt/m/n/10.95 http : / / www . ecs . so
 ton . ac . uk / ~srg / softwaretools / document / templates/$[][] 
@@ -1021,22 +1012,13 @@ LaTeX Warning: Citation 'Reference1' on page 6 undefined on input line 194.
 
 LaTeX Warning: Citation 'Reference3' on page 6 undefined on input line 194.
 
-[6]
-
-LaTeX Warning: Reference `tab:treatments' on page 7 undefined on input line 244
-.
-
-[7]
-<Figures/Electron.pdf, id=205, 398.3386pt x 284.52756pt>
+[6] [7]
+<Figures/Electron.pdf, id=335, 398.3386pt x 284.52756pt>
 File: Figures/Electron.pdf Graphic file (type pdf)
 <use Figures/Electron.pdf>
 Package pdftex.def Info: Figures/Electron.pdf  used on input line 262.
 (pdftex.def)             Requested size: 398.33762pt x 284.52686pt.
-
-
-LaTeX Warning: Reference `fig:Electron' on page 8 undefined on input line 270.
-
-[8 <./Figures/Electron.pdf>]
+ [8 <./Figures/Electron.pdf>]
 Overfull \hbox (0.90797pt too wide) in paragraph at lines 308--309
 \T1/ppl/m/n/10.95 au-to-mat-i-cally builds a ta-ble of Con-tents by look-ing at
  all the [][]\T1/cmtt/m/n/10.95 \chapter{}[]\T1/ppl/m/n/10.95 , [][]\T1/cmtt/m/
@@ -1063,23 +1045,14 @@ Appendix A.
 
 ]
 
-LaTeX Warning: Empty bibliography on input line 283.
+LaTeX Warning: Empty bibliography on input line 341.
 
 (./main.aux (./Chapters/Chapter1.aux) (./Appendices/AppendixA.aux))
 
 LaTeX Warning: There were undefined references.
 
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
-
-Package rerunfilecheck Warning: File `main.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `main.out':
-(rerunfilecheck)             Before: <no file>
-(rerunfilecheck)             After:  D1085734FE7E4CB50A62C1A4B415AEA5;4803.
+Package rerunfilecheck Info: File `main.out' has not changed.
+(rerunfilecheck)             Checksum: D1085734FE7E4CB50A62C1A4B415AEA5;4803.
 
 Package biblatex Warning: Please (re)run BibTeX on the file(s):
 (biblatex)                main
@@ -1090,13 +1063,13 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 28260 strings out of 478238
- 613022 string characters out of 5850456
- 1093150 words of memory out of 5000000
- 46088 multiletter control sequences out of 15000+600000
+ 28308 strings out of 478238
+ 613658 string characters out of 5850456
+ 1099985 words of memory out of 5000000
+ 46120 multiletter control sequences out of 15000+600000
  536038 words of font info for 141 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 96i,21n,93p,1818b,1787s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 96i,21n,93p,1818b,1904s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}{/usr/share/t
 exmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-dist/fonts/type1/public
 /amsfonts/cm/cmr10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cm
@@ -1108,10 +1081,10 @@ tt1095.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sftt1440.pfb></us
 r/share/texmf-dist/fonts/type1/urw/palatino/uplb8a.pfb></usr/share/texmf-dist/f
 onts/type1/urw/palatino/uplr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/palat
 ino/uplr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/palatino/uplri8a.pfb>
-Output written on main.pdf (35 pages, 291511 bytes).
+Output written on main.pdf (35 pages, 297625 bytes).
 PDF statistics:
- 366 PDF objects out of 1000 (max. 8388607)
- 293 compressed objects within 3 object streams
+ 492 PDF objects out of 1000 (max. 8388607)
+ 417 compressed objects within 5 object streams
  79 named destinations out of 1000 (max. 500000)
- 6 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 238 words of extra memory for PDF output out of 10000 (max. 10000000)
 

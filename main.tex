@@ -178,7 +178,71 @@ headsepline, % Uncomment to get a line under the header
 
 \begin{abstract}
 \addchaptertocentry{\abstractname} % Add the abstract to the table of contents
-The Thesis Abstract is written here (and usually kept to just this page). The page is kept centered vertically so can expand into the blank space above the title too\ldots
+
+% TODO: add references to these papers in the abstract
+%There exists many deep learning compiler frameworks including: TVM, DeepTools, TensorFlow XLA, DLVM, nGraph, and Glow that all focus optimizing the performance of
+%runtime and training of deep learning workloads with the aim of being hardware agnostic for most. Some of these optimizations include parallelization, rescheduling,
+%operator fusion, and off chip memory accesses. 
+%
+%While the OnSRAM paper has demonstrated significant improvements in memory
+%efficiency and performance in deep learning accelerators (DLAs) through
+%optimized on-chip scratchpad management, it relies on a single monolithic
+%scratchpad. In this work, we present a novel approach that builds upon the
+%OnSRAM concept by implementing a dynamic scratchpad allocation scheme, enabling
+%further optimization and energy savings in DLAs.
+%
+%However, they largely overlook the potential for inter-node communication and
+%data reuse optimization within on-chip memory resources. Our implementation
+%addresses this gap by introducing a dynamic scratchpad allocation scheme that
+%allows for more fine-grained control over memory resources, further reducing
+%energy consumption and latency associated with inter-node data movement.
+%
+%Our work extends the OnSRAM approach by incorporating a dynamic scratchpad
+%allocation scheme, enabling a more flexible and efficient use of on-chip
+%memory resources in deep learning accelerators. This advancement has the
+%potential to significantly enhance the performance and energy efficiency of
+%various deep learning applications
+%
+%something something about how everyone uses graph compiling into IR or graph level optimizations
+%
+%inter node chip managemernt
+
+%----------------------------------------------------------------------------------
+%----------- Sorta the real section -----------------------------------------------
+%----------------------------------------------------------------------------------
+The landscape of deep learning compiler frameworks has evolved rapidly with the
+development of various tools, such as TVM, deeptools, TensorFlow, DLVM, nGraph,
+and Glow. These frameworks offer unique optimizations to address computation
+and data movement challenges in deep learning accelerators (DLAs). These
+approaches include graph or IR level optimizations related to intra node memory
+access optimizations, operator fusion, and various tiling techniques. Despite
+their unique approaches, these frameworks primarily concentrate on node level
+optimizations that focus on increasing the performance of executing a scheduled
+operation in the graph and overlook the potential for inter-node data reuse
+optimizations within on-chip memory resources.
+
+OnSRAM, a novel approach, addresses this gap by focusing on internode
+scratchpad management in DLAs.
+
+%%% TODO REWRITE THIS ECTIOn
+It leverages data locality and temporal data
+reuse principles through a hierarchical memory allocation scheme, inter-node
+data prefetching mechanism, and dynamic memory reconfiguration mechanism. These
+components work together to minimize off-chip memory accesses and efficiently
+manage a single monolithic on-chip scratchpad, leading to significant
+improvements in energy consumption and latency.
+
+% TODO we can use our work to be used as an extension to existing graph level optimziations frameworks
+% and not necessarily have to be a standalone like OnSRAM
+In this work, we extend the capabilities of OnSRAM by introducing dynamic
+scratchpad allocation for static graph execution models using any number of
+scratchpads. This enhancement allows for more fine-grained control over on-chip
+memory resources, providing increased flexibility and adaptability to better
+accommodate diverse deep learning accelerators and memory access patterns. By
+optimizing inter-node data movement and storage across multiple scratchpads,
+our approach further reduces energy consumption and latency associated with
+inter-node communication.
+
 \end{abstract}
 
 %----------------------------------------------------------------------------------------
