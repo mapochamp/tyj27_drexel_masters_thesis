@@ -1,15 +1,27 @@
 @article{TVM,
-	Abstract = {We have developed an enhanced Littrow configuration extended cavity diode laser (ECDL) that can be tuned without changing the direction of the output beam. The output of a conventional Littrow ECDL is reflected from a plane mirror fixed parallel to the tuning diffraction grating. Using a free-space Michelson wavemeter to measure the laser wavelength, we can tune the laser over a range greater than 10 nm without any alteration of alignment.},
-	Author = {C. J. Hawthorn and K. P. Weber and R. E. Scholten},
-	Journal = {Review of Scientific Instruments},
-	Month = {12},
-	Number = {12},
-	Numpages = {3},
-	Pages = {4477--4479},
-	Title = {Littrow Configuration Tunable External Cavity Diode Laser with Fixed Direction Output Beam},
-	Volume = {72},
-	Url = {http://link.aip.org/link/?RSI/72/4477/1},
-	Year = {2001}}
+	author       = {Tianqi Chen and
+		 Thierry Moreau and
+		 Ziheng Jiang and
+		 Haichen Shen and
+		 Eddie Q. Yan and
+		 Leyuan Wang and
+		 Yuwei Hu and
+		 Luis Ceze and
+		 Carlos Guestrin and
+		 Arvind Krishnamurthy},
+	title        = {{TVM:} End-to-End Optimization Stack for Deep Learning},
+	journal      = {CoRR},
+	volume       = {abs/1802.04799},
+	year         = {2018},
+	url          = {http://arxiv.org/abs/1802.04799},
+	eprinttype    = {arXiv},
+	eprint       = {1802.04799},
+	timestamp    = {Sat, 17 Dec 2022 01:15:27 +0100},
+	biburl       = {https://dblp.org/rec/journals/corr/abs-1802-04799.bib},
+	bibsource    = {dblp computer science bibliography, https://dblp.org}
+}
+
+
 
 @article{IBM,
 	Abstract = {Operating a laser diode in an extended cavity which provides frequency-selective feedback is a very effective method of reducing the laser's linewidth and improving its tunability. We have developed an extremely simple laser of this type, built from inexpensive commercial components with only a few minor modifications. A 780~nm laser built to this design has an output power of 80~mW, a linewidth of 350~kHz, and it has been continuously locked to a Doppler-free rubidium transition for several days.},
@@ -25,17 +37,94 @@
 	Year = {1998}}
 
 @article{onsram,
-	Abstract = {We present a review of the use of diode lasers in atomic physics with an extensive list of references. We discuss the relevant characteristics of diode lasers and explain how to purchase and use them. We also review the various techniques that have been used to control and narrow the spectral outputs of diode lasers. Finally we present a number of examples illustrating the use of diode lasers in atomic physics experiments. Review of Scientific Instruments is copyrighted by The American Institute of Physics.},
-	Author = {Carl E. Wieman and Leo Hollberg},
-	Journal = {Review of Scientific Instruments},
-	Keywords = {Diode Laser},
-	Month = {1},
-	Number = {1},
-	Numpages = {20},
-	Pages = {1--20},
-	Title = {Using Diode Lasers for Atomic Physics},
-	Volume = {62},
-	Url = {http://link.aip.org/link/?RSI/62/1/1},
-	Year = {1991}}
+	author = {Pal, Subhankar and Venkataramani, Swagath and Srinivasan, Viji and Gopalakrishnan, Kailash},
+	title = {OnSRAM: Efficient Inter-Node On-Chip Scratchpad Management in Deep Learning Accelerators},
+	year = {2022},
+	issue_date = {November 2022},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	volume = {21},
+	number = {6},
+	issn = {1539-9087},
+	url = {https://doi.org/10.1145/3530909},
+	doi = {10.1145/3530909},
+	abstract = {Hardware acceleration of Artificial Intelligence (AI) workloads has gained widespread popularity with its potential to deliver unprecedented performance and efficiency. An important challenge remains in how AI accelerators are programmed to sustain high utilization without impacting end-user productivity. Prior software optimizations start with an input graph and focus on node-level optimizations, viz. dataflows and hierarchical tiling, and graph-level optimizations such as operation fusion. However, little effort has been devoted to inter-node on-chip scratchpad memory (SPM) management in Deep Learning (DL) accelerators, whose significance is bolstered by the recent trends in complex network topologies and the emergence of eager execution in DL frameworks.We characterize and show that there exists up to a 5.2\texttimes{} performance gap in DL inference to be bridged using SPM management and propose OnSRAM, a novel SPM management framework integrated with the compiler runtime of a DL accelerator. We develop two variants, viz. &nbsp;OnSRAM-Static, which works on static graphs to identify data structures that can be lucratively held on-chip based on their size, liveness and significance, and OnSRAM-Eager, which targets an eager execution model (no graph) and uses a history-based speculative scheme to hold/discard data structures. We integrate OnSRAM &nbsp;with TensorFlow and analyze it on multiple accelerator configurations. Across a suite of 12 images, objects, and language networks, on a 3&nbsp;TFLOP system with a 2&nbsp;MB SPM and 32&nbsp;GBps external memory bandwidth, OnSRAM-Static &nbsp;and OnSRAM-Eager &nbsp;achieve 1.02–4.8\texttimes{} and 1.02–3.1\texttimes{} reduction in inference latency (batch size of 1), over a baseline with no SPM management. In terms of energy savings, we observe average reductions of 1.51\texttimes{} (up to 4.1\texttimes{}) and 1.23\texttimes{} (up to 2.9\texttimes{}) for the static and eager execution scenarios, respectively.},
+	journal = {ACM Trans. Embed. Comput. Syst.},
+	month = {oct},
+	articleno = {86},
+	numpages = {29},
+	keywords = {Artificial intelligence, neural networks, compiler, hardware acceleration, memory management}
+}
 
+
+
+
+@article{aladdin,
+	author       = {Tianqi Chen and
+		 Thierry Moreau and
+		 Ziheng Jiang and
+		 Haichen Shen and
+		 Eddie Q. Yan and
+		 Leyuan Wang and
+		 Yuwei Hu and
+		 Luis Ceze and
+		 Carlos Guestrin and
+		 Arvind Krishnamurthy},
+	title        = {{TVM:} End-to-End Optimization Stack for Deep Learning},
+	journal      = {CoRR},
+	volume       = {abs/1802.04799},
+	year         = {2018},
+	url          = {http://arxiv.org/abs/1802.04799},
+	eprinttype    = {arXiv},
+	eprint       = {1802.04799},
+	timestamp    = {Sat, 17 Dec 2022 01:15:27 +0100},
+	biburl       = {https://dblp.org/rec/journals/corr/abs-1802-04799.bib},
+	bibsource    = {dblp computer science bibliography, https://dblp.org}
+}
+
+@misc{tensorflow,
+	title={TensorFlow: Large-Scale Machine Learning on Heterogeneous Distributed Systems}, 
+	author={Martín Abadi and Ashish Agarwal and Paul Barham and Eugene Brevdo and Zhifeng Chen and Craig Citro and Greg S. Corrado and Andy Davis and Jeffrey Dean and Matthieu Devin and Sanjay Ghemawat and Ian Goodfellow and Andrew Harp and Geoffrey Irving and Michael Isard and Yangqing Jia and Rafal Jozefowicz and Lukasz Kaiser and Manjunath Kudlur and Josh Levenberg and Dan Mane and Rajat Monga and Sherry Moore and Derek Murray and Chris Olah and Mike Schuster and Jonathon Shlens and Benoit Steiner and Ilya Sutskever and Kunal Talwar and Paul Tucker and Vincent Vanhoucke and Vijay Vasudevan and Fernanda Viegas and Oriol Vinyals and Pete Warden and Martin Wattenberg and Martin Wicke and Yuan Yu and Xiaoqiang Zheng},
+	year={2016},
+	eprint={1603.04467},
+	archivePrefix={arXiv},
+	primaryClass={cs.DC}
+}
+
+
+@misc{gem5,
+	title={The gem5 Simulator: Version 20.0+}, 
+	author={Jason Lowe-Power and Abdul Mutaal Ahmad and Ayaz Akram and Mohammad Alian and Rico Amslinger and Matteo Andreozzi and Adrià Armejach and Nils Asmussen and Brad Beckmann and Srikant Bharadwaj and Gabe Black and Gedare Bloom and Bobby R. Bruce and Daniel Rodrigues Carvalho and Jeronimo Castrillon and Lizhong Chen and Nicolas Derumigny and Stephan Diestelhorst and Wendy Elsasser and Carlos Escuin and Marjan Fariborz and Amin Farmahini-Farahani and Pouya Fotouhi and Ryan Gambord and Jayneel Gandhi and Dibakar Gope and Thomas Grass and Anthony Gutierrez and Bagus Hanindhito and Andreas Hansson and Swapnil Haria and Austin Harris and Timothy Hayes and Adrian Herrera and Matthew Horsnell and Syed Ali Raza Jafri and Radhika Jagtap and Hanhwi Jang and Reiley Jeyapaul and Timothy M. Jones and Matthias Jung and Subash Kannoth and Hamidreza Khaleghzadeh and Yuetsu Kodama and Tushar Krishna and Tommaso Marinelli and Christian Menard and Andrea Mondelli and Miquel Moreto and Tiago Mück and Omar Naji and Krishnendra Nathella and Hoa Nguyen and Nikos Nikoleris and Lena E. Olson and Marc Orr and Binh Pham and Pablo Prieto and Trivikram Reddy and Alec Roelke and Mahyar Samani and Andreas Sandberg and Javier Setoain and Boris Shingarov and Matthew D. Sinclair and Tuan Ta and Rahul Thakur and Giacomo Travaglini and Michael Upton and Nilay Vaish and Ilias Vougioukas and William Wang and Zhengrong Wang and Norbert Wehn and Christian Weis and David A. Wood and Hongil Yoon and Éder F. Zulian},
+	year={2020},
+	eprint={2007.03152},
+	archivePrefix={arXiv},
+	primaryClass={cs.AR}
+}
+
+@misc{smaug,
+      title={SMAUG: End-to-End Full-Stack Simulation Infrastructure for Deep Learning Workloads}, 
+      author={Sam Likun Xi and Yuan Yao and Kshitij Bhardwaj and Paul Whatmough and Gu-Yeon Wei and David Brooks},
+      year={2019},
+      eprint={1912.04481},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG}
+}
+
+@article{deeptools,
+
+	author={Venkataramani, Swagath and Choi, Jungwook and Srinivasan, Vijayalakshmi and Wang, Wei and Zhang, Jintao and Schaal, Marcel and Serrano, Mauricio J. and Ishizaki, Kazuaki and Inoue, Hiroshi and Ogawa, Eri and Ohara, Moriyoshi and Chang, Leland and Gopalakrishnan, Kailash},
+
+	journal={IEEE Micro}, 
+
+	title={DeepTools: Compiler and Execution Runtime Extensions for RaPiD AI Accelerator}, 
+
+	year={2019},
+
+	volume={39},
+
+	number={5},
+
+	pages={102-111},
+
+	doi={10.1109/MM.2019.2931584}}
 

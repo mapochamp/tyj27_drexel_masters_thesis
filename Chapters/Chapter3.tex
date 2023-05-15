@@ -16,32 +16,107 @@ graph based compilers: intra-node and inter-node optimizations \cite{onsram}.
 Intra node optimizations are those that are focused on optimizing the operation
 that the node specifies. This means tiling in favorable sizes and across
 specific dimensions, loop ordering, and DMA pipelining
-between tiles \cite{Aladdin}.
+between tiles \cite{aladdin}.
+
 Inter node optimizations are optimizations concerning the overall structure and
 ordering of the nodes in the graph and their connections. This includes
 operator fusion and node reordering or rescheduling \cite{onsram}.
 OnSRAM focuses on internode optimizations, specifically in the domain of
-scratchpad memory management techniques for DLAs. OnSRAM exploits the 
-repeating useage of nodes in a graph -> some more detail on how graphs look like and why they're repeateable <-
-and identifies the nodes that can pinned to minimize memory transfers which increase inference time and decrease energy costs.
+scratchpad memory management techniques for DLAs. 
+
+Existing frameworks have neglected to focus on inter-node optimizations in favor
+of intra-node optimizations \cite{tvm} \cite{deeptools} \cite{tensorflow}. Many 
+mentioned frameworks are focused on creating an overall compiler framework that
+increases the usability and hardware abstractions for machine learning engineers
+by enabling hardware agnostic support and optimizations. As a consequence, each
+framework had taken a different approach or extended the capabilities to of other
+existing frameworks to achieve the same goal. In comparison, OnSRAM is a
+compiler extension made to focus on an algorithm specific to just one type of
+memory optimization.
+
+The motivation of such optimizations come from the minimization of memory
+transfers which speed up inference runs by up to 5.17x \cite{onsram}. OnSRAM
+exploits the repeating usage of outputs in a graph and identifies the outputs
+that can pinned to minimize memory transfers which decrease inference time and
+decrease energy costs. The ultimate performance gained from pinning outputs comes from
+multiple inference runs where the cost of mapping pinnable tensors are amortized by the
+time saved through iterative inference runs of the same model.
+
+Such inter-node memory management techniques occur due to the presence of
+inherent repeating patterns of operations to support deep learning
+architectures, including matrix multiplication and convolution operations.
 
 
 %-----------------------------------
 %	SUBSECTION 1
 %-----------------------------------
-\subsection{Subsection 1}
 
+\subsection{Static Graph Execution}
 
-%-----------------------------------
-%	SUBSECTION 2
-%-----------------------------------
-
-\subsection{Subsection 2}
-
+OnSRAM-Static, the static DNN Graph SPM manager is described as follows. A
+graph of operations that represent a DNN is passed to OnSRAM-Static as an
+input. The vertexes of the graph are the operations to be executed, e.g matrix
+multiply, and the edges represent input and output tensors.  All input and
+output data tensors of each node is analyzed for the start time, end time,
+number of reuses, distance between reuses, and size of the tensor. These
+properties are then used to determine the optmial pinning scheme. Each of these
+properties are considered with weights on how important each property is and
+the tensors are psuedo-sorted in cost order; they are psuedo-sorted since
+tensors that don't overlap in their lifetimes need not be sorted relative to
+each other. These sorted tensors are then considered in a greedy fashion where
+tensors of the highest cost are considered for pinning first and the rest are
+considered to be pinned if and only if it can be accommodated in spite of the
+higher cost tensor being pinned. Tensors are only considered for pinning if
+they can be pinned for their entire duration of their lifetime and can fit on
+the SPM with the other inputs and outputs for every operation they are pinned.
 
 %----------------------------------------------------------------------------------------
 %	SECTION 2
 %----------------------------------------------------------------------------------------
 
-\section{Generalizing To Multiple Scratchpads}
+\section{Simulation and Architecture}
+% how important is this question? should we just be saying what we used
 
+Differences in hardware and simulators don't affect the relative performance of
+a non-pinning compiler compared to one that has an optimized management scheme,
+however there are some important environment variables that will consequently
+affect repeatability and benchmark performance. Most notably, the simulator and
+hardware architecture in use.
+
+OnSRAM uses a cycle accurate simulator to model and assess the performance of
+their algorithm \cite{onsram}.  We have opted to use the SMAUG\cite{smaug}
+framework that depends on the Aladdin\cite{aladdin} system to model our
+accelerator and the gem5 simulator\cite{gem5} to implement our experiments.
+While gem5 is not cycle accurate, it still advertises a close to cycle accurate
+performance metrics and creates a relative base of comparison between benchmark
+models and our optimized model.
+
+Intra-node optimizations that both simulators do but may not do the same way
+that may affect performance comparisons: loop tiling, loop ordering, unrolling,
+and pipelined DMA operations for maximizing intra-node reuse.
+
+% architectural differences
+We use the default SMAUG provided accelerator inspired by NVDLA\cite{smaug}.
+The accelerator contains eight PEs, multiply accumalate (MACC) arrays, and
+contains 3 scratchpad memories\cite{smaug}. Two scratchpads are configured to
+be used as inputs and one for output.
+
+% do we need to specify onsram architecture?
+
+%----------------------------------------------------------------------------------------
+%	SECTION 3
+%----------------------------------------------------------------------------------------
+
+\section{Extensions}
+
+%-----------------------------------
+%	SUBSECTION 1
+%-----------------------------------
+
+\subsection{OnSRAM Limitations}
+
+%-----------------------------------
+%	SUBSECTION 2
+%-----------------------------------
+
+\subsection{Motivating Example}
