@@ -11,12 +11,12 @@
 \section{Introduction}
 % do we need to talk about all the new accels that come out and why they are needed to run DL workloads instead of CPUs?
 
-OnSRAM introduces the notion of two types of optimizations that can be done on
-graph based compilers: intra-node and inter-node optimizations \cite{onsram}.
-Intra node optimizations are those that are focused on optimizing the operation
-that the node specifies. This means tiling in favorable sizes and across
-specific dimensions, loop ordering, and DMA pipelining
-between tiles \cite{aladdin}.
+OnSRAM introduces the notion of two types of runtime performance optimizations
+that can be done on graph based compilers: intra-node and inter-node
+optimizations \cite{onsram}.  Intra node optimizations are those that are
+focused on optimizing the operation that the node specifies. This means tiling
+in favorable sizes and across specific dimensions, loop ordering, and DMA
+pipelining between tiles \cite{aladdin}.
 
 Inter node optimizations are optimizations concerning the overall structure and
 ordering of the nodes in the graph and their connections. This includes
@@ -59,16 +59,34 @@ input. The vertexes of the graph are the operations to be executed, e.g matrix
 multiply, and the edges represent input and output tensors.  All input and
 output data tensors of each node is analyzed for the start time, end time,
 number of reuses, distance between reuses, and size of the tensor. These
-properties are then used to determine the optmial pinning scheme. Each of these
-properties are considered with weights on how important each property is and
-the tensors are psuedo-sorted in cost order; they are psuedo-sorted since
-tensors that don't overlap in their lifetimes need not be sorted relative to
-each other. These sorted tensors are then considered in a greedy fashion where
-tensors of the highest cost are considered for pinning first and the rest are
-considered to be pinned if and only if it can be accommodated in spite of the
-higher cost tensor being pinned. Tensors are only considered for pinning if
-they can be pinned for their entire duration of their lifetime and can fit on
-the SPM with the other inputs and outputs for every operation they are pinned.
+properties are then used to determine the optmial pinning scheme to minimize
+memory transfers. Each of these properties are considered with weights on how
+important each property is and the tensors are psuedo-sorted in cost order;
+they are psuedo-sorted since tensors that don't overlap in their lifetimes need
+not be sorted relative to each other. These sorted tensors are then considered
+in a greedy fashion where tensors of the highest cost are considered for
+pinning first and the rest are considered to be pinned if and only if it can be
+accommodated in spite of the higher cost tensor being pinned. Tensors are only
+considered for pinning if they can be pinned for their entire duration of their
+lifetime and can fit on the SPM with the other inputs and outputs for every
+operation they are pinned.
+
+OnSRAM-Static only applies to input and output tensors, not weights. This is
+due to the fact that weights are single use objects that are only needed for
+the layers they are used in. There exists no reuse opportunity unlike output
+tensors since all layers contain independently different weights. Thus, weights
+are not considered for pinning for both OnSRAM-Static and our extension work as
+well.
+
+Another aspect that OnSRAM does not consider is applicability towards training.
+The assumptions of the problem change when considering training and
+significantly increase the difficulty and search space. This requires the
+separate compiler extension implementations to be designed into separate
+portions of the framework. Further, batched training, partitioned accelerators,
+distributed systems, and large reuse distances due to backward passes and
+batched data \cite{onsram} bring significant design challenges that are not present in
+inference. Thus we have also chosen not to extend this work in this regard as
+well.
 
 %----------------------------------------------------------------------------------------
 %	SECTION 2
@@ -115,8 +133,25 @@ be used as inputs and one for output.
 
 \subsection{OnSRAM Limitations}
 
+While OnSRAM has contributed a novel SPM management scheme that no framework
+currently supports \cite{onsram}, there are limitations that don't allow it to
+generalize to a hardware agnostic scenario. This is primarily due to its
+assumption that the accelerator contains only one shared scratchpad for input
+and output tensors. A consequence of this is that the greedy algorithm proposed
+to map possible pin candidates is non-trivial to apply to an accelerator with
+more than one scratchpad. Further, because of the heuristic approach, OnSRAM is not able
+to achieve the optimal memory mappings with respect to minimizing memory transfer.
+
 %-----------------------------------
 %	SUBSECTION 2
 %-----------------------------------
 
 \subsection{Motivating Example}
+
+%-----------------------------------
+%	SUBSECTION 3
+%-----------------------------------
+
+\subsection{Problems with Generalizing a Single SPM Management Scheme to Multiple SPMs}
+\subsubsection{Attempted Greedy Approaches}
+\subsubsection{Attempted Architectural Assumptions}
