@@ -41,7 +41,12 @@ headsepline, % Uncomment to get a line under the header
 \usepackage[utf8]{inputenc} % Required for inputting international characters
 \usepackage[T1]{fontenc} % Output font encoding for international characters
 
-\usepackage{mathpazo} % Use the Palatino font by default
+%\usepackage{mathpazo} % Use the Palatino font by default
+\usepackage{relsize} % \mathlarger{} command to make summations big
+%\usepackage{txfonts} % \coloneqq := symbol
+\usepackage{amssymb}
+\usepackage{lmodern}
+\usepackage{mathtools, nccmath}
 
 \usepackage[backend=bibtex,style=numeric,citestyle=ieee,natbib=true]{biblatex} % Use the bibtex backend with the authoryear citation style (which resembles APA)
 
@@ -241,7 +246,7 @@ energy consumption and latency associated with inter-node communication.
 \include{Chapters/Chapter1}
 \include{Chapters/Chapter2} 
 \include{Chapters/Chapter3}
-%\include{Chapters/Chapter4} 
+\include{Chapters/Chapter4} 
 %\include{Chapters/Chapter5} 
 
 %----------------------------------------------------------------------------------------
