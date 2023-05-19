@@ -1,0 +1,72 @@
+%This is my super simple Real Analysis Homework template
+
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+%\usepackage[]{amsthm} %lets us use \begin{proof}
+\usepackage[]{amssymb} %gives us the character \varnothing
+%\usepackage{txfonts} % \coloneqq := symbol
+\usepackage{lmodern}
+\usepackage{mathtools, nccmath}
+
+\title{SPM Problem Formulation} \author{Tajung Jang}
+\date\today
+%This information doesn't actually show up on your document unless you use the maketitle command below
+
+\begin{document}
+\maketitle %This command prints the title based on information entered above
+
+%Section and subsection automatically number unless you put the asterisk next to them.
+\section{Model Formulation}
+\subsection{Constraints}
+Let $N \coloneqq \{ n \text{ }  | \text{ } n   \text{ represents a tensor ID used in the DNN graph}\}$\\
+Let $K \coloneqq \{ k \text{ }  | \text{ } k   \text{ represents a scratchpad ID}\}$\\
+Let $M \coloneqq \{ m \text{ }  | \text{ } m   \text{ represents an operation in the DNN graph}\}$\\
+Let $S \coloneqq \{ s \text{ }| \text{ } \text{where } S_n \text{ represents the size of tensor$_n \in N$}\}$\\
+Let $Q \coloneqq \{ q \text{ }| \text{ } \text{where } Q_k \text{ represents the size of Scratchpad$_k \in K$}\}$\\
+
+$x_{nkm} = 1$ represents a tensor $n$ that occupies scratchpad $k$ at operation $m$.\\
+
+\[
+x_{nkm} \in \{0, 1\} \forall n,k,m
+\]
+
+
+\begin{itemize}
+	\item All necessary input and output tensors for a given operation will be present on the SPMs\\
+
+		Let $A \coloneqq \{ a \text{ } | \text{ } \text{where } A_n = 1\text{ represents a tensor$_n$ is required as an input or output for operation$_m$} \}$\\
+		\[
+			A_{nm} \in \{0, 1\} \forall n,m
+		\]
+
+		\[
+			A_{nm} = 1 \implies \sum_{i \in K} x_{nim} = 1 
+		\]
+
+	\item All tensors mapped on an SPM$_k$ must fit on within the given scratchpad space\\
+
+		$\sum_{i \in N} {x_{ikm} * s_i} \leq q_k \forall m,k$\\
+
+	\item Tensors are not mapped before the operation in which they're lifetime begins \\
+
+		Let $B \coloneqq \{ b_n \text{ } | \text{ }  b_n \text{represents the start time for tensor $n$}\}$ \\
+
+		$x_{nmk} = 0 \forall m < B_m$
+
+	\item Tensors are not mapped after the operation in which they're lifetime ends \\
+
+		Let $E \coloneqq \{ e_n \text{ } | \text{ }  e_n \text{represents time for tensor $n$}\}$ \\
+
+		$x_{nmk} = 0 \forall m > E_m$
+\end{itemize}
+
+%-----------------------------------
+%	SUBSECTION 2
+%-----------------------------------
+
+\subsection{Objective Function}
+
+
+
+\end{document}
