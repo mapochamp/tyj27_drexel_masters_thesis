@@ -1,6 +1,5 @@
-% Chapter Template
 
-\chapter{Deep Learning} % Main chapter title
+\chapter{Background} % Main chapter title
 
 \label{Chapter1} % Change X to a consecutive number; for referencing this chapter elsewhere, use \ref{ChapterX}
 
@@ -36,5 +35,36 @@
 %----------------------------------------------------------------------------------------
 %	SECTION 2
 %----------------------------------------------------------------------------------------
+\section{Accelerators and Scratchpad Memory}
+Deep learning accelerators (DLA) are hardware made specifically to accelerate
+common operations needed to run inference or training on DL models. 
 
-\section{Main Section 2}
+\subsection{Existing Scratchpad Memory Management Schemes}
+
+\section{Deep Learning Compilers}
+Deep learning compilers are frameworks that can be broken down into three
+parts: a front end, middle end, and back end. In order to maximize the
+accessibility and productivity of machine learning engineers, many leverage
+high level languages and the associated libraries to describe their deep
+learning architectures. The parsing and lexical analysis done to convert this
+high level form into a lower level form in which we can start to run
+optimization passes on is the front end of the compiler. Typically the high
+level description of the deep learning architecture from the front end is
+transformed into either a graph network of nodes that represent data structures
+and vertices that represent operations \cite{tensorflow} \cite{onsram} or into
+an intermediate representation (IR) \cite{onnx} \cite{DLVM} \cite{nGraph}
+form where the high level description is broken down into indivisible
+operations to run. Operations include matrix multiplication, convolution, DMA
+loads and stores, and arithmetic instructions \cite{tensorflow}.
+
+The middle end is responsible for taking either the IR or graph form and apply
+any possible optimizations without any knowledge of the target hardware for
+runtime, memory constraints, scalability on multiple accelerators, and among
+others in a hardware agnostic way. A simple but non-trivial example is schedule
+re-ordering of operations to maximize scratchpad memory utilizations or minimizing
+runtime.
+
+The back end of the compiler is responsible for taking the IR or graph
+representation and converting it to a binary format for a given hardware
+architecture. The back end for deep learning compilers are typically
+proprietary and vendor provided, eg CUDA.
