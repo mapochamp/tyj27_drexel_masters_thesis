@@ -1,0 +1,137 @@
+-----------------------------------------------------------------------------
+|                                                                           |
+|                                                                           |
+|                       Accelerators and scratchpad memory                  |
+|                                                                           |
+|                                                                           |
+-----------------------------------------------------------------------------
+- There is a growing demand to deploy smart applications to a wide spectrum of
+devices, rang- ing from cloud servers to self-driving cars and embed- ded
+devices. Mapping DL workloads to these devices is complicated by the diversity
+of hardware characteristics, including embedded CPUs, GPUs, FPGAs, and ASICs
+(e.g., the TPU [21]). These hardware targets diverge in terms of memory
+organization, compute functional units, (TVM)
+
+- FPGAs, asics, neuromorphic, systolic array, TPU, GPU. 
+- operation types  (primitives)
+	- Operations include matrix multiplication, convolution, DMA loads and stores, and arithmetic instructions \cite{tensorflow}.
+
+- accelerators don't do shit if you dont program it to be utilization maxxing (onsram)
+- low precision arhitemetic, architures to exploint parallelism, software managed scratchpad memory hierarchy (onsram)
+
+- thousands of PEs and custom ISAs.\ specialized memeory hiercy structures and inrterconnect topologies (deeptools)
+-  They are hard to program and you need framworks to ease the programmibility of all these accels and its fucking hard (deeptools)
+- 
+
+-----------------------------------------------------------------------------
+|                                                                           |
+|                                                                           |
+|                       deep learning compilers and frameworks              |
+|                                                                           |
+|                                                                           |
+-----------------------------------------------------------------------------
+- what are end to end frameworks?
+	- automagically execute DNN graph descriptions on AI accelerator
+	backends (deeptools)
+	- contain a runtime scheduler to successfully execute each graph node
+	in a goob way on the target device (deeptools)
+	- allow for programmers to focus on machine leraning and not have to
+	worry about hardware specific programming (deeptools)
+	- A key difference between compilers for languages
+	like C++ and compilers for deep learning frameworks is that with
+	deep learning, the data being operated on is large and variable-sized,
+	but highly amenable to parallelization (ngraph)
+	- 
+
+- can be broken down into graph creation, graph optimiziation/IR lowering +
+  optimization, kernel serach, context creation, engine/runtime creation +
+  scheduling, compiling to host + device binary
+
+- types of end to end frameworks?
+
+- COPY NGRAPH / ONNX / DEEPTOOLS IR SHPEEL
+
+
+- Current DL frameworks, such as TensorFlow, MXNet, Caffe, and PyTorch, rely on a
+computational graph in- termediate representation to implement optimizations,
+e.g., auto differentiation and dynamic memory man- agement [3, 4, 9].
+Graph-level optimizations, however, are often too high-level to handle hardware
+back-end- specific operator-level transformations. Most of these frameworks
+focus on a narrow class of server-class GPU devices and delegate
+target-specific optimizations to highly engineered and vendor-specific operator
+li- braries. These operator-level libraries require significant manual tuning
+and hence are too specialized and opaque to be easily ported across hardware
+devices. Providing support in various DL frameworks for diverse hardware
+back-ends presently requires significant engineering ef- fort. Even for
+supported back-ends, frameworks must make the difficult choice between: (1)
+avoiding graph optimizations that yield new operators not in the prede- fined
+operator library, and (2) using unoptimized imple- mentations of these new
+operators. (TVM)
+	- What do they mean by graph level IR? the graph becomes IR? what do
+	they mean by the backends? I need toreread this shit. can they
+	elaborate please? what the fuck?
+	- read 3, 4, 9
+
+- computation types written on CNTK paper: negate, sigmoid, tanh, relu, log, vectorsum, l1 norm, scale, mat mul, element wise multiply, dropout ,etc.
+
+- mxnet does a thing for BLAS and CUDA where there are premade kernels ready to
+be deployed and called and so they just look at the graph, figure out what
+operations can be fused, and call the sequence of kernels that are optimized
+for memory/compute and pass the needed params and pointers. This is basically
+what happens during runtime for other architectures too like ours. Either there
+is a lookup table of kernels to call or the entire thing is built as a single
+binary based on the backend. This is because there is still some host-device
+interplay here and not everything is ran just on the device. if it is, then its
+entirely up to the backend on how to manage it.
+
+- there are mappings between operators and operator libraries to backends. There
+are unoptimzied and optimized versions too.  (TVM)
+
+
+- lets make sure we understand what actually gets passed to the backend. ie, is
+the backend or middle end generating kernels? are passing a binary? are we
+passing a graph? what about JIT versions?
+- what if the backend doesn't suport the IR the framework makes? -> it doesn't get  supported as a backend for that framework
+- how are we translating graph to kernel? we make graph of ops and we have
+dedicated kenerals premade in the backend to match with the ops
+- what happens to unsupported operations?
+
+- all frameworks assume architectures have unified memory except for
+distributed cases (mxnet) (onsram)
+
+- recall: there has to be a corresponding backend to a middle end that supports everything that gets connected to it. otherwise it wouldnt be a framework. So either a backend supports multiple middle end outputs or the other way around. a middle end can create different outputs for backends -> BIG FUCKING CITATION NEEDED
+
+- ok so like theres a few ways we can send something to the backend: an optimized control flow graph itself where each node is an operation that exists as a call to a kernel to the target device or an io_ctl call where we can just dma stuff into 
+
+- ok and like the the programmer never actually creates a runtime or execution engine that schedules shit and does the loads and stores. they only write the model. so like al l of that is created and generated by the backend. so a runtime execution engine is created that does the scheduling, memory management, and kernel calls. so really the bakcend is is some super code generator and compiler. For example tensorRT:
+	- build phase: "responsible for optimizing a model, and producing an ENGINE"
+		- the builder searches for available kernels to call and build together 		to execute your graph.
+		- builder eliminates dead coputations, folds constants (wtf?),
+		and reorders and combines operations to run more efficiently on
+		the GPU. this also means reducing and quantizing fpus
+		- the engine creates a serialized plan which can be saved to
+		disk or deserialized immedietly for use
+	- runtime phase: deserialize a plan to create an engine and create an
+	execution context from the engine. Then, repeatedly: populate input
+	buffers for inference, call enqueue() on the execution context to run
+	inference
+		- the engine just means the execution context: the saved model,
+		inputs, outputs, size of the inputs outputs, the network graph
+		of operations etc
+
+- Optimizations types: internode and intra node
+
+- optimizations on coomputations graphs:
+it implements
+many graph-level optimizations, including: operator fu-
+sion, which fuses multiple small operations together;
+constant-folding, which pre-computes graph parts that
+can be determined statically, saving execution costs; a
+static memory planning pass, which pre-allocates mem-
+ory to hold each intermediate tensor; and data layout
+transformations, which transform internal data layouts
+into back-end-friendly forms. We now discuss operator
+fusion and the data layout transformation. (TVM)
+
+Middle end note:
+- read TVMs operator fusion, data layout transformation sections for optimziations

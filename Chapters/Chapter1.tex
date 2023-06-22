@@ -39,111 +39,122 @@
 Deep learning accelerators (DLA) are hardware made specifically to accelerate
 common operations needed to run inference or training on DL models. 
 
-- There is a growing demand to deploy smart applications to a wide spectrum of
-devices, rang- ing from cloud servers to self-driving cars and embed- ded
-devices. Mapping DL workloads to these devices is complicated by the diversity
-of hardware characteristics, including embedded CPUs, GPUs, FPGAs, and ASICs
-(e.g., the TPU [21]). These hardware targets diverge in terms of memory
-organization, compute functional units, (TVM)
-
-- FPGAs, asics, neuromorphic, systolic array, TPU, GPU. 
-- operation types  (primitives)
-	- Operations include matrix multiplication, convolution, DMA loads and stores, and arithmetic instructions \cite{tensorflow}.
-
-- accelerators don't do shit if you dont program it to be utilization maxxing (onsram)
-- low precision arhitemetic, architures to exploint parallelism, software managed scratchpad memory hierarchy (onsram)
-
-- thousands of PEs and custom ISAs.\ specialized memeory hiercy structures and inrterconnect topologies (deeptools)
--  They are hard to program and you need framworks to ease the programmibility of all these accels and its fucking hard (deeptools)
-- 
-
 \subsection{Existing Scratchpad Memory Management Schemes}
 
-\section{Deep Learning Compilers}
+\section{Deep Learning Frameworks}
+\subsection{Introduction}
+In order to create to run a DL model, a programmer must describe the architecture, its input and output layers, and the inputs that will be passed to the model. Beyond these
+properties, the implementation and challenges associated with deploying such a model
+on a DLA or distributed system is handled by deep learning frameworks. Deep learning
+frameworks abstract the implementation and execution details from the programmer such
+that the programmer may focus on the model creation only. The abstraction of such
+details forces the trade-off of performance and generality as the frameworks
+must optimize the same model for runtime and memory efficiency on a diverse set
+of available hardware. Frameworks must be able to decipher model descriptions
+in high level languages such as Python, apply hardware agnostic optimizations,
+and create an executable that will run the model to completion on the target
+device.
 
-- what are end to end frameworks?
-	- automagically execute DNN graph descriptions on AI accelerator
-	backends (deeptools)
-	- contain a runtime scheduler to successfully execute each graph node
-	in a goob way on the target device (deeptools)
-	- allow for programmers to focus on machine leraning and not have to
-	worry about hardware specific programming (deeptools)
-	- A key difference between compilers for languages
-	like C++ and compilers for deep learning frameworks is that with
-	deep learning, the data being operated on is large and variable-sized,
-	but highly amenable to parallelization (ngraph)
-	- 
+Deep learning frameworks are different from conventional compilers (eg. GCC) by
+having to deal with a small set of operations that are highly parallelizable
+but with variable-sized data \cite{nGraph}. Some operations include: sigmoid,
+matrix multiply, vectorsum, L1 Norm, element wise multiply, and dropout among
+others \cite{cntk}. Further, conventional compilers typically take a high level
+language down to an intermediate representation (IR) to then machine code that
+can run on a device.  The front end is responsible for what parses and lexes
+the high level code, the middle end is responsible for lowering it to IR and
+running optimization passes on the IR, and the back-end lowers the IR further
+into machine code. Similarly, DL frameworks can be broken down into a
+front-end, middle-end, and back-end.
+
+%Computational graphs
+\subsection{Computational Graphs}
+A common interface used by most DL frameworks is the computational graph
+\cite{tensorflow} \cite{cntk} that represents a network of operations needed to
+run a DL model. Each DL model can be broken down into a series of discrete
+computational operations that can be applied to an input to describe a given
+model. A graph made up of vertices and edges where the vertices represent an
+operation and the edges represent tensors that flow from one operation to the
+next can be used to fully describe a DL model. Computational graphs are
+directed acyclic graphs (DAG).  Each vertex can have between zero and two
+inputs and zero to one outputs. So for each model, each node in each layer can
+be broken down into an operation that maps to a node in the graph. An operation
+is a particular computation that must be ran with a set of inputs and outputs.
+The implementation of the operation is defined by a kernel. A kernel is
+specific to a hardware architecture and are mapped to each operation by the
+back-end. For example a matrix multiply operation is an essential operation
+that reoccurs frequently in computation graphs; the implementation of a matrix
+multiply will depend on how many processing elements (PE) the DLA has and its
+memory hierarchy. A tensor is a multi-dimensional array that can take on many
+types (eg., floating point, int8) and are the inputs and outputs of operations.
+Tensors are what are passed along edges of the graph. The dataflow represented
+by a graph can be used to infer dependencies and possible optimizations for the
+middle-end to apply.
+
+% TODO: algorthim of a one hiddle layer sigmoid like in CNTK
+
+% TODO: figure of DAG -> operation -> kernel code snippet
+
+% TODO: figure of Matrix operations -> DAG -> kernel code
+
+% TODO: figure of NN -> DAG
+
+%IR
+\subsection{IR}
 
 
-- types of end to end frameworks?
+%Front end
+\subsection{Front End}
+The front end of frameworks are responsible for breaking down the high level
+descriptions of a DL model, typically in Python or C++ \cite{tensorflow}, and
+converting them into computation graphs or IR. These lower level abstractions
+allow the framework to more easily apply optimizations for memory and runtime
+efficiency.
 
-- COPY NGRAPH / ONNX / DEEPTOOLS IR SHPEEL
+%middle end
+\subsection{Middle End}
 
-
-- Current DL frameworks, such as TensorFlow, MXNet, Caffe, and PyTorch, rely on a
-computational graph in- termediate representation to implement optimizations,
-e.g., auto differentiation and dynamic memory man- agement [3, 4, 9].
-Graph-level optimizations, however, are often too high-level to handle hardware
-back-end- specific operator-level transformations. Most of these frameworks
-focus on a narrow class of server-class GPU devices and delegate
-target-specific optimizations to highly engineered and vendor-specific operator
-li- braries. These operator-level libraries require significant manual tuning
-and hence are too specialized and opaque to be easily ported across hardware
-devices. Providing support in various DL frameworks for diverse hardware
-back-ends presently requires significant engineering ef- fort. Even for
-supported back-ends, frameworks must make the difficult choice between: (1)
-avoiding graph optimizations that yield new operators not in the prede- fined
-operator library, and (2) using unoptimized imple- mentations of these new
-operators. (TVM)
-	- What do they mean by graph level IR? the graph becomes IR? what do
-	they mean by the backends? I need toreread this shit. can they
-	elaborate please? what the fuck?
-	- read 3, 4, 9
-
-- there are mappings between operators and operator libraries to backends. There
-are unoptimzied and optimized versions too.  (TVM)
+%backend
+\subsection{Back End}
 
 
-- lets make sure we understand what actually gets passed to the backend. ie, is
-the backend or middle end generating kernels? are passing a binary? are we
-passing a graph? what about JIT versions?
-- what if the backend doesn't suport the IR the framework makes? -> it doesn't get  supported as a backend for that framework
-- how are we translating graph to kernel? we make graph of ops and we have
-dedicated kenerals premade in the backend to match with the ops
-- what happens to unsupported operations?
+%Graph level optimizations
 
-- recall: there has to be a corresponding backend to a middle end that supports everything that gets connected to it. otherwise it wouldnt be a framework. So either a backend supports multiple middle end outputs or the other way around. a middle end can create different outputs for backends -> BIG FUCKING CITATION NEEDED
+%IR level optimizations
 
-Deep learning compilers are frameworks that can be broken down into three
-parts: a front end, middle end, and back end. In order to maximize the
-accessibility and productivity of machine learning engineers, many leverage
-high level languages and the associated libraries to describe their deep
-learning architectures. The parsing and lexical analysis done to convert this
-high level form into a lower level form in which we can start to run
-optimization passes on is the front end of the compiler. Typically the high
-level description of the deep learning architecture from the front end is
-transformed into either a graph network of nodes that represent data structures
-and vertices that represent operations \cite{tensorflow} \cite{onsram} or into
-an intermediate representation (IR) \cite{onnx} \cite{DLVM} \cite{nGraph}
-form where the high level description is broken down into indivisible
-operations to run.
 
-The middle end is responsible for taking either the IR or graph form and apply
-any possible optimizations without any knowledge of the target hardware for
-runtime, memory constraints, scalability on multiple accelerators, and among
-others in a hardware agnostic way. A simple but non-trivial example is schedule
-re-ordering of operations to maximize scratchpad memory utilizations or minimizing
-runtime.
 
-The back end of the compiler is responsible for taking the IR or graph
-representation and converting it to a binary format for a given hardware
-architecture. The back end for deep learning compilers are typically
-proprietary and vendor provided, eg CUDA.
 
-This abstraction of optimizations and the target hardware allows for
-programmers to focus on the DL models while offloading the need to maximize
-hardware utilizations to the compiler and the challenges associated with
-deploying the model on an unknown amount of accelerators of type of
-accelerators.
 
-- Optimizations types: internode and intra node
+%Deep learning compilers are frameworks that can be broken down into three
+%parts: a front end, middle end, and back end. In order to maximize the
+%accessibility and productivity of machine learning engineers, many leverage
+%high level languages and the associated libraries to describe their deep
+%learning architectures. The parsing and lexical analysis done to convert this
+%high level form into a lower level form in which we can start to run
+%optimization passes on is the front end of the compiler. Typically the high
+%level description of the deep learning architecture from the front end is
+%transformed into either a graph network of nodes that represent data structures
+%and vertices that represent operations \cite{tensorflow} \cite{onsram} or into
+%an intermediate representation (IR) \cite{onnx} \cite{DLVM} \cite{nGraph}
+%form where the high level description is broken down into indivisible
+%operations to run.
+%
+%The middle end is responsible for taking either the IR or graph form and apply
+%any possible optimizations without any knowledge of the target hardware for
+%runtime, memory constraints, scalability on multiple accelerators, and among
+%others in a hardware agnostic way. A simple but non-trivial example is schedule
+%re-ordering of operations to maximize scratchpad memory utilizations or minimizing
+%runtime.
+%
+%The back end of the compiler is responsible for taking the IR or graph
+%representation and converting it to a binary format for a given hardware
+%architecture. The back end for deep learning compilers are typically
+%proprietary and vendor provided, eg CUDA.
+%
+%This abstraction of optimizations and the target hardware allows for
+%programmers to focus on the DL models while offloading the need to maximize
+%hardware utilizations to the compiler and the challenges associated with
+%deploying the model on an unknown amount of accelerators of type of
+%accelerators.
+%

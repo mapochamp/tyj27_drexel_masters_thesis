@@ -34,6 +34,7 @@ What is IR
 NGRAPH AND DEEPTOOLS HAVE GOOD RELATED WORKS SECTIONS THAT HAVE GOOD SUMMARIES ON EACH DL COMPILER
 
 
+
 %----------------------------------------------------------------------------------------
 %	SECTION 2
 %----------------------------------------------------------------------------------------
@@ -63,4 +64,20 @@ NGRAPH AND DEEPTOOLS HAVE GOOD RELATED WORKS SECTIONS THAT HAVE GOOD SUMMARIES O
 %-----------------------------------
 
 %\subsection{TVM}
+
+\section{Existing Scratchpad Memory Management Schemes}
+"The main differ- ence between this high-level representation and a low- level
+compiler intermediate representation (IR), such as LLVM, is that the
+intermediate data items are large, multi-dimensional tensors. Computational
+graphs pro- vide a global view of operators, but they avoid specifying how each
+operator must be implemented. Like LLVM IRs, a computational graph can be
+transformed into func- tionally equivalent graphs to apply optimizations." - (TVM)
+
+%^
+%|
+basically because the intermediate values are variable-sized and big af between operations,
+you can't really just put a "bound" on tensor sizes (well you can if you know the DL arch but still the
+variables size range so widely you're gonna get really really bad utiliztaion) you can't just slap on
+graph coloring and separate the SPM into a bunch of registers. that only works for super regular things
+in embedded.
 
