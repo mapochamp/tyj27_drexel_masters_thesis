@@ -101,7 +101,40 @@ middle-end to apply.
 
 %IR
 \subsection{IR}
+Intermediate representation (IR) is an alternative representation of DL models
+for some frameworks such as \cite{DLVM} \cite{nGraph} \cite{ONNX}. For each
+framework that uses IR, the framework typically uses its own IR, however
+there are tools such as ONNX that attempt to standardize the IR used in
+frameworks. 
 
+IR in DL frameworks are a language that support linear algebra instructions and
+other general purpose instructions (eg., branch, conditional- branch). DL
+models are lowered into the framework's IR and a DAG of control flow
+\cite{ngraph} can be created where the vertices are operations and edges are
+data. This is similar to a computational graph, however, the expressivness and
+modularity that IR provides may lead to more optimization oppurtunities
+\cite{DLVM}. In a computation graph, each kernel can be tuned to maximize its
+performance in isolation. Outside of manual kernel turning, performance gains
+come from the reordering of schedules and changing the access pattern of
+tensors.  In IR based frameworks, the same types of optimizations can be done
+to each instruction that maps to a kernel. However, the kernels in IR are not
+picked from a set of pre-made kernels in a supported back-end, but rather code
+generated into LLVM IR or another lower level IR based on the framework. This
+allows static analysis to better fuse redundant operations and kenerls together
+in a more efficient way than sequentially ordering kernels as done in
+computational graph based frameworks. Further, different IRs may come with
+a wider range of operations that may be supported than the set of operations in
+a computational graph that allow the compiler and code generator to manipulate
+the DAG in more ways.
+
+Once a DL model is lowered into IR and its optimization passes are done, the IR
+is either passed into a bridge code generator or a more supported IR such as
+LLVM IR. A bridge will transform the framework IR into a format that is
+compatible wit h a particular back-end. There must be a bridge made for every
+back-end. Otherwise, in the case of LLVM based IR transformations, only
+back-ends that support LLVM IR are able to be used to generate a final binary.
+
+% TODO: DL arch -> IR -> IR CFG
 
 %Front end
 \subsection{Front End}
@@ -116,45 +149,45 @@ efficiency.
 
 %backend
 \subsection{Back End}
+"Backends’ implemen-
+tations are encapsulated so that the same computation can execute
+on multiple backends, such as CPUs and GPUs." - (ngraph)
+
 
 
 %Graph level optimizations
 
 %IR level optimizations
+Optimizations include domain- specific optimizations, such as algebra
+simplification, linear algebra fusion, matrix multiplication reordering, and AD
+checkpointing, and traditional compiler optimizations. - DLVM 
 
+Since DLVM IR is aware of mathematical operators such as tanh and power, the
+algebra simplifi- cation pass can find and simplify certain mathematical
+operations that are expensive or redundant.  For example, x2 can be simplified
+to x x ( stands for element-wise multiplication), and x0 can be simplified to
+constant 1. Matrix multiplication reordering is another classic optimization
+that minimizes the number of sub-operations in a chain of matrix
+multiplications with different dimensionality, based on matrix multiplication’s
+associativity.  Since the DLVM optimizer is aware of linear algebra operations
+with static dimensionality, maxi- mizing the performance by fusing verbose
+linear operations into a single matrix multiplication is beneficial as well.
+For example, it is very common to encounter expressions of the form Wx + b.
+When unoptimized, the matrix multiplication and the addition will be
+parallelized separately. Since launching compute kernels separately can be
+expensive, DLVM performs linear algebra fusion, which transforms subexpressions
+involving both matrix multiplication and element-wise operations into a single
+matrix multiplication instruction on padded tensors. Besides the simple pattern
+like an addition of matrix multiplication and a vector, we can apply the same
+approach to a polynomial of multiple matrix multiplications, turning the
+polynomial into a single matrix multiplication. For example, in a simple
+recurrent neural network (RNN), each cell of the recurrence is a feed forward
+neural network that takes two inputs: xt, the input local to the current
+timestep, and ht, the hidden state carried along the recurrence. The linear
+algebra fusion pass can simplify operations in ht = f (Wxt−1 +Uht−1 +b) from
+two matrix multiplications and two additions into a single matrix
+multiplication. A more aggres- sive, interprocedural version of linear algebra
+fusion can optimize parameter passing and memory allocation, so that the entire
+concatenated matrix can be created and passed around in the first place without
+reallocation - DLVM
 
-
-
-
-%Deep learning compilers are frameworks that can be broken down into three
-%parts: a front end, middle end, and back end. In order to maximize the
-%accessibility and productivity of machine learning engineers, many leverage
-%high level languages and the associated libraries to describe their deep
-%learning architectures. The parsing and lexical analysis done to convert this
-%high level form into a lower level form in which we can start to run
-%optimization passes on is the front end of the compiler. Typically the high
-%level description of the deep learning architecture from the front end is
-%transformed into either a graph network of nodes that represent data structures
-%and vertices that represent operations \cite{tensorflow} \cite{onsram} or into
-%an intermediate representation (IR) \cite{onnx} \cite{DLVM} \cite{nGraph}
-%form where the high level description is broken down into indivisible
-%operations to run.
-%
-%The middle end is responsible for taking either the IR or graph form and apply
-%any possible optimizations without any knowledge of the target hardware for
-%runtime, memory constraints, scalability on multiple accelerators, and among
-%others in a hardware agnostic way. A simple but non-trivial example is schedule
-%re-ordering of operations to maximize scratchpad memory utilizations or minimizing
-%runtime.
-%
-%The back end of the compiler is responsible for taking the IR or graph
-%representation and converting it to a binary format for a given hardware
-%architecture. The back end for deep learning compilers are typically
-%proprietary and vendor provided, eg CUDA.
-%
-%This abstraction of optimizations and the target hardware allows for
-%programmers to focus on the DL models while offloading the need to maximize
-%hardware utilizations to the compiler and the challenges associated with
-%deploying the model on an unknown amount of accelerators of type of
-%accelerators.
-%
