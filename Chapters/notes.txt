@@ -135,3 +135,70 @@ fusion and the data layout transformation. (TVM)
 
 Middle end note:
 - read TVMs operator fusion, data layout transformation sections for optimziations
+
+
+
+
+-----------------------------------------------------------------------------
+|                                                                           |
+|                                                                           |
+|                                IR                                         |
+|                                                                           |
+|                                                                           |
+-----------------------------------------------------------------------------
+"An nGraph framework bridge acts as
+a framework backend. Each nGraph backend has a transformer
+that compiles or interprets the IR and provides an allocation and
+execution API that the framework bridges use to implement the
+framework’s API" - ngraph. 
+if you have you're own IR then you have to create a bridge or something
+to transform it into the backend. efforts like ONNX try to standardize the use
+of MLIR since every framework wants to claim that their IR is easier to reason
+about or more optimizable than the other. But in the end, you can't just have
+some arbitrary IR be interpreted by a backend without your own translating
+bridge like ngraph. the bridges are code generators and theres a code generator
+per backend. so honeslty idk what the hypes is about bc IR and computational graphs
+are literally the same shti since IR just creates a DAG dataflow graph anyway of
+ops... like theres literally no difference. The same passes of optimzations
+happen anyway and you still need a specific bridge/code generator per backend
+simiarlly to the way you need to create a seperate kernel per operation for
+computational graphs... which a vendor will typically provide to you anyway
+otherwise it would be fucking useless lmofa.
+
+
+ok ok ok. so rather than a computational graph, we create an IR of linear algebra
+operations and we convert to LLVM IR. This is done using code generators
+to generate code from a high level description into IR into backend comapatible IR - DLVM
+
+you have a cpu code generator, DLA kernel code generator, and LLVM driver and
+some kind of framework runtime/memeory manager - DLVM
+
+differences in the dataflow graph of an IR based and computational graph is the 
+granularity of the nodes and how expressive each node is. so like you can have a
+generic mat mul node that has its own kernel in the computational graph version
+but in the IR version that gets broken down further ig? I need better examples
+to see if i actually understand this correctly. -> not really broken down
+further but you get to have a larger range of operation mappings without
+necessarily needing hand made kernels. so you can have operations like branch
+and conditional branch and have a code generator take care of that for you so
+that the optimzier can then figure out more things it can do rather than just
+gluing a bunch of kernels together - DLVM
+
+modelled after LLVM where you have basic blocks, module, functions, and
+instructions. instructions are the lowest thing you can add.  The code
+representation has a hierarchy of abstractions: module, function, basic block,
+and instruction. An instruction is the minimal unit of code that operates on
+values, which can be globals, function arguments or temporary virtual registers
+produced by instructions. Each module contains a collection of type
+definitions, global values and functions. Each function has a control flow
+graph formed by basic blocks and control flow edges. Each basic block contains
+an ordered list of instructions with data dependencies forming a directed
+acyclic graph - DLVM
+
+OK so DLVM converts DLVM IR into LLVM IR. and so basically, unless you create
+bridges manually, you are only supporting whatever backends support LLVM IR.
+similarly though, you're only supporting backends that support serialized
+computation graphs when using computational graphs instead of IR.
+
+Existing LLVM utilities are used to compile the generated LLVM IR to the final binary. - DLVM
+
