@@ -43,29 +43,39 @@ common operations needed to run inference or training on DL models.
 
 \section{Deep Learning Frameworks}
 \subsection{Introduction}
-In order to create to run a DL model, a programmer must describe the architecture, its input and output layers, and the inputs that will be passed to the model. Beyond these
-properties, the implementation and challenges associated with deploying such a model
-on a DLA or distributed system is handled by deep learning frameworks. Deep learning
-frameworks abstract the implementation and execution details from the programmer such
-that the programmer may focus on the model creation only. The abstraction of such
+In order to create to run a DL model, a programmer must describe the
+architecture, its input and output layers, and the inputs that will be passed
+to the model. Beyond these properties, the implementation and challenges
+associated with deploying such a model on a DLA or distributed system is
+handled by deep learning frameworks. Deep learning frameworks abstract the
+implementation and execution details from the programmer such that the
+programmer may focus on the model creation only. The abstraction of such
 details forces the trade-off of performance and generality as the frameworks
 must optimize the same model for runtime and memory efficiency on a diverse set
-of available hardware. Frameworks must be able to decipher model descriptions
-in high level languages such as Python, apply hardware agnostic optimizations,
-and create an executable that will run the model to completion on the target
-device.
+of available hardware that all have different memory heiarchies, number of PEs,
+and supported operations. Frameworks must be able to decipher model
+descriptions in high level languages such as Python, apply hardware agnostic
+optimizations, and map operations to a specific hardware create an executable
+that will run the model to completion device.
 
-Deep learning frameworks are different from conventional compilers (eg. GCC) by
-having to deal with a small set of operations that are highly parallelizable
-but with variable-sized data \cite{nGraph}. Some operations include: sigmoid,
-matrix multiply, vectorsum, L1 Norm, element wise multiply, and dropout among
-others \cite{cntk}. Further, conventional compilers typically take a high level
-language down to an intermediate representation (IR) to then machine code that
-can run on a device.  The front end is responsible for what parses and lexes
-the high level code, the middle end is responsible for lowering it to IR and
-running optimization passes on the IR, and the back-end lowers the IR further
-into machine code. Similarly, DL frameworks can be broken down into a
-front-end, middle-end, and back-end.
+Conventional compilers (eg. GCC) typically take a high level language down to
+an intermediate representation (IR) to then machine code that can run on a
+device.  The front end is responsible for what parses and lexes the high level
+code, the middle end is responsible for lowering it to IR and running
+optimization passes on the IR, and the backend lowers the IR further into
+machine code. Similarly, DL frameworks can be broken down into a front-end,
+middle-end, and backend. However, there are major differences in the role of
+each partition and how they are performed.  Deep learning frameworks deal with
+a small set of operations that are highly parallelizable but with
+variable-sized data \cite{nGraph}. Some operations include: sigmoid, matrix
+multiply, vectorsum, L1 Norm, element wise multiply, and dropout among others
+\cite{cntk}. Further, a programmer for within a deep learning framework will
+work with a domain specific language (DSL) such as Tensorflow
+\cite{tensorflow}. Because DSLs only concern with the description of deep
+learning networks, the runtime execution, memory, and device management is
+managed by the framework. A framework that enables the deployment of a deep
+learning model onto hardware from only a high level language description is
+called an end to end framework.
 
 %Computational graphs
 \subsection{Computational Graphs}
@@ -82,7 +92,7 @@ be broken down into an operation that maps to a node in the graph. An operation
 is a particular computation that must be ran with a set of inputs and outputs.
 The implementation of the operation is defined by a kernel. A kernel is
 specific to a hardware architecture and are mapped to each operation by the
-back-end. For example a matrix multiply operation is an essential operation
+backend. For example a matrix multiply operation is an essential operation
 that reoccurs frequently in computation graphs; the implementation of a matrix
 multiply will depend on how many processing elements (PE) the DLA has and its
 memory hierarchy. A tensor is a multi-dimensional array that can take on many
@@ -118,7 +128,7 @@ performance in isolation. Outside of manual kernel turning, performance gains
 come from the reordering of schedules and changing the access pattern of
 tensors.  In IR based frameworks, the same types of optimizations can be done
 to each instruction that maps to a kernel. However, the kernels in IR are not
-picked from a set of pre-made kernels in a supported back-end, but rather code
+picked from a set of pre-made kernels in a supported backend, but rather code
 generated into LLVM IR or another lower level IR based on the framework. This
 allows static analysis to better fuse redundant operations and kenerls together
 in a more efficient way than sequentially ordering kernels as done in
@@ -130,9 +140,9 @@ the DAG in more ways.
 Once a DL model is lowered into IR and its optimization passes are done, the IR
 is either passed into a bridge code generator or a more supported IR such as
 LLVM IR. A bridge will transform the framework IR into a format that is
-compatible wit h a particular back-end. There must be a bridge made for every
-back-end. Otherwise, in the case of LLVM based IR transformations, only
-back-ends that support LLVM IR are able to be used to generate a final binary.
+compatible wit h a particular backend. There must be a bridge made for every
+backend. Otherwise, in the case of LLVM based IR transformations, only
+backends that support LLVM IR are able to be used to generate a final binary.
 
 % TODO: DL arch -> IR -> IR CFG
 
@@ -146,48 +156,55 @@ efficiency.
 
 %middle end
 \subsection{Middle End}
+Most optimizations that occur and the engineering focus of end to end
+frameworks lie in the middle end. Middle ends must have a diverse set of
+backens in mind and be hardware agnostic. In order to achieve this, an IR or
+computational graph representation of a DL model is received from the front
+end.  Once a constructed dataflow graph in either operator or IR form is
+passed, several passes of static analysis and optimization occur \cite{TVM}
+\cite{DLVM} \cite{tensorflow}. Once a completely optimized dataflow graph is
+created, it must then be formatted to be compatible to a particular backend.
+This can either mean serializing a computational graph into a one that a
+backend can read or applying a transform to the optimized IR to generate code
+that is compatible with a backend.  Backends are vendor specific compilers that
+deal with the device level details for kernel implementations and tuning.
+Back-ends will support a subset of formats (ie either serialized computational
+graphs or a specific IR) and to that end, there must be significant engineering
+effort to support a backend for a given middlend. Consequently, most frameworks
+only support a handful or backends such as Nvidia's CUDA backend or BLAS for
+CPUs. For supported backends, the middlend must be sure to create a final
+computational graph or set of IR modules that do not contain operations or
+instructions that are not supported by the predefined kernels in the vendor
+provided library of a backend \cite{TVM}.
+
+Optimizations in the middle end can be separated into IR specific and
+computational graph specific optimizations. IR optimizations 
 
 %backend
 \subsection{Back End}
-"Backends’ implemen-
-tations are encapsulated so that the same computation can execute
-on multiple backends, such as CPUs and GPUs." - (ngraph)
+"Backends’ implementations are encapsulated so that the same computation can
+execute on multiple backends, such as CPUs and GPUs." - (ngraph)
+
+"Leveraging Specific Hardware Features and Abstrac-
+tions. DL accelerators introduce optimized tensor com-
+pute primitives [1, 12, 21], while GPUs and CPUs con-
+tinuously improve their processing elements. This poses
+a significant challenge in generating optimized code for
+a given operator description. The inputs to hardware in-
+structions are multi-dimensional, with fixed or variable
+lengths; they dictate different data layouts; and they have
+special requirements for memory hierarchy. The system
+must effectively exploit these complex primitives to ben-
+efit from acceleration. Further, accelerator designs also
+commonly favor leaner control [21] and offload most
+scheduling complexity to the compiler stack. For spe-
+cialized accelerators, the system now needs to gener-
+ate code that explicitly controls pipeline dependencies to
+hide memory access latency – a job that hardware per-
+forms for CPUs and GPUs" - TVM
+
 
 
 
 %Graph level optimizations
-
-%IR level optimizations
-Optimizations include domain- specific optimizations, such as algebra
-simplification, linear algebra fusion, matrix multiplication reordering, and AD
-checkpointing, and traditional compiler optimizations. - DLVM 
-
-Since DLVM IR is aware of mathematical operators such as tanh and power, the
-algebra simplifi- cation pass can find and simplify certain mathematical
-operations that are expensive or redundant.  For example, x2 can be simplified
-to x x ( stands for element-wise multiplication), and x0 can be simplified to
-constant 1. Matrix multiplication reordering is another classic optimization
-that minimizes the number of sub-operations in a chain of matrix
-multiplications with different dimensionality, based on matrix multiplication’s
-associativity.  Since the DLVM optimizer is aware of linear algebra operations
-with static dimensionality, maxi- mizing the performance by fusing verbose
-linear operations into a single matrix multiplication is beneficial as well.
-For example, it is very common to encounter expressions of the form Wx + b.
-When unoptimized, the matrix multiplication and the addition will be
-parallelized separately. Since launching compute kernels separately can be
-expensive, DLVM performs linear algebra fusion, which transforms subexpressions
-involving both matrix multiplication and element-wise operations into a single
-matrix multiplication instruction on padded tensors. Besides the simple pattern
-like an addition of matrix multiplication and a vector, we can apply the same
-approach to a polynomial of multiple matrix multiplications, turning the
-polynomial into a single matrix multiplication. For example, in a simple
-recurrent neural network (RNN), each cell of the recurrence is a feed forward
-neural network that takes two inputs: xt, the input local to the current
-timestep, and ht, the hidden state carried along the recurrence. The linear
-algebra fusion pass can simplify operations in ht = f (Wxt−1 +Uht−1 +b) from
-two matrix multiplications and two additions into a single matrix
-multiplication. A more aggres- sive, interprocedural version of linear algebra
-fusion can optimize parameter passing and memory allocation, so that the entire
-concatenated matrix can be created and passed around in the first place without
-reallocation - DLVM
 

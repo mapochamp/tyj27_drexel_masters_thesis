@@ -202,3 +202,38 @@ computation graphs when using computational graphs instead of IR.
 
 Existing LLVM utilities are used to compile the generated LLVM IR to the final binary. - DLVM
 
+%IR level optimizations
+
+Optimizations include domain- specific optimizations, such as algebra
+simplification, linear algebra fusion, matrix multiplication reordering, and AD
+checkpointing, and traditional compiler optimizations. - DLVM 
+
+Since DLVM IR is aware of mathematical operators such as tanh and power, the
+algebra simplifi- cation pass can find and simplify certain mathematical
+operations that are expensive or redundant.  For example, x2 can be simplified
+to x x ( stands for element-wise multiplication), and x0 can be simplified to
+constant 1. Matrix multiplication reordering is another classic optimization
+that minimizes the number of sub-operations in a chain of matrix
+multiplications with different dimensionality, based on matrix multiplication’s
+associativity.  Since the DLVM optimizer is aware of linear algebra operations
+with static dimensionality, maxi- mizing the performance by fusing verbose
+linear operations into a single matrix multiplication is beneficial as well.
+For example, it is very common to encounter expressions of the form Wx + b.
+When unoptimized, the matrix multiplication and the addition will be
+parallelized separately. Since launching compute kernels separately can be
+expensive, DLVM performs linear algebra fusion, which transforms subexpressions
+involving both matrix multiplication and element-wise operations into a single
+matrix multiplication instruction on padded tensors. Besides the simple pattern
+like an addition of matrix multiplication and a vector, we can apply the same
+approach to a polynomial of multiple matrix multiplications, turning the
+polynomial into a single matrix multiplication. For example, in a simple
+recurrent neural network (RNN), each cell of the recurrence is a feed forward
+neural network that takes two inputs: xt, the input local to the current
+timestep, and ht, the hidden state carried along the recurrence. The linear
+algebra fusion pass can simplify operations in ht = f (Wxt−1 +Uht−1 +b) from
+two matrix multiplications and two additions into a single matrix
+multiplication. A more aggres- sive, interprocedural version of linear algebra
+fusion can optimize parameter passing and memory allocation, so that the entire
+concatenated matrix can be created and passed around in the first place without
+reallocation - DLVM
+
