@@ -23,6 +23,36 @@ organization, compute functional units, (TVM)
 -  They are hard to program and you need framworks to ease the programmibility of all these accels and its fucking hard (deeptools)
 - 
 
+Leveraging Specific Hardware Features and Abstrac-
+tions. DL accelerators introduce optimized tensor com-
+pute primitives [1, 12, 21], while GPUs and CPUs con-
+tinuously improve their processing elements. This poses
+a significant challenge in generating optimized code for
+a given operator description. The inputs to hardware in-
+structions are multi-dimensional, with fixed or variable
+lengths; they dictate different data layouts; and they have
+special requirements for memory hierarchy. The system
+must effectively exploit these complex primitives to ben-
+efit from acceleration. Further, accelerator designs also
+commonly favor leaner control [21] and offload most
+scheduling complexity to the compiler stack. For spe-
+cialized accelerators, the system now needs to gener-
+ate code that explicitly controls pipeline dependencies to
+hide memory access latency – a job that hardware per-
+forms for CPUs and GPUs - TVM
+
+So basically: accels are all special and are made for DL so they have special
+memory and PEs made for processing large tensors in a certain way. but based
+on the memory layout and PE layout, the way you want to feed tensors differ.
+And because they all support different types of operations, different
+operations can be fused and others can't and others just don't exist or certain
+special operations exist for some but not for others. so programming them is hard
+and its up to the compiler to figure out what is the optimal set of operations
+to use. The level of acceleration you get from these accelerators is dependant
+on how well they are programmed. Scheduling, memory control, and pipeline dependencies
+are now all up to the programmer, something CPUs and GPUs handle for you within the
+hardware.
+
 -----------------------------------------------------------------------------
 |                                                                           |
 |                                                                           |
@@ -237,3 +267,97 @@ fusion can optimize parameter passing and memory allocation, so that the entire
 concatenated matrix can be created and passed around in the first place without
 reallocation - DLVM
 
+
+%Graph level optimizations
+
+operator fu- sion, which fuses multiple small operations together;
+constant-folding, which pre-computes graph parts that can be determined
+statically, saving execution costs; a static memory planning pass, which
+pre-allocates mem- ory to hold each intermediate tensor; and data layout
+transformations, which transform internal data layouts into back-end-friendly
+forms. We now discuss operator fusion and the data layout transformation - TVM
+
+Operator fusion: combining multiple operators into a single operation. Why this is
+helpful: different operators that are scheduled that can otherwise be fused may
+be scheduled in an unoptimized way. Every operation requires an input to be loaded
+into the accelerator and an output to be produced to be loaded back into main memory.
+Without explicit caching, or in cases where caching may not be feasible due to
+size constraints of the accelerator memory which would require tiling, this
+incurs extra memory loading/storing costs that adds additional time to inference.
+By fusing operators together, the cost of memory operations are removed. Further,
+by fusing ceratain oepratoins together, operation code generation can be optimzied
+as certain intermediate values may not have to be stored or other computations
+may be able to be skipped based on the available transformations that can be
+applied. The downside to this is that, fused operations have to either be code
+generated where the performance of the kernel is dependant on the quality of
+the code generator without manual tuning or vendor provided libraries must have
+pre-defined fused operators that have been optimized available to be used. As the
+number of operators and operations on a network grows, the number of possible operators
+that can be fused aslo grows with it. This means that without significant manual
+effort, code generation tools may create suboptimal kernels or vendor libraries may
+run out of pre-defined fused operators for the optimzier to work with, forcing a 
+suboptimal graph of unoptimally fused operators. The number of optimially fused
+operators grows combinoatroially with the number of supported data layouts and data
+types and accelertor intrincts are supported \cite{TVM}. No backend could possible
+have every combination of these fused operators for every DL architecture that exists,
+much less new operators that may be invented in teh future.
+
+Datalayout transformation:
+Different DLAs perform best on different sized and dimensions of tensors. Reformatting
+data to be tiled or adding reshape operators to better shape the data in such a way
+the DLA can exploit is one optimization to minimize inference time.
+
+
+%BACKEND
+"Backends’ implementations are encapsulated so that the same computation can
+execute on multiple backends, such as CPUs and GPUs." - (ngraph)
+
+"Leveraging Specific Hardware Features and Abstrac-
+tions. DL accelerators introduce optimized tensor com-
+pute primitives [1, 12, 21], while GPUs and CPUs con-
+tinuously improve their processing elements. This poses
+a significant challenge in generating optimized code for
+a given operator description. The inputs to hardware in-
+structions are multi-dimensional, with fixed or variable
+lengths; they dictate different data layouts; and they have
+special requirements for memory hierarchy. The system
+must effectively exploit these complex primitives to ben-
+efit from acceleration. Further, accelerator designs also
+commonly favor leaner control [21] and offload most
+scheduling complexity to the compiler stack. For spe-
+cialized accelerators, the system now needs to gener-
+ate code that explicitly controls pipeline dependencies to
+hide memory access latency – a job that hardware per-
+forms for CPUs and GPUs" - TVM
+
+- ok and like the the programmer never actually creates a runtime or execution engine that schedules shit and does the loads and stores. they only write the model. so like al l of that is created and generated by the backend. so a runtime execution engine is created that does the scheduling, memory management, and kernel calls. so really the bakcend is is some super code generator and compiler. For example tensorRT:
+	- build phase: "responsible for optimizing a model, and producing an ENGINE"
+		- the builder searches for available kernels to call and build together 		to execute your graph.
+		- builder eliminates dead coputations, folds constants (wtf?),
+		and reorders and combines operations to run more efficiently on
+		the GPU. this also means reducing and quantizing fpus
+		- the engine creates a serialized plan which can be saved to
+		disk or deserialized immedietly for use
+	- runtime phase: deserialize a plan to create an engine and create an
+	execution context from the engine. Then, repeatedly: populate input
+	buffers for inference, call enqueue() on the execution context to run
+	inference
+		- the engine just means the execution context: the saved model,
+		inputs, outputs, size of the inputs outputs, the network graph
+		of operations etc
+
+The backend of an end-to-end framework is the final compiler that produces
+a binary to be executed. This involves taking the output of a middle end (ie.
+serialized computational graph, IR) and mapping the operations to a kernel
+or compiling the IR generated code into a kernel for the DLA. Kernels are then
+statically analyzed to identify and apply optimizations such as loop unrolling
+and loop reordering to minimize latency. At this point, no runtime execution
+context, memory allocations, or scheduler has been created by the front or middle
+end and is up to the compiler to generate. All optimizations and transforms
+that have been applied have been only to the DL model description provided
+by the programmer.
+
+TensorRT includes a deep learning inference optimizer and runtime that delivers low latency and high throughput for deep learning inference applications. The core of NVIDIA TensorRT is a C++ library that facilitates high-performance inference on NVIDIA GPUs. TensorRT takes a trained network, which consists of a network definition and a set of trained parameters, and produces a highly optimized runtime engine that performs inference for that network. Refer to the following TensorRT product documentation for more information. - TensorRT
+
+
+just do stuff. neber stay idle. shkreli will fire u if you do.

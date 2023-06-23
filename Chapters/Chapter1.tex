@@ -228,3 +228,29 @@ and an element-wise add \cite{DLVM}.
 
 %backend
 \subsection{Back End}
+A backend is typically not something that is component of a framework
+but a vendor provided compiler for a DLA that may be hooked into a compatible
+middle end. A backend may support a small set of input formats that describe
+a DL model in the form an optimized version of a computational graph or IR.
+At this point, all optimizations and transforms that have occurred have
+only been applied to the DL model description provided by the programmer.
+The backend will be responsible in creating
+an execution engine and either outputting a compiled executable or managing
+a runtime environment.
+
+A backend like TensorRT \cite{tensorRT} consists of two phases: a build phase
+and runtime phase. During the build phase a kernel search is done to map
+available kernels to the operators in the dataflow graph the middlend passed. A
+serialized version the graph is then statically analyzed to be used as context
+to generate code for the execution context and runtime engine.  An engine is a
+represenation of the optimzied model with a scheduler, memory manager, a
+network of oeprators, their inputs and outputs, and meta data of input and
+output tensors such as size and name of the tensors.
+During the runtime phase, an execution context and runtime engine will be
+instantiated. The execution context can then be saved to be loaded later or started
+to run inference tasks.
+
+Kernels are highly specialized and must be tuned for a DLAs particular memory
+hierarchy, data layout, and intrinsics. Kernels are created either code generated
+or supplied by a vendor library. Kernel tuning optmizations are handled by the backend.
+This includes loop unrolling, caching, loop reordering, and tiling.
