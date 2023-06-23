@@ -5,6 +5,36 @@
 |                                                                           |
 |                                                                           |
 -----------------------------------------------------------------------------
+
+The on-chip SPMs are abstractions for the on-chip buffers of DNN
+accelerators. They are fast but with size limitation, and are visible to operator
+programmers and compiler. They usually play the role of caching partial input data
+and temporary computational results. While the off-chip DRAMs are large but slow.
+They are used for the storage of large quantity DNN parameters and input/output
+data required by operators. The communications between the on-chip SPMs and the
+off-chip DRAMs are accomplished through explicit DMA load and store
+instruction - toplib
+
+For most reconfigurable DNN accelerators, there are at least three levels of memory
+hierarchy: off-chip memory (DRAM), on-chip scratchpad memory (SPM) and
+registers. Unlike the caches of CPUs, which are managed by the hardware
+automatically and are invisible to programmers, the on-chip buffers of DNN
+accelerators are usually managed by programmers explicitly due to performance and
+power concerns. To simplify the programmability of DNN accelerators, we hide the
+hardware execution details and expose the performance-critical parts to
+programmers - toplib
+
+These SIMD instructions usually have the requirements of specific memory
+alignment and data layout. For example, for the vector addition instruction of
+Cambricon-ACC, the memory address of two source vectors’ must be multiple of 32
+bytes. For Cambricon-ACC, the convolution, pooling and matrix multiplication
+intrinsic primitives have specific data layout requirements. The data layout of
+their input filters must follow the NHWC (N: batch size, H: height, W: width,
+C: channel) layout requirement. Primitives load and store denote the DMA
+communications between the on-chip SPMs and off-chip DRAM - toplib
+
+
+
 - There is a growing demand to deploy smart applications to a wide spectrum of
 devices, rang- ing from cloud servers to self-driving cars and embed- ded
 devices. Mapping DL workloads to these devices is complicated by the diversity
@@ -361,3 +391,56 @@ TensorRT includes a deep learning inference optimizer and runtime that delivers 
 
 
 just do stuff. neber stay idle. shkreli will fire u if you do.
+
+
+For the sake of brevity, we omit the kernel explanation details. But for now, it
+suffices to see that even this trivial MLP implementation involves many low-level
+programming chores. For example, the vector-vector and matrix-vector instructions,
+e.g., VAV and MMV, usually need special registers to store the memory address and
+the size of input data. Programmers have to manually allocate these registers and
+track the lifetime of each memory block, which is burdensome and error-prone.
+Besides, these CISC style instructions usually have special address alignment
+requirements, programmers have to manually check the address alignment of each
+memory block. This kind of low-level coding is very typical during the development
+of DNN operators. - toplib
+
+^ include this into the backend kernel shpeel and talk about how its important
+to do non kernel based optimziations to squeeze as much hardware agnostic
+optimziatiosn as possible bc kernel based shits are hard af. Also include into the
+backend kenrel shpeel by talkin about howhard it is to do code generation and have
+good operater fusion and manual tuning so we need the backend to do this shit for us
+if middle end did operator fusion. like explain that the middle end has to know that
+certain operator fusions can happen based on the backed and its hte backends responsibilty
+to konw how to create those fused oeprators by either probding vendor provided
+predeinfed fused operators or using code generation liek this paper to create the kenrnesl
+idk make things sound really complicated by talking about spceifics of hardware like this
+paper so that we can talk more shit in our background that isn't relevant to the thesis
+
+
+we should have a section on ILP probably or someshit. idk how much space to
+give to this section. we should also talk about binpacking and time variant binapcking.
+oh fuck i need to read up on this before talking to shack
+
+The trick of
+expression template is done by letting operations and functions return abstracted
+operation objects that contain all necessary information to construct the expression
+tree, instead of calculating the result themselves. The expression tree is only
+evaluated when the actual need arises (i.e., lazy evaluation). Through the use of
+template meta-programming, it is even possible to manipulate the expression tree at
+compile time to apply algebraic transformations (enumeration based rewriting
+rules). For example, we define fst as a notational shorthand for map(fst, x), where x
+is a n-order tensor, marked as ½x0; x1; :::; x n1, i.e., an array of tuples. Function fst
+yields a tensor which is composed of the first component of each tuple in x, i.e.,
+fstðxÞ ¼ ½xð0Þ
+0 ; xð0Þ
+1 ; :::; xð0Þ
+n1. Programmers wrote such an algorithmic expression
+y ¼ fstðreduceðþ0; xÞÞ 1 , where reduce operator þ0 means apply a reduction
+summation along the first dimension of the input tensor x. TOpLib will transform
+this expression into y ¼ reduceðþ0; fstðxÞÞ 2 . Obviously, reduce operation þ0 is
+more computation-intensive than the map operation fst. Compared with expression
+1 , the fst operation in 2 can filter out input data of the reduce operation and
+maintain the original semantics. This transformation can eliminate redundant
+computations, and thereby reducing the overall cost - top lib
+
+
