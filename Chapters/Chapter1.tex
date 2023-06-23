@@ -120,7 +120,7 @@ frameworks.
 IR in DL frameworks are a language that support linear algebra instructions and
 other general purpose instructions (eg., branch, conditional- branch). DL
 models are lowered into the framework's IR and a DAG of control flow
-\cite{ngraph} can be created where the vertices are operations and edges are
+\cite{nGraph} can be created where the vertices are operations and edges are
 data. This is similar to a computational graph, however, the expressivness and
 modularity that IR provides may lead to more optimization oppurtunities
 \cite{DLVM}. In a computation graph, each kernel can be tuned to maximize its
@@ -158,16 +158,16 @@ efficiency.
 \subsection{Middle End}
 Most optimizations that occur and the engineering focus of end to end
 frameworks lie in the middle end. Middle ends must have a diverse set of
-backens in mind and be hardware agnostic. In order to achieve this, an IR or
+backends in mind and be hardware agnostic. In order to achieve this, an IR or
 computational graph representation of a DL model is received from the front
-end.  Once a constructed dataflow graph in either operator or IR form is
-passed, several passes of static analysis and optimization occur \cite{TVM}
-\cite{DLVM} \cite{tensorflow}. Once a completely optimized dataflow graph is
-created, it must then be formatted to be compatible to a particular backend.
-This can either mean serializing a computational graph into a one that a
-backend can read or applying a transform to the optimized IR to generate code
-that is compatible with a backend.  Backends are vendor specific compilers that
-deal with the device level details for kernel implementations and tuning.
+end. Once a constructed dataflow graph in either computational graph or IR
+form is passed, several passes of static analysis and optimization occur
+\cite{TVM} \cite{DLVM} \cite{tensorflow}. Once a completely optimized dataflow
+graph is created, it must then be formatted to be compatible to a particular
+backend. This can either mean serializing a computational graph into a one
+that a backend can read or applying a transform to the optimized IR to generate
+code that is compatible with a backend. Backends are vendor specific compilers
+that deal with the device level details for kernel implementations and tuning.
 Back-ends will support a subset of formats (ie either serialized computational
 graphs or a specific IR) and to that end, there must be significant engineering
 effort to support a backend for a given middlend. Consequently, most frameworks
@@ -178,33 +178,53 @@ instructions that are not supported by the predefined kernels in the vendor
 provided library of a backend \cite{TVM}.
 
 Optimizations in the middle end can be separated into IR specific and
-computational graph specific optimizations. IR optimizations 
+computational graph specific optimizations. For graph level optimizations,
+they are typically higher level than kernel tuning and involve graph
+restructuring and fusing of subgraphs. Speicific optimizations include
+re-ordering or scheduling of operators to maximize data reuse
+to hide memory transfer latencies, mapping operators to available kernels
+for a target DLA, data layout transformations and operator fusion \cite{TVM}.
+
+Operator fusion is the combining of multiple operators into a single operator.
+This is helpful because different operators that are distinct from one another
+that can otherwise be fused may be scheduled in an unoptimized way or incur
+unnecessary memory transfer costs. Every operation requires an input tensor to
+be loaded into the accelerator and an output tensor to be produced to be loaded
+back into main memory. Without explicit data pinning memory management or
+caching, or in cases where pinning may not be feasible due to memory size
+constraints of the DLA, intermediate values between two operators where the
+output of one is the input to the other, may be necessarily transferred back
+and forth between main and device memory. By fusing operators together,
+the cost of memory transfers due to separated operators are removed.
+Further, by fusing operators together, operator code generation can
+be optimized as certain intermediate values may not have to be stored or other
+computations may be able to be reduced into simpler forms \cite{TVM} \cite{ONNX}.
+A disadvantage to this is, fused operations have to either be code generated
+where the performance of the kernel is dependant on the quality of the code
+generator without any manual tuning or vendor provided libraries must have
+pre-defined fused operators that are available to be mapped into the computational
+graph. As the number of operators on a network grows, the number of possible
+operators that can be fused also grows with it combinatorially \cite{TVM}.
+This is exacerbated wit hthe number of supported data layouts, data types, 
+and DLA intrinsivs that are supported. To this end, a large fused operator
+cannot be created such that memory transfer costs are fully hidden optimally.
+
+Data layout transformations are the reformatting of how tensors are passed
+to a DLA based on the specific memory hierarchy that the DLA has. To exploit
+the shape of tensors the DLA best works with, tiling along certain dimensions or
+adding reshape operators to change the layout of the tensor in main memory before
+sending to the DLA is one way to minimize inference time and is done at the
+computational graph level.
+
+Many of the optimizations that apply to computational graphs can also be done
+to IR based frameworks. But because they may be lowered into a lower level IR,
+more granular and kernel specific optimizations can also be applied before
+being passed to the backend. One optimization example is algebraic
+simplification and linear algebra fusion \cite{DLVM}. This involved reordering
+matrix multiplications and other linear operations into a single matrix
+operation. Another example is transforming subexpressions involving multiple
+types of operations into a single matrix operation such as a matrix multiply
+and an element-wise add \cite{DLVM}.
 
 %backend
 \subsection{Back End}
-"Backends’ implementations are encapsulated so that the same computation can
-execute on multiple backends, such as CPUs and GPUs." - (ngraph)
-
-"Leveraging Specific Hardware Features and Abstrac-
-tions. DL accelerators introduce optimized tensor com-
-pute primitives [1, 12, 21], while GPUs and CPUs con-
-tinuously improve their processing elements. This poses
-a significant challenge in generating optimized code for
-a given operator description. The inputs to hardware in-
-structions are multi-dimensional, with fixed or variable
-lengths; they dictate different data layouts; and they have
-special requirements for memory hierarchy. The system
-must effectively exploit these complex primitives to ben-
-efit from acceleration. Further, accelerator designs also
-commonly favor leaner control [21] and offload most
-scheduling complexity to the compiler stack. For spe-
-cialized accelerators, the system now needs to gener-
-ate code that explicitly controls pipeline dependencies to
-hide memory access latency – a job that hardware per-
-forms for CPUs and GPUs" - TVM
-
-
-
-
-%Graph level optimizations
-
