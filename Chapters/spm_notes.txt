@@ -1,0 +1,11 @@
+Toplib does graph coloring for all the tensors and i'm guessing so does onsram. how tf do you do this on
+multiple spms?
+
+toplib does a thing where the partition sizes of the spm is the max(same color tensors)
+so its basically register allocation but with heterogenous register sizes.
+
+I guess i can do this with register spilling on 3 spms
+
+Greedy implementation: they don't specify how they color or build the graph but they do
+tell you the entire algorthim if you figure that part out. all you know is that its greedy
+coloring. ig i can find an implmentation online somehere..
