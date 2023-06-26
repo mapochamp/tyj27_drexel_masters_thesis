@@ -1,3 +1,39 @@
+-----------------------------------------------------------------------------
+|                                                                           |
+|                                                                           |
+|                       scratchpad memory outline                           |
+|                                                                           |
+|                                                                           |
+-----------------------------------------------------------------------------
+
+- what a spm is
+
+- where spm's are used
+	- embedded
+	- DLA
+
+- register allocation
+	- graph coloring
+	- spilling
+
+- scratchpad memory management
+	- graph coloring
+		- graph coloring + memory coloring paper + toplib
+	- heursitics
+		- papers referenced in graph coloring paper
+		- on sram
+		- top lib
+	- ILP
+		- papers referenced in graph coloring paper + multicore w/e paper
+	- virtual memory / MMU style
+
+-----------------------------------------------------------------------------
+|                                                                           |
+|                                                                           |
+|                       notes + scratch                                     |
+|                                                                           |
+|                                                                           |
+-----------------------------------------------------------------------------
 Toplib does graph coloring for all the tensors and i'm guessing so does onsram. how tf do you do this on
 multiple spms?
 
