@@ -40,13 +40,59 @@ Deep learning accelerators (DLA) are hardware made specifically to accelerate
 common operations needed to run inference or training on DL models. 
 
 \subsection{Existing Scratchpad Memory Management Schemes}
-Scratchpad memory management is usually manually created by developers
+Because SPMs do not contain any hardware logic that deals with pinning and
+eviction, all memory transfers between main memory and on-chip-scratchpad-memory
+must be explicitly programmed. In workloads where the access patterns are very
+predictable or deterministic, this is ideal as the overhead of tag-decoding
+logic is avoided and superior performance gains can be had with carefully
+optimized memory transfers. Further, software-managed memory leads to more
+predictable timing and data transfer costs since because of the lack of
+tag-decoding logic \cite{graphColoring}. This makes the use of scratchpads
+highly desirable for deep learning workloads where the computations and
+dataflow are deterministic for any given architecture and therefore the
+memory management strategy can be highly tuned for. Consequently,
+the runtime performance of an application is highly dependant on the
+ability of a strategy to optimally manage memory and exploit data reuse.
+
+Scratchpad memory management is usually manually programmed by developers
 that are specialized in a particular architecture. This is the case for
 DLA kernels as well, as most kernels are provided as vendor supplied libraries
 where the memory management is optimized \cite{TVM}.
 
-While manual tuning is still used, compiler based automated scratchpad
-memory management has 
+While manual tuning is still used, there exist many limitations that make it
+unattractive. Manual tuning requires significant engineering effort from
+developers that can otherwise be productively used else where, is vulnerable to
+bugs, and a strategy is not portable across different architectures.  Due to
+these limitations, techniques for compiler based automated scratchpad memory
+management have been developed to ease the burden of programmers. The problem
+of portability and need for an automated alternative has been exacerbated for
+deep learning frameworks and engineers. The same model could be deployed on
+several different types of architectures, each with their own memory hierarchy.
+Creating memory optimized operator schedules, pinning directives, and kernels
+for each of these architectures is time consuming and requires specialized
+knowledge of each architecture. The implementation of such strategies requires
+a low level language to describe as well, which forces a DL engineers who
+typically work in high level language frameworks to be an expert in many more
+fields at once.  While most automated compiler implementations have been aimed
+at embedded devices programmed in C \cite{graphColoring} \cite{memoryColoring},
+in recent years there have been compiler tools built for deep learning
+workloads as well \cite{onsram} \cite{toplib}.
+
+The goal of an SPM management strategy is to minimize incurring the cost of
+data transfers by maximizing the reuse of data in the SPM. To achieve this,
+three main techniques explored in the compiler space: graph coloring, Integer
+Linear Programming (ILP), and heuristic based approaches.
+
+Graph coloring for SPMs comes from using graph coloring for the register
+allocation problem \cite{registerAllocation} \cite{graphColoring}.
+
+
+% register allocation
+% graph coloring
+% ILP
+% heurstics
+
+
 
 \section{Deep Learning Frameworks}
 \subsection{Introduction}
@@ -59,7 +105,7 @@ implementation and execution details from the programmer such that the
 programmer may focus on the model creation only. The abstraction of such
 details forces the trade-off of performance and generality as the frameworks
 must optimize the same model for runtime and memory efficiency on a diverse set
-of available hardware that all have different memory heiarchies, number of PEs,
+of available hardware that all have different memory hierarchies, number of PEs,
 and supported operations. Frameworks must be able to decipher model
 descriptions in high level languages such as Python, apply hardware agnostic
 optimizations, and map operations to a specific hardware create an executable
@@ -128,8 +174,8 @@ IR in DL frameworks are a language that support linear algebra instructions and
 other general purpose instructions (eg., branch, conditional- branch). DL
 models are lowered into the framework's IR and a DAG of control flow
 \cite{nGraph} can be created where the vertices are operations and edges are
-data. This is similar to a computational graph, however, the expressivness and
-modularity that IR provides may lead to more optimization oppurtunities
+data. This is similar to a computational graph, however, the expressiveness and
+modularity that IR provides may lead to more optimization opportunities
 \cite{DLVM}. In a computation graph, each kernel can be tuned to maximize its
 performance in isolation. Outside of manual kernel turning, performance gains
 come from the reordering of schedules and changing the access pattern of
@@ -137,7 +183,7 @@ tensors.  In IR based frameworks, the same types of optimizations can be done
 to each instruction that maps to a kernel. However, the kernels in IR are not
 picked from a set of pre-made kernels in a supported backend, but rather code
 generated into LLVM IR or another lower level IR based on the framework. This
-allows static analysis to better fuse redundant operations and kenerls together
+allows static analysis to better fuse redundant operations and kernels together
 in a more efficient way than sequentially ordering kernels as done in
 computational graph based frameworks. Further, different IRs may come with
 a wider range of operations that may be supported than the set of operations in
@@ -187,7 +233,7 @@ provided library of a backend \cite{TVM}.
 Optimizations in the middle end can be separated into IR specific and
 computational graph specific optimizations. For graph level optimizations,
 they are typically higher level than kernel tuning and involve graph
-restructuring and fusing of subgraphs. Speicific optimizations include
+restructuring and fusing of subgraphs. Specific optimizations include
 re-ordering or scheduling of operators to maximize data reuse
 to hide memory transfer latencies, mapping operators to available kernels
 for a target DLA, data layout transformations and operator fusion \cite{TVM}.
@@ -212,8 +258,8 @@ generator without any manual tuning or vendor provided libraries must have
 pre-defined fused operators that are available to be mapped into the computational
 graph. As the number of operators on a network grows, the number of possible
 operators that can be fused also grows with it combinatorially \cite{TVM}.
-This is exacerbated wit hthe number of supported data layouts, data types, 
-and DLA intrinsivs that are supported. To this end, a large fused operator
+This is exacerbated wit the number of supported data layouts, data types, 
+and DLA intrinsics that are supported. To this end, a large fused operator
 cannot be created such that memory transfer costs are fully hidden optimally.
 
 Data layout transformations are the reformatting of how tensors are passed
@@ -250,14 +296,14 @@ and runtime phase. During the build phase a kernel search is done to map
 available kernels to the operators in the dataflow graph the middlend passed. A
 serialized version the graph is then statically analyzed to be used as context
 to generate code for the execution context and runtime engine.  An engine is a
-represenation of the optimzied model with a scheduler, memory manager, a
-network of oeprators, their inputs and outputs, and meta data of input and
-output tensors such as size and name of the tensors.
-During the runtime phase, an execution context and runtime engine will be
-instantiated. The execution context can then be saved to be loaded later or started
-to run inference tasks.
+representation of the optimized model with a scheduler, memory manager, a
+network of operators, their inputs and outputs, and meta data of input and
+output tensors such as size and name of the tensors.  During the runtime phase,
+an execution context and runtime engine will be instantiated. The execution
+context can then be saved to be loaded later or started to run inference tasks.
 
 Kernels are highly specialized and must be tuned for a DLAs particular memory
-hierarchy, data layout, and intrinsics. Kernels are created either code generated
-or supplied by a vendor library. Kernel tuning optmizations are handled by the backend.
-This includes loop unrolling, caching, loop reordering, and tiling.
+hierarchy, data layout, and intrinsics. Kernels are created either code
+generated or supplied by a vendor library. Kernel tuning optmizations are
+handled by the backend.  This includes loop unrolling, caching, loop
+reordering, and tiling.
