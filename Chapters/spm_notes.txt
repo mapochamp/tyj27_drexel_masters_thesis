@@ -46,6 +46,37 @@ Greedy implementation: they don't specify how they color or build the graph but 
 tell you the entire algorthim if you figure that part out. all you know is that its greedy
 coloring. ig i can find an implmentation online somehere..
 
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+----------------------------what is spm?-------------------------------
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Scratchpad memory (SPM) [3] is a kind of fast on-chip memory managed by
+software (a programmer or a compiler), while cache has to query the flag bit
+which is managed by hardware to check cache misses or hits. Compared with the
+hardware cache, SPM does not need to perform flag bit judgment and other tasks,
+and has the advantages of low power consumption and fast access. SPM is
+initially used in embedded systems to meet the real-time and time predictable
+requirements of embedded systems [17]. Besides, the Scratchpad memory is also
+extensively used in FPGAs and is also employed as application-specific caches
+[33, 34]. The current heterogeneous many-core processors, such as Adapteva
+Epiphany, Sunway TaihuLight, and IBM Cell, also use SPM to achieve better per-
+formance and lower energy consumption. The characteristic of this type of
+archi- tecture is that each accelerator core has its own SPM that can be
+accessed at high speed but has limited space.  The SPM is connected to the
+off-chip memory through a bus [26]. The accel- erator cores can only access the
+data of off-chip memory directly by global load/ store instructions or direct
+memory access (DMA) [11, 29]. The accelerator cores can communicate with each
+other by a network-on-chip (NoC). However, pro- grammers need to explicitly
+manage the data transfer between the SPM and the off-chip memory in the
+application, which hinders program development - many core architectures
+
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+
+
+
 Scratchpad memory (SPM), a fast on-chip SRAM managed by software, is widely
 used in embedded systems. This article introduces a general-purpose compiler
 approach, called memory coloring, to assign static data aggregates, such as
@@ -122,3 +153,26 @@ we use the entire thing lmao.
 
 
 Existing methods: ILP, heurstic, color graphing
+
+
+% register allocation
+the relationship between run-time performance and effective use of a ma-
+chine’s register set is well understood. In a compiler, the process of deciding
+which values to keep in registers at each point in the generated code is called
+register allocation - register allocation
+
+popular techniques for performing register allocation are based on a graph
+coloring paradigm. These allocators construct a graph representing the con-
+straints that the allocator must preserve. Using graph techniques, they
+discover a mapping from values in the procedure to registers in the target
+machine; the mapping must observe the constraints.  - register allocation
+
+
+% ILP
+bro many core archtiecture is fucking useless. all it does is just figure out
+an optimal granularity of data transfers. not an actual pinning schedule.
+basically a glorified tiler.
+
+verma ILP allocation is literally just extending the ILP model for register allocation
+into the SPM by splitting SPM into registers as well.
+

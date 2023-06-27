@@ -84,15 +84,25 @@ three main techniques explored in the compiler space: graph coloring, Integer
 Linear Programming (ILP), and heuristic based approaches.
 
 Graph coloring for SPMs comes from using graph coloring for the register
-allocation problem \cite{registerAllocation} \cite{graphColoring}.
+allocation problem \cite{registerAllocation} \cite{graphColoring}.  A compiler
+can decide what variables should be kept in what registers during their
+lifetimes and how often they should be swapped between main memory.  The
+objective of register allocations are the same as scratchpad management
+schemes: to minimize the amount of swaps. This is achieved by constructing
+interference graphs of variables whose lifetimes overlap and therefore require
+to be placed in separate registers. An interference graph can then be used to
+apply a greedy graph coloring algorithm where the number of registers maps to
+the number of colors to determine the optimal register allocation scheme.
+Scratchpad management can be done by extending this idea where the scratchpad
+is partitioned into psuedo-register files \cite{graphColoring}. Applying this
+to deep learning workloads is non-trivial as the tensor sizes are variable and
+can be larger than the size of the scratchpad. \cite{toplib} discusses graph
+coloring implantations for deep learning workloads in the context of maximizing
+SPM utilization within kernel code.
 
-
-% register allocation
-% graph coloring
-% ILP
-% heurstics
-
-
+Similarly, by considering an SPM with fixed size partitions to emulate registers,
+an Integer Linear Program (ILP) made to solve the register allocation problem can
+be extended to find an optimal strategy for an SPM as discussed in \cite{verma}.
 
 \section{Deep Learning Frameworks}
 \subsection{Introduction}
