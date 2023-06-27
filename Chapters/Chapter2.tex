@@ -9,29 +9,29 @@
 %----------------------------------------------------------------------------------------
 \section{Deep Learning Compilers}
 
-- What are deep learning compilers?
-
-- What sort of deep learning compilers exist?
-	- JIT
-	- Graph based
-	- optimization types and differences in compilers
-
-"Few research efforts have proposed end-to-end software stacks that support AI accelerators. 
-These are realized either as standalone custom frameworks or as software extensions to existing Deep Learning
-frameworks." \cite{onsram}
-What are tensors in the context of compilers and why do they matter
-	multi dimensional array that gets accessed a certain way and takes up memory for all we care
-What operations exist in deep learning
-- mat mul
-- convolution
-- adding?
-- Training
-- stuff ig
-What optimizations exist on deep learning models
-What is graph level representation
-What is IR 
-
-NGRAPH AND DEEPTOOLS HAVE GOOD RELATED WORKS SECTIONS THAT HAVE GOOD SUMMARIES ON EACH DL COMPILER
+%- What are deep learning compilers?
+%
+%- What sort of deep learning compilers exist?
+%	- JIT
+%	- Graph based
+%	- optimization types and differences in compilers
+%
+%"Few research efforts have proposed end-to-end software stacks that support AI accelerators. 
+%These are realized either as standalone custom frameworks or as software extensions to existing Deep Learning
+%frameworks." \cite{onsram}
+%What are tensors in the context of compilers and why do they matter
+%	multi dimensional array that gets accessed a certain way and takes up memory for all we care
+%What operations exist in deep learning
+%- mat mul
+%- convolution
+%- adding?
+%- Training
+%- stuff ig
+%What optimizations exist on deep learning models
+%What is graph level representation
+%What is IR 
+%
+%NGRAPH AND DEEPTOOLS HAVE GOOD RELATED WORKS SECTIONS THAT HAVE GOOD SUMMARIES ON EACH DL COMPILER
 
 
 
@@ -66,18 +66,18 @@ NGRAPH AND DEEPTOOLS HAVE GOOD RELATED WORKS SECTIONS THAT HAVE GOOD SUMMARIES O
 %\subsection{TVM}
 
 \section{Existing Scratchpad Memory Management Schemes}
-"The main differ- ence between this high-level representation and a low- level
-compiler intermediate representation (IR), such as LLVM, is that the
-intermediate data items are large, multi-dimensional tensors. Computational
-graphs pro- vide a global view of operators, but they avoid specifying how each
-operator must be implemented. Like LLVM IRs, a computational graph can be
-transformed into func- tionally equivalent graphs to apply optimizations." - (TVM)
-
-%^
-%|
-basically because the intermediate values are variable-sized and big af between operations,
-you can't really just put a "bound" on tensor sizes (well you can if you know the DL arch but still the
-variables size range so widely you're gonna get really really bad utiliztaion) you can't just slap on
-graph coloring and separate the SPM into a bunch of registers. that only works for super regular things
-in embedded.
+%"The main differ- ence between this high-level representation and a low- level
+%compiler intermediate representation (IR), such as LLVM, is that the
+%intermediate data items are large, multi-dimensional tensors. Computational
+%graphs pro- vide a global view of operators, but they avoid specifying how each
+%operator must be implemented. Like LLVM IRs, a computational graph can be
+%transformed into func- tionally equivalent graphs to apply optimizations." - (TVM)
+%
+%%^
+%%|
+%basically because the intermediate values are variable-sized and big af between operations,
+%you can't really just put a "bound" on tensor sizes (well you can if you know the DL arch but still the
+%variables size range so widely you're gonna get really really bad utiliztaion) you can't just slap on
+%graph coloring and separate the SPM into a bunch of registers. that only works for super regular things
+%in embedded.
 
