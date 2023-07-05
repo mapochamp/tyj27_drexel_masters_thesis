@@ -51,6 +51,29 @@ coloring. ig i can find an implmentation online somehere..
 ----------------------------what is spm?-------------------------------
 -----------------------------------------------------------------------
 -----------------------------------------------------------------------
+
+The advent of Deep Neural Networks (DNNs) and the growth of Artificial
+Intelligence (AI) based applications and services has revitalized the
+application landscape across the spectrum of computing devices, from mobile
+phones and edge devices to data centers and the cloud. The success of DNNs can
+be attributed in part to their large-scale structure (100s of layers with
+millions of parameters), which imposes a high computational cost. This has
+triggered a rapid evolution in computer architecture in recent years, from many
+demonstrations of specialized accelerators for DNNs [6, 10, 14, 16, 19, 29, 36,
+49, 59, 63, 76, 91, 94] to AI cores featured in many commercial products, such
+as Google TPUs, NVIDIA Tensor Cores, Intel NNP [1, 2, 100], among others.
+Computations in DNNs can be expressed using a small number (few 10s) of
+primitives, which lends itself well to hardware acceleration. DNN accelerators
+have constantly pushed the enve- lope of compute efficiency, achieving peak
+processing capabilities from 100s of GOPS/W to >10 TOPS/W. As summarized by
+Hennessy and Patterson in the 2019 Turing Award Lecture [40], the key hardware
+techniques to boost compute efficiency include low-precision arithmetic,
+architec- tures to exploit parallelism, and software-managed Scratchpad Memory
+(SPM) hierarchy. How- ever, the key to the success of AI accelerators lies in
+how they are programmed to sustain high utilization with little/no loss in
+end-user productivity. The heterogeneity in computing character- istics across
+layers and operations makes performance-aware programming a challenge. - ONSRAM
+
 Scratchpad memory (SPM) [3] is a kind of fast on-chip memory managed by
 software (a programmer or a compiler), while cache has to query the flag bit
 which is managed by hardware to check cache misses or hits. Compared with the
@@ -70,12 +93,6 @@ memory access (DMA) [11, 29]. The accelerator cores can communicate with each
 other by a network-on-chip (NoC). However, pro- grammers need to explicitly
 manage the data transfer between the SPM and the off-chip memory in the
 application, which hinders program development - many core architectures
-
------------------------------------------------------------------------
------------------------------------------------------------------------
------------------------------------------------------------------------
-
-
 
 Scratchpad memory (SPM), a fast on-chip SRAM managed by software, is widely
 used in embedded systems. This article introduces a general-purpose compiler
@@ -110,6 +127,10 @@ ing explicit data transfers required between SPM and off-chip memory. Such
 a manual approach is often time consuming and error prone. Moreover, the
 handcrafted code is not portable, since it is usually customized to a particular
 architecture - graph coloring paper
+
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
 
 To overcome these limitations, we propose a general-purpose compiler ap-
 proach, called memory coloring, to determining the dynamic allocation and
