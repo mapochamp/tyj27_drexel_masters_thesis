@@ -7,50 +7,46 @@
 %	SECTION 1
 %----------------------------------------------------------------------------------------
 
-\section{Deep Learning Architectures}
-
-%-----------------------------------
-%	SUBSECTION 1
-%-----------------------------------
-\subsection{Perceptron}
-
-%-----------------------------------
-%	SUBSECTION 2
-%-----------------------------------
-\subsection{CNN}
-
-%-----------------------------------
-%	SUBSECTION 3
-%-----------------------------------
-
-\subsection{RNN}
-
-
-%-----------------------------------
-%	SUBSECTION 4
-%-----------------------------------
-
-\subsection{LSTM}
-
 %----------------------------------------------------------------------------------------
 %	SECTION 2
 %----------------------------------------------------------------------------------------
 \section{Accelerators and Scratchpad Memory}
+The growth in Deep Learning (DL) has grown substantially in the past few years
+enabled by the availability in hardware to train the Deep Neural Network (DNN)
+models. There exists many use cases of DL models such as natural language
+processing, image recognition, media generation, and media alteration. Each of
+these use cases demand different workloads as they use different DL model
+architectures and are deployed in a variety of environments. This creates the
+need of a diverse set of hardware call Deep Learning Accelerators (DLAs) that
+are specifically made to compute DL workloads efficiently for a specific
+purpose. This is due to the nature of DNNs. They are made up of millions of
+parameters, dozens of different operations that work on multi dimensional data
+structures made of thousands of floating point units. However, because of the
+finite set of primitive operations that are needed to support the computation
+of these models, the repetitive nature of these operations, and type of data
+they work with; DL models are highly parallelizable and specialized hardware
+can be built to exploit this with maximum efficiency. Some exist to be power
+efficient and work in embedded devices while others are made to have no power
+constraints to maximize compute speed in cloud clusters. In contrast, general
+purpose hardware are not able to meet power management needs of many workloads
+or cannot compute inference fast enough to meet timing requirements. Examples
+of DLAs used are TPUs from Google \cite{tensorflow}, NVDIA's NVDLA \cite{nvdla}, and Intel NNP \cite{nnp}.
 
-% what a DLA is and why they necessary bc of huge fucking DL model architectures
-% and how they require some huge fucking levels of flops
-% and how they're necessary for different types of workloads like
-% embedded, cluster compute, and whatever to make stuff faster than status quo gpus
-% we want effeciency and copmute fast and that they're performance is totally
-% reliant on how they are programmed
-% something something about how theres lots of differnt types of architectures
-% and that lots of architectures have 1 spm but some have 3 spm
-% quote something from nvdla and systolic array or some other implmentations
-% ^ theres a bunch of papers referenced in the onsram paper and they metion commercial
-% shit like tpu, Intel NNP and stuff
-% talk about what an spm is
-Deep learning accelerators (DLA) are hardware made specifically to accelerate
-common operations needed to run inference or training on DL models. 
+A key factor that determines the compute and power efficiency of a DLA is how
+well its Scratchpad Memory (SPM) is managed. Scratchpad memory is an on-chip
+SRAM memory that is managed by software. The transfer of data to and from main
+memory must be orchestrated explicitly by the programmer or compiler and the
+degree of utilization of the memory is dependant on how it is managed.  This
+feature of SPMs is why they have the potential to be more compute and power
+efficient than caches due to the predictability of data transfer latencies and
+explicit management of data evictions and pinnings without tagging.  Each data
+transfer incurs a latency between main and on-chip memory and also power costs
+to initiate DMA loads and stores. Caches have hardware that determines when and
+what data is transferred but can be unpredictable or optimal due to the fact
+that eviction and caching schemes are implemented in a heuristic manner
+\cite{manyCore}. As a result, SPMs are highly popular for predictable and
+repeatable workloads and are used in many embedded devices \cite{graphColoring}
+and DLAs \cite{onsram}.
 
 \subsection{Existing Scratchpad Memory Management Schemes}
 Because SPMs do not contain any hardware logic that deals with pinning and
