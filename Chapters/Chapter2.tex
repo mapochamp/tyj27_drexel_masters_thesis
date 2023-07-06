@@ -7,77 +7,67 @@
 %----------------------------------------------------------------------------------------
 %	SECTION 1
 %----------------------------------------------------------------------------------------
-\section{Deep Learning Compilers}
+\section{Existing Memory Optimizations in Deep Learning Frameworks}
+There exist many end to end deep learning frameworks that allow
+high level DSL programmers to create models that will be optimized to run
+on a given hardware. Because memory management is such a significant
+factor in runtime performance, all frameworks employ their own specialized
+optimization methods based on their unique model representation forms.
 
-%- What are deep learning compilers?
-%
-%- What sort of deep learning compilers exist?
-%	- JIT
-%	- Graph based
-%	- optimization types and differences in compilers
-%
-%"Few research efforts have proposed end-to-end software stacks that support AI accelerators. 
-%These are realized either as standalone custom frameworks or as software extensions to existing Deep Learning
-%frameworks." \cite{onsram}
-%What are tensors in the context of compilers and why do they matter
-%	multi dimensional array that gets accessed a certain way and takes up memory for all we care
-%What operations exist in deep learning
-%- mat mul
-%- convolution
-%- adding?
-%- Training
-%- stuff ig
-%What optimizations exist on deep learning models
-%What is graph level representation
-%What is IR 
-%
-%NGRAPH AND DEEPTOOLS HAVE GOOD RELATED WORKS SECTIONS THAT HAVE GOOD SUMMARIES ON EACH DL COMPILER
+% IR based ones (ngraph and DLVM)
+% simplify shit to remove unnessary datamovement by creating smaller or fused
+% kernels so that you don't have to have to jam together a bunch of complex
+% kernels to complete your dataflow. 
+% graph based ones (smaug and TVM)
 
+TVM by Chen, et al. 2018 is a graph based end to end framework. 
+TVM aims to create a framework that targets
+multiple backends and accelerator architectures while still applying
+fine grained optimizations for both intra and inter operator computations.
+The main problem Chen et al. solved was the problem of existing deep learning
+compiler frameworks only applying high level graph optimizations that did
+not allow for tuning in operator specific implementations and left that to
+the backends. However, the existing frameworks only supported a small handful
+of GPU and CPU based backends. Creating support for new hardware backends
+requires significant manual effort and there was no automated solution that 
+existed. TVM allows for multiple backends to be supported while also
+applying high graph level and operator implementation level optimizations
+within its framework. Optimizations include operator fusion, SPM management via
+operator rescheduling, pipelined memory access, and machine learning (ml) based
+cost modeling for code generation. Operator fusion is when kernels are fused
+together into a single kernel to avoid the need to save intermediate results
+to main memory. Operator rescheduling is the rescheduling of operators based
+on data flow dependencies to maximize reuse by placing operators whose
+inputs are outputs of another next to each other. Pipelined memory accesses are
+when memory access instructions are executed without compute instructions having
+been completed yet so that the next compute instruction does not need to wait
+for the next memory instruction to complete. TVM also introduces an ML
+based modeling method that estimates the performance cost of different
+code generated and generates the lowest cost code to compile into the backed.
 
+DLVM \cite{dlvm} (Wei et al. 2018) lowers a model into a domain specific IR
+such that modern compiler optimizations could be performed on the operations
+and simplified before LLVM IR is code generated for a backend to create
+individual kernels. Deep learning compilers \cite{tensorflow} \cite{torch}
+prior to this work would take a computational graph of operations and use off
+the shelf vendor provided kernels to implement them. While the kernels
+themselves are highly tuned, further optimizations could be made such as
+algebra implication, kernel fusion, and other modern compiler techniques such
+as dead code elimination and sub expression elimination could be applied to
+further increase performance. By reducing the amount of operations needed to be
+applied by analyzing which linear algebra operations could be simplified and
+applying further parallelization optimizations once it is lowered into LLVM IR,
+DLVM is able to minimize the amount of data transfer needed for kernels and how
+much data is needed to run the kernels themselves.
 
-%----------------------------------------------------------------------------------------
-%	SECTION 2
-%----------------------------------------------------------------------------------------
+After DLVM, Cyphers, Bansal, et al. 2018 at Intel created nGraph \cite{nGraph},
+another IR based deep learning framework that takes an approach of using its
+own IR. Instead of lowering a domain specific IR into LLVM after optimization
+passes, nGraph takes the IR and passes it to a transformer, a code generator
+that produces optimized backend code or code to be linked to a specific
+backend's kernels. The goal was to create a more flexible IR that better supported
+tensor based instructions and could be compiled in a more targeted fashion compared
+to generic LLVM IR. Transformers also remove the dependency of backends having
+to support LLVM.
 
-\section{Graph Level Frameworks}
-
-%-----------------------------------
-%	SUBSECTION 1
-%-----------------------------------
-
-\subsection{TVM}
-
-%-----------------------------------
-%	SUBSECTION 2
-%-----------------------------------
-
-\subsection{TensorFlow}
-
-%----------------------------------------------------------------------------------------
-%	SECTION 3
-%----------------------------------------------------------------------------------------
-
-\section{IR Level Frameworks}
-
-%-----------------------------------
-%	SUBSECTION 1
-%-----------------------------------
-
-%\subsection{TVM}
-
-\section{Existing Scratchpad Memory Management Schemes}
-%"The main differ- ence between this high-level representation and a low- level
-%compiler intermediate representation (IR), such as LLVM, is that the
-%intermediate data items are large, multi-dimensional tensors. Computational
-%graphs pro- vide a global view of operators, but they avoid specifying how each
-%operator must be implemented. Like LLVM IRs, a computational graph can be
-%transformed into func- tionally equivalent graphs to apply optimizations." - (TVM)
-%
-%%^
-%%|
-%basically because the intermediate values are variable-sized and big af between operations,
-%you can't really just put a "bound" on tensor sizes (well you can if you know the DL arch but still the
-%variables size range so widely you're gonna get really really bad utiliztaion) you can't just slap on
-%graph coloring and separate the SPM into a bunch of registers. that only works for super regular things
-%in embedded.
-
+% explicit focus on memory reuse (top lib, many core architecutre, onsram)

@@ -1,0 +1,85 @@
+This should be like a focused survey of SPM managment techniques in DL workloads
+- kernel optimizations for spm in IR (ngrpah)
+- DLVM makes optimiatiosn in IR lowers IR to LLVM to turn into CUDA to have
+  cuda backend or other LLVM based backend to deal with the kernel code
+  generation
+- data optimizations in loop tiling and unrolling based on tensor layouts (smaug)
+- hetero kernel code generation via ML based cost models and OPERATOR FUSION (TVM)
+- kernel stuff and color graping [mention register allocation](toplib)
+- many core architecture [ ilp ] (many core architecture)
+- OnSRAM
+
+
+TVM notes:
+problem:
+
+We identify the major optimization challenges in pro-
+viding performance portability to deep learning work-
+loads across diverse hardware back-ends
+
+Current frameworks rely on vendor-specific operator libraries
+and optimize for a narrow range of server-class GPUs.
+Deploying workloads to new platforms – such as mo-
+bile phones, embedded devices, and accelerators (e.g.,
+FPGAs, ASICs) – requires significant manual effort "
+
+Graph-level optimizations, however,
+are often too high-level to handle hardware back-end-
+specific operator-level transformations. Most of these
+frameworks focus on a narrow class of server-class
+GPU devices and delegate target-specific optimizations
+to highly engineered and vendor-specific operator li-
+braries. These operator-level libraries require significant
+manual tuning and hence are too specialized and opaque
+to be easily ported across hardware devices. Providing
+support in various DL frameworks for diverse hardware
+back-ends presently requires significant engineering ef-
+fort.
+
+Even for supported back-ends, frameworks must
+make the difficult choice between: (1) avoiding graph
+optimizations that yield new operators not in the prede-
+fined operator library, and (2) using unoptimized imple-
+mentations of these new operator
+
+
+implemenation + contributions:
+" We propose TVM, a compiler that exposes graph-level
+and operator-level optimizations to provide performance
+portability to deep learning workloads across diverse
+hardware back-ends. TVM solves optimization chal-
+lenges specific to deep learning, such as high-level op-
+erator fusion, mapping to arbitrary hardware primitives,
+and memory latency hiding. It also automates optimiza-
+tion of low-level programs to hardware characteristics by
+employing a novel, learning-based cost modeling method
+for rapid exploration of code optimizations. "
+
+We built
+TVM, a compiler that takes a high-level specification of
+a deep learning program from existing frameworks and
+generates low-level optimized code for a diverse set of
+hardware back-ends
+
+We introduce a tensor expression language
+to build operators and provide program transformation
+primitives that generate different versions of the pro-
+gram with various optimizations. 
+
+We introduce an automated program optimization frame-
+work to find optimized tensor operators. The optimizer is
+guided by an ML-based cost model that adapts and im-
+proves as we collect more data from a hardware back-
+end.
+
+On top of the automatic code generator, we
+introduce a graph rewriter that takes full advantage of
+high- and operator-level optimizations.
+
+Eval:
+"Experimental results show that TVM delivers performance across
+hardware back-ends that are competitive with state-of-
+the-art, hand-tuned libraries for low-power CPU, mo-
+bile GPU, and server-class GPUs. We also demonstrate
+TVM’s ability to target new accelerator back-ends, such
+as the FPGA-based generic deep learning accelerator"
