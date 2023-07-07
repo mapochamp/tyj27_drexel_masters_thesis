@@ -185,6 +185,25 @@ Problem:
 
 Implementation:
 
+In this
+paper, we propose a compiler-directed multithreaded SPM data transfer model
+(MSDTM) to optimize the process of data transfer in a heterogeneous many-core
+architecture. We use compile-time analysis to classify data accesses, check depend-
+ences and determine the allocation of data transfer operations. We further present
+the data transfer performance model to derive the optimal granularity of data trans-
+fer and select the most profitable data transfer strategy. 
+
+We propose an algorithm to determine the allocation of data transfer for multi-
+threaded applications with an analysis of data accesses and dependence check-
+ing.
+• We formulate the data transfer strategy selection problem for multithreaded
+applications on an SPM-based heterogeneous many-core architecture and design
+a performance model to derive the optimal granularity of data transfer and select
+the most profitable strategy.
+• We implement and evaluate our proposed model on Sunway TaihuLight with the
+kernel of scientific computing programs and applications from general bench-
+marks
+
 results:
 
 

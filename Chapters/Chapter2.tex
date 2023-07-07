@@ -47,7 +47,7 @@ code generated and generates the lowest cost code to compile into the backed.
 This means that the search space of parameters such as loop tiling size and 
 loop unrolling factors are automated and decided based on the ML model.
 
-DLVM \cite{dlvm} (Wei et al. 2018) lowers a model into a domain specific IR
+DLVM \cite{DLVM} (Wei et al. 2018) lowers a model into a domain specific IR
 such that modern compiler optimizations could be performed on the operations
 and simplified before LLVM IR is code generated for a backend to create
 individual kernels. Deep learning compilers \cite{tensorflow} \cite{torch}
@@ -72,12 +72,50 @@ tensor based instructions and could be compiled in a more targeted fashion compa
 to generic LLVM IR. Transformers also remove the dependency of backends having
 to support LLVM.
 
-
 % Toplib
-Li et al. 2020 introduced TOpLib: a compiler-assisted operator template library
-for DNN accelerators that focused on automated kernel generation with optimized
-memory management using graph coloring.
+Li et al. 2020 introduced TOpLib \cite{toplib}: a compiler-assisted operator
+template library for DNN accelerators that focused on automated kernel
+generation with optimized memory management using graph coloring. TOpLib builds
+on the graph coloring solution to the register allocation problem applied to
+SPM management for embedded devices but for DNNs. The key difference is that
+in non-DL workloads, allocations are targeted for single dimensional arrays
+whose sizes are known statically. Meanwhile, for DL workloads, tensors are high
+dimensional and can often be larger than the size of the SPM itself.  This
+requires an approach to dynamically partition the SPM into variable sized
+psuedo-registers rather than equally sizing. The general concept that they
+apply is as follows. A static walk through of kernel code for a given operator
+is applied to analyze the liveness of each tensor used within it.  The liveness
+of each tensor can then be used to create an interference graph of tensors
+where tensors on an interference graph have overlapping lifetimes.  This graph
+can then be used to apply a graph coloring strategy to cluster tensors with
+non-overlapping lifetimes onto the same partition of the SPM, while overlapping
+lifetimes will be allocated separate partitions. The paper proved that
+such an automated solution reached close to or exceeded hand written assembly
+kernels and reach on average a 90\% speed up over non-optimized kernel code.
+While this approach could have been generalized to the overall DNN case from the
+kernel case, this work applies a different approach similar to the work presented
+by Verma et al. 2004 using an ILP model. However, Li et al. demonstrate that
+a greedy graph coloring approach can reach close to optimal performance across
+a multitude of operators.
+
+Verma et al. \cite{verma} introduce an ILP approach to the same register
+allocation problem for single dimensional arrays as the work Li et al. extend
+for DNNs. Verma et al.  reformulate the graph colorign problem into an ILP form
+where constraints are added to ensure that tensors with overalapping lifetimes
+are not allocated the same parition. The objective function is created to
+maximize the number of data transfers saved. By using an ILP model over a
+greedy algorthim, the solution is set to be optimal and. However, again, this
+approach is not trivial to apply towards large variable tensors in DL workloads
+due to assumptions the model takes of fixed size psuedo-registers and single
+dimensional arrays.
 
 % many core architecture
+The problem of using more than one SPM is an issue that has mostly been ignored
+until the work of Tao et  al. 2021 where they solve for an optimal data size
+granularity to transfer between scratchpads and main memory to maximize performance
+using a linear programming model for multicore architectures. The paper achieves
+this via compiler-directed SPM data transfer model to formulate ann allocation
+scheme in a heterogeneous many-core architecture and then use the same allocations
+to determine the optimal data transfer granularity to maximize performance.
 
 % on sram
