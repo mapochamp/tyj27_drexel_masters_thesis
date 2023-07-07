@@ -192,9 +192,9 @@ reuse, leading to unpredictable decision-making and near-suboptimal results.
 This limitation persists, albeit in a reduced form, even when the size of the
 SPM is increased. Therefore, to devise an algorithm that meticulously analyzes
 possible decisions and maps tensors in a manner that effectively encourages
-reuse, one could implement techniques such as graph coloring or Integer Linear
-Programming (ILP), which are similar to the methods used in solving the
-pseudo-register SPM register allocation problem.
+reuse, one could implement techniques such as graph coloring or ILP, which are
+similar to the methods used in solving the pseudo-register SPM register
+allocation problem.
 
 Choosing an optimal pinning strategy to minimize the amount of data transfers
 within this search space is the goal of this work.
@@ -203,10 +203,19 @@ within this search space is the goal of this work.
 % we do everything in the 3 spm case
 % goal is to mitigate data transfers between SPMs and main memory
 % In order to analyze the possible mapping
+In order to analyze the search space and create a pin mapping for all tensors
+such that the number of data transfers between SPMs and main memory on an
+inter-node graph level are minimized, we propose an ILP model to create an
+optimal strategy for a multi-scratchpad architecture.
 
-\subsection{Implementation}
-% Static analysis of all the graphs -> get liveness data -> create initial pin
-% mapping of just inputs and outputs with no pinnning -> check all possible spms
-% mappings where inputs nad outputs of a given operation are necessary and
-% unnegotioable and things that could be pinned will be pinned -> meta info like
-% spm size, \# of spms, and tensor size, etc.
+To do this we first take an optimized computational graph and map it as a final
+schedule of operators that will be ran. Using this schedule of operators, we
+then aggregate all tensors that are used in the DNN. Each input and output
+tensor is annotated with the operator from which it was created from and all
+operators that use it as an input from creation until the last use of the
+tensor. All tensor sizes, number of SPMs, and the size of the SPMs are gathered
+as well. Using this information an initial naive mapping scheme can be created
+where all inputs and outputs are mapped to a designated input SPM and output
+SPM. All outputs are assumed to be saved back to memory and reloaded when
+needed. We then use the initial mapping as an input into the ILP solver to realize the
+optimal strategy.
