@@ -131,6 +131,7 @@ practical. However, they target the single flat arrays, not the high dimensional
 tensors in the DNN domain. Besides, their graph coloring schemes do not take the
 memory hierarchy diversity of DNN accelerator
 
+WE SHOULD USE THIS PORTION OF THE PROPOSAL PORTION OF THE THESIS
 To alleviate the low-level programming issues, we propose a compiler-assisted
 template library for operator programmers, namely TOpLib (short for Tensor
 Operator Library). TOpLib follows the philosophy of decoupling the programmers’
