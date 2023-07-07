@@ -13,34 +13,37 @@
 
 OnSRAM introduces the notion of two types of runtime performance optimizations
 that can be done on graph based compilers: intra-node and inter-node
-optimizations \cite{onsram}.  Intra node optimizations are those that are
-focused on optimizing the operation that the node specifies. This means tiling
-in favorable sizes and across specific dimensions, loop ordering, and DMA
-pipelining between tiles \cite{aladdin}.
+optimizations \cite{onsram}. Intra node optimizations are those that are
+focused on optimizing the operation kernel that the node specifies. This means
+tiling in favorable sizes and across specific dimensions, loop ordering, and
+DMA pipelining between tiles \cite{aladdin}.
 
 Inter node optimizations are optimizations concerning the overall structure and
 ordering of the nodes in the graph and their connections. This includes
-operator fusion and node reordering or rescheduling \cite{onsram}.
+operator fusion and node reordering\cite{onsram}.
 OnSRAM focuses on internode optimizations, specifically in the domain of
 scratchpad memory management techniques for DLAs. 
 
-Existing frameworks have neglected to focus on inter-node optimizations in favor
-of intra-node optimizations \cite{TVM} \cite{deeptools} \cite{tensorflow}. Many 
-mentioned frameworks are focused on creating an overall compiler framework that
-increases the usability and hardware abstractions for machine learning engineers
-by enabling hardware agnostic support and optimizations. As a consequence, each
-framework had taken a different approach or extended the capabilities to of other
-existing frameworks to achieve the same goal. In comparison, OnSRAM is a
-compiler extension made to focus on an algorithm specific to just one type of
-memory optimization.
+Existing frameworks have neglected to focus on inter-node memory reuse
+optimizations in favor of intra-node optimizations \cite{TVM} \cite{deeptools}
+\cite{tensorflow}. Many mentioned frameworks are focused on creating an overall
+compiler framework that increases the usability and hardware abstractions for
+machine learning engineers by enabling hardware agnostic support and
+optimizations. As a consequence, each framework has taken a different approach
+or extended the capabilities of other existing frameworks to achieve the same
+goal. In comparison, OnSRAM is a compiler extension made to focus on an
+algorithm specific to just one type of memory optimization.
 
+% TODO: its obvious but explain the amortization comment
+% TODO: create figure of reuse graph
 The motivation of such optimizations come from the minimization of memory
 transfers which speed up inference runs by up to 5.17x \cite{onsram}. OnSRAM
 exploits the repeating usage of outputs in a graph and identifies the outputs
 that can pinned to minimize memory transfers which decrease inference time and
-decrease energy costs. The ultimate performance gained from pinning outputs comes from
-multiple inference runs where the cost of mapping pinnable tensors are amortized by the
-time saved through iterative inference runs of the same model.
+decrease energy costs. The ultimate performance gained from pinning outputs
+comes from multiple inference runs where the cost of mapping pinnable tensors
+are amortized by the time saved through iterative inference runs of the same
+model.
 
 Such inter-node memory management techniques occur due to the presence of
 inherent repeating patterns of operations to support deep learning
@@ -69,7 +72,7 @@ pinning first and the rest are considered to be pinned if and only if it can be
 accommodated in spite of the higher cost tensor being pinned. Tensors are only
 considered for pinning if they can be pinned for their entire duration of their
 lifetime and can fit on the SPM with the other inputs and outputs for every
-operation they are pinned.
+operation they are pinned for.
 
 OnSRAM-Static only applies to input and output tensors, not weights. This is
 due to the fact that weights are single use objects that are only needed for
@@ -80,7 +83,7 @@ well.
 
 Another aspect that OnSRAM does not consider is applicability towards training.
 The assumptions of the problem change when considering training and
-significantly increase the difficulty and search space. This requires the
+significantly increase the difficulty and search space. This requires 
 separate compiler extension implementations to be designed into separate
 portions of the framework. Further, batched training, partitioned accelerators,
 distributed systems, and large reuse distances due to backward passes and
@@ -96,18 +99,21 @@ well.
 % how important is this question? should we just be saying what we used
 
 Differences in hardware and simulators don't affect the relative performance of
-a non-pinning compiler compared to one that has an optimized management scheme,
-however there are some important environment variables that will consequently
-affect repeatability and benchmark performance. Most notably, the simulator and
-hardware architecture in use.
+a non-pinning compiler compared to a pinning compiler, however there are some
+important environment variables that will consequently affect repeatability and
+benchmark performance. Most notably, the simulator and hardware architecture in
+use.
 
 OnSRAM uses a cycle accurate simulator to model and assess the performance of
 their algorithm \cite{onsram}.  We have opted to use the SMAUG\cite{smaug}
 framework that depends on the Aladdin\cite{aladdin} system to model our
 accelerator and the gem5 simulator\cite{gem5} to implement our experiments.
 While gem5 is not cycle accurate, it still advertises a close to cycle accurate
-performance metrics and creates a relative base of comparison between benchmark
+performance metrics and creates a relative base of comparison between base
 models and our optimized model.
+
+% TODO: explain smaug more. like what it is and stuff and like other stuff from
+% the paper
 
 Intra-node optimizations that both simulators do but may not do the same way
 that may affect performance comparisons: loop tiling, loop ordering, unrolling,
@@ -134,13 +140,14 @@ be used as inputs and one for output.
 \subsection{OnSRAM Limitations}
 
 While OnSRAM has contributed a novel SPM management scheme that no framework
-currently supports \cite{onsram}, there are limitations that don't allow it to
-generalize to a hardware agnostic scenario. This is primarily due to its
-assumption that the accelerator contains only one shared scratchpad for input
-and output tensors. A consequence of this is that the greedy algorithm proposed
-to map possible pin candidates is non-trivial to apply to an accelerator with
-more than one scratchpad. Further, because of the heuristic approach, OnSRAM is not able
-to achieve the optimal memory mappings with respect to minimizing memory transfer.
+has explored \cite{onsram}, there are limitations that don't allow it to
+generalize in a hardware agnostic scenario. This is due to its assumption that
+the accelerator contains only one shared scratchpad for input and output
+tensors. A consequence of this is that the greedy algorithm proposed to map
+possible pin candidates is non-trivial to apply to an accelerator with more
+than one scratchpad. Further, because of the heuristic approach, OnSRAM is not
+able to achieve the optimal memory mappings with respect to minimizing memory
+transfer.
 
 %-----------------------------------
 %	SUBSECTION 2

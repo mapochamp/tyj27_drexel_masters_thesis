@@ -11,13 +11,20 @@
 %	SECTION 2
 %----------------------------------------------------------------------------------------
 \section{Accelerators and Scratchpad Memory}
+% TODO: explain DL workloads better: why they're parallelizable ; why consumer
+% hardware sucks
+% TODO: need more backgroudn on what DLAs look like and how they are superior to DL
+% Workloads so that later on when we describe operators in graphs and why
+% kernels are differnt for every arch it makes sense and we can also smoothly
+% talk about why DL compilers need so many backends since there is no
+% standardized IR
 The growth in Deep Learning (DL) has grown substantially in the past few years
 enabled by the availability in hardware to train the Deep Neural Network (DNN)
 models. There exists many use cases of DL models such as natural language
 processing, image recognition, media generation, and media alteration. Each of
 these use cases demand different workloads as they use different DL model
 architectures and are deployed in a variety of environments. This creates the
-need of a diverse set of hardware call Deep Learning Accelerators (DLAs) that
+need of a diverse set of hardware called Deep Learning Accelerators (DLAs) that
 are specifically made to compute DL workloads efficiently for a specific
 purpose. This is due to the nature of DNNs. They are made up of millions of
 parameters, dozens of different operations that work on multi dimensional data
@@ -27,7 +34,7 @@ of these models, the repetitive nature of these operations, and type of data
 they work with; DL models are highly parallelizable and specialized hardware
 can be built to exploit this with maximum efficiency. Some exist to be power
 efficient and work in embedded devices while others are made to have no power
-constraints to maximize compute speed in cloud clusters. In contrast, general
+constraints so as to maximize compute speed in cloud clusters. In contrast, general
 purpose hardware are not able to meet power management needs of many workloads
 or cannot compute inference fast enough to meet timing requirements. Examples
 of DLAs used are TPUs from Google \cite{tensorflow}, NVDIA's NVDLA \cite{nvdla}, and Intel NNP \cite{nnp}.
@@ -37,12 +44,14 @@ well its Scratchpad Memory (SPM) is managed. Scratchpad memory is an on-chip
 SRAM memory that is managed by software. The transfer of data to and from main
 memory must be orchestrated explicitly by the programmer or compiler and the
 degree of utilization of the memory is dependant on how it is managed.  This
+% TODO: redo this ru non sentence and make it more clear
+% TODO: explain better why SPMs are better at repeateable workloads
 feature of SPMs is why they have the potential to be more compute and power
 efficient than caches due to the predictability of data transfer latencies and
 explicit management of data evictions and pinnings without tagging.  Each data
 transfer incurs a latency between main and on-chip memory and also power costs
 to initiate DMA loads and stores. Caches have hardware that determines when and
-what data is transferred but can be unpredictable or optimal due to the fact
+what data is transferred but can be unpredictable or unoptimal due to the fact
 that eviction and caching schemes are implemented in a heuristic manner
 \cite{manyCore}. As a result, SPMs are highly popular for predictable and
 repeatable workloads and are used in many embedded devices \cite{graphColoring}
@@ -55,37 +64,40 @@ must be explicitly programmed. In workloads where the access patterns are very
 predictable or deterministic, this is ideal as the overhead of tag-decoding
 logic is avoided and superior performance gains can be had with carefully
 optimized memory transfers. Further, software-managed memory leads to more
-predictable timing and data transfer costs since because of the lack of
+predictable timing and data transfer costs because of the lack of
 tag-decoding logic \cite{graphColoring}. This makes the use of scratchpads
+% TODO: we need to explain better intuition of why determinism creates for a
+% more highly tuned and optimal management schemes for memory compared to cache
 highly desirable for deep learning workloads where the computations and
 dataflow are deterministic for any given architecture and therefore the
-memory management strategy can be highly tuned for. Consequently,
+memory management strategy can be tuned for. Consequently,
 the runtime performance of an application is highly dependant on the
 ability of a strategy to optimally manage memory and exploit data reuse.
 
+% TODO: epxlain what a kernel is
 Scratchpad memory management is usually manually programmed by developers
 that are specialized in a particular architecture. This is the case for
 DLA kernels as well, as most kernels are provided as vendor supplied libraries
 where the memory management is optimized \cite{TVM}.
 
 While manual tuning is still used, there exist many limitations that make it
-unattractive. Manual tuning requires significant engineering effort from
-developers that can otherwise be productively used else where, is vulnerable to
-bugs, and a strategy is not portable across different architectures.  Due to
-these limitations, techniques for compiler based automated scratchpad memory
-management have been developed to ease the burden of programmers. The problem
-of portability and need for an automated alternative has been exacerbated for
-deep learning frameworks and engineers. The same model could be deployed on
-several different types of architectures, each with their own memory hierarchy.
-Creating memory optimized operator schedules, pinning directives, and kernels
-for each of these architectures is time consuming and requires specialized
-knowledge of each architecture. The implementation of such strategies requires
-a low level language to describe as well, which forces a DL engineers who
-typically work in high level language frameworks to be an expert in many more
-fields at once.  While most automated compiler implementations have been aimed
-at embedded devices programmed in C \cite{graphColoring} \cite{memoryColoring},
-in recent years there have been compiler tools built for deep learning
-workloads as well \cite{onsram} \cite{toplib}.
+unattractive. Manual tuning requires significant engineering effort, is
+vulnerable to bugs, and a strategy is not portable across different
+architectures.  Due to these limitations, techniques for compiler based
+automated scratchpad memory management have been developed to ease the burden
+of programmers. The problem of portability and need for an automated
+alternative has been exacerbated for deep learning frameworks and engineers.
+The same model could be deployed on several different types of architectures,
+each with their own memory hierarchy.  Creating memory optimized operator
+schedules, pinning directives, and kernels for each of these architectures is
+time consuming and requires specialized knowledge of each architecture. The
+implementation of such strategies requires a low level language to describe as
+well, which forces a DL engineers who typically work in high level language
+frameworks to be an expert in many more fields at once.  While most automated
+compiler implementations have been aimed at embedded devices programmed in C
+\cite{graphColoring} \cite{memoryColoring}, in recent years there have been
+compiler tools built for deep learning workloads as well \cite{onsram}
+\cite{toplib}.
 
 The goal of an SPM management strategy is to minimize incurring the cost of
 data transfers by maximizing the reuse of data in the SPM. To achieve this,
@@ -125,23 +137,24 @@ programmer may focus on the model creation only. The abstraction of such
 details forces the trade-off of performance and generality as the frameworks
 must optimize the same model for runtime and memory efficiency on a diverse set
 of available hardware that all have different memory hierarchies, number of PEs,
+% TODO: fix this run on
 and supported operations. Frameworks must be able to decipher model
 descriptions in high level languages such as Python, apply hardware agnostic
-optimizations, and map operations to a specific hardware create an executable
+optimizations, and map operations to a specific hardware to create an executable
 that will run the model to completion device.
 
-Conventional compilers (eg. GCC) typically take a high level language down to
+Conventional compilers (eg. Clang) typically take a high level language down to
 an intermediate representation (IR) to then machine code that can run on a
 device.  The front end is responsible for what parses and lexes the high level
-code, the middle end is responsible for lowering it to IR and running
-optimization passes on the IR, and the backend lowers the IR further into
-machine code. Similarly, DL frameworks can be broken down into a front-end,
-middle-end, and backend. However, there are major differences in the role of
-each partition and how they are performed.  Deep learning frameworks deal with
-a small set of operations that are highly parallelizable but with
+code into a control flow graph, the middle end is responsible for lowering it
+to IR and running optimization passes on the IR, and the backend lowers the IR
+further into machine code. Similarly, DL frameworks can be broken down into a
+front-end, middle-end, and backend. However, there are major differences in the
+role of each section and how they are performed.  Deep learning frameworks
+deal with a small set of operations that are highly parallelizable but with
 variable-sized data \cite{nGraph}. Some operations include: sigmoid, matrix
 multiply, vectorsum, L1 Norm, element wise multiply, and dropout among others
-\cite{cntk}. Further, a programmer for within a deep learning framework will
+\cite{cntk}. Further, a programmer for a given deep learning framework will
 work with a domain specific language (DSL) such as Tensorflow
 \cite{tensorflow}. Because DSLs only concern with the description of deep
 learning networks, the runtime execution, memory, and device management is
@@ -151,6 +164,8 @@ called an end to end framework.
 
 %Computational graphs
 \subsection{Computational Graphs}
+% TODO: use the toplib explanation of differnt operators that make up a graph
+% to explain this part
 A common interface used by most DL frameworks is the computational graph
 \cite{tensorflow} \cite{cntk} that represents a network of operations needed to
 run a DL model. Each DL model can be broken down into a series of discrete
@@ -159,6 +174,9 @@ model. A graph made up of vertices and edges where the vertices represent an
 operation and the edges represent tensors that flow from one operation to the
 next can be used to fully describe a DL model. Computational graphs are
 directed acyclic graphs (DAG).  Each vertex can have between zero and two
+% TODO: we need to explain how deep leraning models archs look like to describe
+% how the concept of layers and "stacking" works to make this explaniation work
+% TODO: create a figure of DL computational graph
 inputs and zero to one outputs. So for each model, each node in each layer can
 be broken down into an operation that maps to a node in the graph. An operation
 is a particular computation that must be ran with a set of inputs and outputs.
@@ -189,6 +207,10 @@ framework that uses IR, the framework typically uses its own IR, however
 there are tools such as ONNX that attempt to standardize the IR used in
 frameworks. 
 
+% TODO: we don't actually describe what IR is and need to make sure to cleraly
+% explain what IR is in regular code and that this is an analogue made to
+% speciazlie in describing tensor operations
+% TODO: make sure to explain what a tensor is
 IR in DL frameworks are a language that support linear algebra instructions and
 other general purpose instructions (eg., branch, conditional- branch). DL
 models are lowered into the framework's IR and a DAG of control flow
@@ -202,6 +224,8 @@ tensors.  In IR based frameworks, the same types of optimizations can be done
 to each instruction that maps to a kernel. However, the kernels in IR are not
 picked from a set of pre-made kernels in a supported backend, but rather code
 generated into LLVM IR or another lower level IR based on the framework. This
+% TODO: this is word salad taht means nothing. like you didn't explain
+% anything. make it better
 allows static analysis to better fuse redundant operations and kernels together
 in a more efficient way than sequentially ordering kernels as done in
 computational graph based frameworks. Further, different IRs may come with
@@ -210,16 +234,18 @@ a computational graph that allow the compiler and code generator to manipulate
 the DAG in more ways.
 
 Once a DL model is lowered into IR and its optimization passes are done, the IR
-is either passed into a bridge code generator or a more supported IR such as
-LLVM IR. A bridge will transform the framework IR into a format that is
-compatible wit h a particular backend. There must be a bridge made for every
-backend. Otherwise, in the case of LLVM based IR transformations, only
-backends that support LLVM IR are able to be used to generate a final binary.
+is passed into a code generator as backend code or a more supported IR such as
+LLVM IR. A transformer will transform the framework IR into code formatted for
+a particular backend. There must be a transformer made for every backend. Otherwise,
+in the case of LLVM based IR transformations, only backends that support LLVM
+IR are able to be used to generate a final binary.
 
-% TODO: DL arch -> IR -> IR CFG
+% TODO: Figure of DL arch -> IR -> IR CFG
 
 %Front end
 \subsection{Front End}
+% TODO: talk more about DSLs and how they are used and why they need to be
+% broken up into expressions -> graph 
 The front end of frameworks are responsible for breaking down the high level
 descriptions of a DL model, typically in Python or C++ \cite{tensorflow}, and
 converting them into computation graphs or IR. These lower level abstractions
@@ -262,6 +288,7 @@ This is helpful because different operators that are distinct from one another
 that can otherwise be fused may be scheduled in an unoptimized way or incur
 unnecessary memory transfer costs. Every operation requires an input tensor to
 be loaded into the accelerator and an output tensor to be produced to be loaded
+% TODO: fix this run on
 back into main memory. Without explicit data pinning memory management or
 caching, or in cases where pinning may not be feasible due to memory size
 constraints of the DLA, intermediate values between two operators where the
@@ -277,8 +304,8 @@ generator without any manual tuning or vendor provided libraries must have
 pre-defined fused operators that are available to be mapped into the computational
 graph. As the number of operators on a network grows, the number of possible
 operators that can be fused also grows with it combinatorially \cite{TVM}.
-This is exacerbated wit the number of supported data layouts, data types, 
-and DLA intrinsics that are supported. To this end, a large fused operator
+This is exacerbated with the number of supported data layouts, data types, 
+and DLA intrinsics. To this end, a large fused operator
 cannot be created such that memory transfer costs are fully hidden optimally.
 
 Data layout transformations are the reformatting of how tensors are passed
@@ -292,7 +319,7 @@ Many of the optimizations that apply to computational graphs can also be done
 to IR based frameworks. But because they may be lowered into a lower level IR,
 more granular and kernel specific optimizations can also be applied before
 being passed to the backend. One optimization example is algebraic
-simplification and linear algebra fusion \cite{DLVM}. This involved reordering
+simplification and linear algebra fusion \cite{DLVM}. This involves reordering
 matrix multiplications and other linear operations into a single matrix
 operation. Another example is transforming subexpressions involving multiple
 types of operations into a single matrix operation such as a matrix multiply
@@ -307,22 +334,24 @@ a DL model in the form an optimized version of a computational graph or IR.
 At this point, all optimizations and transforms that have occurred have
 only been applied to the DL model description provided by the programmer.
 The backend will be responsible in creating
-an execution engine and either outputting a compiled executable or managing
+an execution engine, outputting a compiled executable, and managing
 a runtime environment.
 
 A backend like TensorRT \cite{tensorRT} consists of two phases: a build phase
 and runtime phase. During the build phase a kernel search is done to map
-available kernels to the operators in the dataflow graph the middlend passed. A
-serialized version the graph is then statically analyzed to be used as context
-to generate code for the execution context and runtime engine.  An engine is a
-representation of the optimized model with a scheduler, memory manager, a
-network of operators, their inputs and outputs, and meta data of input and
-output tensors such as size and name of the tensors.  During the runtime phase,
-an execution context and runtime engine will be instantiated. The execution
-context can then be saved to be loaded later or started to run inference tasks.
+available kernels to the operators in the dataflow graph that was passed from
+the middle end. A serialized version of the graph is then statically analyzed to
+be used as context to generate code for the execution context and runtime
+engine.  An engine is a representation of the optimized model with a scheduler,
+memory manager, a network of operators, their inputs and outputs, and meta data
+of input and output tensors such as size and name of the tensors.  During the
+runtime phase, an execution context and runtime engine will be instantiated.
+The execution context can then be saved to be loaded later or started to run
+inference tasks.
 
 Kernels are highly specialized and must be tuned for a DLAs particular memory
-hierarchy, data layout, and intrinsics. Kernels are created either code
-generated or supplied by a vendor library. Kernel tuning optmizations are
+hierarchy, data layout, and intrinsics. Kernels are created either via code
+generation or supplied by a vendor library. Kernel tuning optimizations are
+% TODO: explain what these means probably
 handled by the backend.  This includes loop unrolling, caching, loop
 reordering, and tiling.
