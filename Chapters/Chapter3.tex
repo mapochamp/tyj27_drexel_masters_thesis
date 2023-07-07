@@ -1,6 +1,6 @@
 % Chapter Template
 
-\chapter{OnSRAM} % Main chapter title
+\chapter{OnSRAM and Proposed approach} % Main chapter title
 
 \label{Chapter3} % Change X to a consecutive number; for referencing this chapter elsewhere, use \ref{ChapterX}
 
@@ -10,6 +10,13 @@
 
 \section{Introduction}
 % do we need to talk about all the new accels that come out and why they are needed to run DL workloads instead of CPUs?
+
+% TODO: talk about how this thing is a compiler extension that can be plugged
+% into frameworks and we like this since it isn't re-optimizing and fighting
+% for the same intrano de optimizations every other framework is doing and
+% doesn't require reimagingin how to make a computation graph or IR for the
+% millionth time. So this is attractive because its an actual unsolved problem
+% compared to the rest
 
 OnSRAM introduces the notion of two types of runtime performance optimizations
 that can be done on graph based compilers: intra-node and inter-node
@@ -155,10 +162,51 @@ transfer.
 
 \subsection{Motivating Example}
 
-%-----------------------------------
-%	SUBSECTION 3
-%-----------------------------------
+% explain how onsram does the thing
 
-\subsection{Problems with Generalizing a Single SPM Management Scheme to Multiple SPMs}
-\subsection{Attempted Greedy Approaches}
-\subsection{Attempted Architectural Assumptions}
+Consider the computational graph of in figure 1. The graph clearly shows that
+node 0's output will be reused as inputs to node 1 and 2. In a single SPM case,
+we can see how the tensors would be mapped for each timestep. Clearly, the leftover
+space of the SPM is what we can use as leftover pinning space between operations.
+However, in the case of a multi-SPM architecture, this is not the case as tensors
+cannot be split over different SPMs. The other main point is that, to reach an optimal
+or close to optimal mapping of pinned tensors, the strategy must consider which SPM
+to pin it on if multiple SPMs have enough space. Once an SPM has been pinned, the
+mapping of other inputs, outputs, and future pins will then be affect the availble
+space and ability to maximize the nubmer of pinned tensors. The choice of where to
+map each input, output, and pinned tensor per operation creates a combinatorial
+explosion in the search space. A toy model is illustrated in figure 3.
+
+Utilizing a greedy approach in the context of multiple SPMs, i.e., initially
+pinning an item and remapping the inputs and outputs accordingly, essentially
+results in a dilemma comparable to the bin-packing problem. This process
+involves eviction when the pinned item cannot accommodate all other items, or
+when the output of the present operation is of higher importance. The initial
+decision of selecting an SPM to pin an item, which depends on the primary
+remapping of inputs and outputs around a pinned tensor, can considerably
+influence the pinnability of future items. This might, in certain instances,
+lead to the unpinned state of items immediately prior to their reuse.
+
+In such an approach, the system may not adequately identify opportunities for
+reuse, leading to unpredictable decision-making and near-suboptimal results.
+This limitation persists, albeit in a reduced form, even when the size of the
+SPM is increased. Therefore, to devise an algorithm that meticulously analyzes
+possible decisions and maps tensors in a manner that effectively encourages
+reuse, one could implement techniques such as graph coloring or Integer Linear
+Programming (ILP), which are similar to the methods used in solving the
+pseudo-register SPM register allocation problem.
+
+Choosing an optimal pinning strategy to minimize the amount of data transfers
+within this search space is the goal of this work.
+
+\subsection{Proposed Approach}
+% we do everything in the 3 spm case
+% goal is to mitigate data transfers between SPMs and main memory
+% In order to analyze the possible mapping
+
+\subsection{Implementation}
+% Static analysis of all the graphs -> get liveness data -> create initial pin
+% mapping of just inputs and outputs with no pinnning -> check all possible spms
+% mappings where inputs nad outputs of a given operation are necessary and
+% unnegotioable and things that could be pinned will be pinned -> meta info like
+% spm size, \# of spms, and tensor size, etc.
