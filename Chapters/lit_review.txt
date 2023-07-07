@@ -83,3 +83,117 @@ the-art, hand-tuned libraries for low-power CPU, mo-
 bile GPU, and server-class GPUs. We also demonstrate
 TVM’s ability to target new accelerator back-ends, such
 as the FPGA-based generic deep learning accelerator"
+
+
+--------------------------------------------------
+top lib notes:
+
+Problem:
+In contrast to existing
+researches targeting the whole DNNs, we choose to dive into details and review this
+problem from a finer-grained level, operators. Due to performance concerns,
+operator programmers may have to take hand-written assembly as their first choice,
+which is error-prone and involves many programming chores. To alleviate this
+problem, we propose TOpLib, a compiler-assisted template library. By providing a
+unified user-view abstraction, TOpLib allows programmers to express computa-
+tional kernels with high-level tensor primitives, which will be automatically low-
+ered into low-level intrinsic primitives via expression templates. Moreover,
+considering memory management is performance-critical and the optimization
+strategy of expression template is limited to enumeration based rewriting rules, we
+implement TOpLib with a compiler-assisted approach. We address the memory
+reuse challenges into the compiler, which allows TOpLib to make full use of on-
+chip buffers and result in better performance. 
+
+Due to performance concerns, they
+may have to take hand-written assembly as their first programming choice. Coding a
+highly tuned operator kernel with hand-written assembly usually requires expert
+knowledge to manage every hardware detail, which involves a plethora of low-level
+programming chores
+
+For example, the vector-vector and matrix-vector instructions,
+e.g., VAV and MMV, usually need special registers to store the memory address and
+the size of input data. Programmers have to manually allocate these registers and
+track the lifetime of each memory block, which is burdensome and error-prone.
+Besides, these CISC style instructions usually have special address alignment
+requirements, programmers have to manually check the address alignment of each
+memory block. This kind of low-level coding is very typical during the development
+of DNN operator
+
+
+
+
+Implementation:
+
+In general, all these
+memory optimization techniques employ similar approaches from the register
+allocation domain [28] that have been previously well-studied and proved to be
+practical. However, they target the single flat arrays, not the high dimensional
+tensors in the DNN domain. Besides, their graph coloring schemes do not take the
+memory hierarchy diversity of DNN accelerator
+
+To alleviate the low-level programming issues, we propose a compiler-assisted
+template library for operator programmers, namely TOpLib (short for Tensor
+Operator Library). TOpLib follows the philosophy of decoupling the programmers’
+view from the diversity of underlying hardwares. It provides a user-view abstraction
+for DNN accelerators. It uses C-like syntax as the surface language to repres
+
+The on-chip SPMs are abstractions for the on-chip buffers of DNN
+accelerators. They are fast but with size limitation, and are visible to operator
+programmers and compiler. They usually play the role of caching partial input data
+and temporary computational results. While the off-chip DRAMs are large but slow.
+They are used for the storage of large quantity DNN parameters and input/output
+data required by operators. The communications between the on-chip SPMs and the
+off-chip DRAMs are accomplished through explicit DMA load and store
+instructions
+
+Our memory reuse algorithm (Algorithm 2) is partially inspired by [20, 21].
+Firstly, the compiler collects the meta-data information (including address space
+and size) of tensor variables by statically walking through K. Then It gets the live
+ranges of each tensor variable by data flow analysis. In this paper, we apply the
+definition of liveness for arrays in [21] to the aggregate tensor data type. Similarly,
+liveness analysis for tensors is conducted on the control flow graph (CFG) of K. The
+liveness information for a tensor T can be computed on CFG of K by applying the
+standard data-flow equations to the entry and exit of every basic block (abbr. BB) B:
+INT ðBÞ ¼ ðOUTT ðBÞ  DEFT ðBÞÞ [ USET ðBÞ
+OUTT ðBÞ ¼ [ S2succðBÞINT ðSÞ ð2Þ
+where succðBÞ denotes the set of all successor BBs of B in CFG of K. The pred-
+icates, DEF and USE, local to a BB B for a tensor T are defined as follows: USE
+T ðBÞ returns true if some elements of T are read in B; DEF T ðBÞ returns true if T is
+killed in B. Fig. 4c top shows the live ranges of tensor variables B1-B5. Then the
+compiler builds interference graph (IG). However, considering the memory hier-
+archies of DNN accelerators, we need to build IG for different address spaces
+respectively, i.e., vertices in the same IG must have the same address space spec-
+ifier. Fig. 4c bottom shows the IG of tensor variables in address space NEURAL.
+Now compiler takes a greedy graph coloring strategy [6] by clustering the memory
+blocks with non-overlapping live ranges. Memory blocks with the same color will
+be assigned to the same memory partition. The size of each memory partition is
+calculated by choosing the maximum size of colored memory blocks. Fig. 4d shows
+the memory partitions after graph coloring and there is 26K on-chip memory left.
+The compiler will try to promote some off-chip data (including but not limited to
+local variable or stack data) into this region. The promotion strategy can be per-
+formed by static analysis. We will evaluate the effectiveness of our memory reuse
+algorithm in Section 4
+
+results:
+
+
+--------------------------------------------------
+many core architecture:
+
+Problem:
+
+Implementation:
+
+results:
+
+
+--------------------------------------------------
+onsram:
+
+Problem:
+
+Implementation:
+
+results:
+
+

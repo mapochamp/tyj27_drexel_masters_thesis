@@ -44,6 +44,8 @@ been completed yet so that the next compute instruction does not need to wait
 for the next memory instruction to complete. TVM also introduces an ML
 based modeling method that estimates the performance cost of different
 code generated and generates the lowest cost code to compile into the backed.
+This means that the search space of parameters such as loop tiling size and 
+loop unrolling factors are automated and decided based on the ML model.
 
 DLVM \cite{dlvm} (Wei et al. 2018) lowers a model into a domain specific IR
 such that modern compiler optimizations could be performed on the operations
@@ -70,4 +72,12 @@ tensor based instructions and could be compiled in a more targeted fashion compa
 to generic LLVM IR. Transformers also remove the dependency of backends having
 to support LLVM.
 
-% explicit focus on memory reuse (top lib, many core architecutre, onsram)
+
+% Toplib
+Li et al. 2020 introduced TOpLib: a compiler-assisted operator template library
+for DNN accelerators that focused on automated kernel generation with optimized
+memory management using graph coloring.
+
+% many core architecture
+
+% on sram
