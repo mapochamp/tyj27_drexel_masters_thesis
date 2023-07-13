@@ -219,34 +219,46 @@ node 0's output will be reused as inputs to node 1 and 2. In a single SPM case,
 we can see how the tensors would be mapped for each timestep. Clearly, the
 leftover space of the SPM is what we can use as leftover pinning space between
 operations. However, in the case of a multi-SPM architecture, this is not the
-case as tensors cannot be split over different SPMs. The other main point is
-that, to reach an optimal or close to optimal mapping of pinned tensors, the
-strategy must consider which SPM to pin it on if multiple SPMs have enough
-space. Once tensor has been pinned to a particular SPM, the mapping of other
-inputs and outputs will then be affect the available space and ability to
-maximize the number of future pinned tensors. The choice of where to map each
-input, output, and pinned tensor per operation is a new problem consideration
-not present in a single scratchpad case. In the single scratchpad case,
-location of where a tensor was pinned was not a necessary optimization. Transfer
-costs and size were the only determining factor of how a pinned tensor could affect
-the pin opportunities of future tensors. This new consideration creates a
-combinatorial explosion in the search space. A toy model is illustrated in
-figure 3.
+case as tensors cannot be split over different SPMs. To effectively navigate
+the optimal mapping of pinned tensors, what SPM a tensor is pinned on greatly
+affects the accumulated number of data transfers because of its effect on the
+mapping of future tensors to an SPM. Once a tensor is pinned to a particular
+SPM, mappings of inputs and outputs associated to other operations must be
+remapped in accordance to the remaining capacity of all SPMs. This issue can be
+compared to the bin-packing problem where the SPMs are bins and the tensors are
+the items. Hence, for every possible mapping of a particular tensor to a SPM,
+there exists new mapping for all other tensors that will exist for that
+particular operation and future operations relative to the position of the
+pinned tensor. The combinatorial explosion of possible mappings of tensors,
+how long each one is mapped for, and where they are mapped is a search space
+that grows with the depth of the deep learning model. A model of such
+a mapping problem is shown in figure 3.
 
-Utilizing a greedy approach in the context of multiple SPMs, i.e., initially
-pinning an item and remapping the inputs and outputs accordingly, essentially
-results in a dilemma comparable to the bin-packing problem. This process
-involves eviction when the pinned item cannot accommodate all other items, or
-when the output of the present operation is of higher importance. The initial
-decision of selecting an SPM to pin an item, which depends on the primary
-remapping of inputs and outputs around a pinned tensor, can considerably
-influence the pinnability of future items. This might, in certain instances,
-lead to the unpinned state of items immediately prior to their reuse.
+Notably, the single SPM case does not involve the concern of the exact location for
+pinning a tensor. Rather, the decision making process in such a case is guided
+solely by a tesnor's relative cost, its size, and the degree of overlap it has
+with other tensors in terms of liveness. These factors shape how a pinned
+tensor could influence future pinning opportunities for other tensors.
+Due to these new considerations, simply porting the OnSRAM greedy algorithm 
+leads to inefficient results since only a single scratchpad in the DLA can
+be used for pinning.
+
+Rather than porting the OnSRAM approach; utilizing a naively greedy approach in
+the context of multiple SPMs, i.e., initially pinning an item to whatever SPM
+has the most space and remapping the inputs and outputs accordingly, has also
+been considered. This process involves pinning outputs of every operation and
+evicting the tensors when the pinned tensor cannot accommodate all other
+necessary tensors for an operation, or when the output of the present operation
+is of higher importance. The initial decision of selecting an SPM to pin an
+item, which depends on the primary remapping of inputs and outputs around a
+pinned tensor, can considerably influence the pinnability of future items. This
+might, in certain instances, lead to the unpinned state of items immediately
+prior to their reuse.
 
 In such an approach, the system may not adequately identify opportunities for
 reuse, leading to unpredictable decision-making and near-suboptimal results.
 This limitation persists, albeit in a reduced form, even when the size of the
-SPM is increased. Therefore, to devise an algorithm that meticulously analyzes
+SPMs are increased. Therefore, to devise an algorithm that meticulously analyzes
 possible decisions and maps tensors in a manner that effectively encourages
 reuse, one could implement techniques such as graph coloring or ILP, which are
 similar to the methods used in solving the pseudo-register SPM register
@@ -264,14 +276,13 @@ such that the number of data transfers between SPMs and main memory on an
 inter-node graph level are minimized, we propose an ILP model to create an
 optimal strategy for a multi-scratchpad architecture.
 
-To do this we first take an optimized computational graph and map it as a final
+To do this we first take an optimized computational graph and create a final
 schedule of operators that will be ran. Using this schedule of operators, we
 then aggregate all tensors that are used in the DNN. Each input and output
 tensor is annotated with the operator from which it was created from and all
-operators that use it as an input from creation until the last use of the
-tensor. All tensor sizes, number of SPMs, and the size of the SPMs are gathered
-as well. Using this information an initial naive mapping scheme can be created
-where all inputs and outputs are mapped to a designated input SPM and output
-SPM. All outputs are assumed to be saved back to memory and reloaded when
-needed. We then use the initial mapping as an input into the ILP solver to realize the
-optimal strategy.
+operators that require it as a dependency. All tensor sizes, number of SPMs,
+and the size of the SPMs are gathered as well. Using this information an
+initial naive mapping scheme can be created where all inputs and outputs are
+mapped to a designated input SPM and output SPM. All outputs are assumed to be
+saved back to memory and reloaded when needed. We then use the initial mapping
+as an input into the ILP solver to realize the optimal strategy.
