@@ -1,6 +1,6 @@
 % Chapter Template
 
-\chapter{OnSRAM and Proposed approach} % Main chapter title
+\chapter{Proposed approach} % Main chapter title
 
 \label{Chapter3} % Change X to a consecutive number; for referencing this chapter elsewhere, use \ref{ChapterX}
 
@@ -8,7 +8,7 @@
 %	SECTION 1
 %----------------------------------------------------------------------------------------
 
-\section{Introduction}
+\section{OnSRAM}
 % do we need to talk about all the new accels that come out and why they are needed to run DL workloads instead of CPUs?
 
 % TODO: talk about how this thing is a compiler extension that can be plugged
@@ -18,68 +18,119 @@
 % millionth time. So this is attractive because its an actual unsolved problem
 % compared to the rest
 
-OnSRAM introduces the notion of two types of runtime performance optimizations
-that can be done on graph based compilers: intra-node and inter-node
-optimizations \cite{onsram}. Intra node optimizations are those that are
-focused on optimizing the operation kernel that the node specifies. This means
-tiling in favorable sizes and across specific dimensions, loop ordering, and
-DMA pipelining between tiles \cite{aladdin}.
+IBM's OnSRAM (Subhankar, et al. 2022) introduces the notion of two types of
+runtime performance optimizations that can be done on computational graphs:
+intra-node and inter-node optimizations \cite{onsram}. Intra node optimizations
+are those that are focused on optimizing the operation kernel that the node
+specifies. This means tiling in favorable sizes and across specific dimensions,
+loop ordering, and DMA pipelining between tiles \cite{aladdin}.
+Inter node optimizations are optimizations concerning the overall structure 
+of the graph and the relationship between node connections. This includes
+operator fusion and node reordering\cite{onsram}. 
 
-Inter node optimizations are optimizations concerning the overall structure and
-ordering of the nodes in the graph and their connections. This includes
-operator fusion and node reordering\cite{onsram}.
-OnSRAM focuses on internode optimizations, specifically in the domain of
-scratchpad memory management techniques for DLAs. 
+Existing deep learning frameworks are not modular like modern programming
+language compilers \cite{tensorflow} \cite{TVM} \cite{nGraph}. Differences in
+supported operation and backends, optimization opportunities based on IR
+structuring, and lack of a standardized IR \cite{nGraph}\cite{DLVM} all lead to
+why frameworks tend to be standalone projects that have little interoperability
+between layers of other compilers. Because of the fact that many of these
+frameworks are built from the ground up, they tend to re-implement many
+optimizations already explored in other frameworks for their own IR. In
+addition to the major engineering efforts required to do this, frameworks also
+implement their own IR for the sake of implementing their own unique kernel
+optimizations. Thus, almost all research efforts for memory efficiency within
+the deep learning framework space have been on intra-node optimizations
+facilitated through custom IR transformations and code generation. In contrast,
+OnSRAM exists as a interoperable compiler extension for computational graph
+based compilers to apply internode optimizations to maximize SPM utilization.
 
-Existing frameworks have neglected to focus on inter-node memory reuse
-optimizations in favor of intra-node optimizations \cite{TVM} \cite{deeptools}
-\cite{tensorflow}. Many mentioned frameworks are focused on creating an overall
-compiler framework that increases the usability and hardware abstractions for
-machine learning engineers by enabling hardware agnostic support and
-optimizations. As a consequence, each framework has taken a different approach
-or extended the capabilities of other existing frameworks to achieve the same
-goal. In comparison, OnSRAM is a compiler extension made to focus on an
-algorithm specific to just one type of memory optimization.
+%The motivation of such optimizations come from the minimization of memory
+%transfers which speed up inference runs by up to 5.17x \cite{onsram}. OnSRAM
+%exploits the repeating usage of outputs in a graph and identifies the outputs
+%that can pinned to minimize memory transfers which decrease inference time and
+%decrease energy costs. The ultimate performance gained from pinning outputs
+%comes from multiple inference runs where the cost of mapping pinnable tensors
+%are amortized by the time saved through iterative inference runs of the same
+%model.
 
-% TODO: its obvious but explain the amortization comment
-% TODO: create figure of reuse graph
-The motivation of such optimizations come from the minimization of memory
-transfers which speed up inference runs by up to 5.17x \cite{onsram}. OnSRAM
-exploits the repeating usage of outputs in a graph and identifies the outputs
-that can pinned to minimize memory transfers which decrease inference time and
-decrease energy costs. The ultimate performance gained from pinning outputs
-comes from multiple inference runs where the cost of mapping pinnable tensors
-are amortized by the time saved through iterative inference runs of the same
-model.
+%Such inter-node memory management techniques occur due to the presence of
+%inherent repeating patterns of operations to support deep learning
+%architectures, including matrix multiplication and convolution operations.
 
-Such inter-node memory management techniques occur due to the presence of
-inherent repeating patterns of operations to support deep learning
-architectures, including matrix multiplication and convolution operations.
-
+OnSRAM achieves its goal of maximizing SPM utilization by analyzing inter-node
+data-dependencies in computational graphs and using identified data reuse opportunities
+to create an optimal data allocation scheme for on-chip memory of the target DLA. OnSRAM
+shows that there exists a potential of up to 5.2x speedup opportunity for DL inference
+after integrating their SPM management in the runtime of Tensorflow \cite{onsram}.
 
 %-----------------------------------
 %	SUBSECTION 1
 %-----------------------------------
 
 \subsection{Static Graph Execution}
+% TODO: graph node reuse opportunities explained
+% TODO: explain what pinning (avoids incurring data transfer costs)
+% TODO: graph figure
 
-OnSRAM-Static, the static DNN Graph SPM manager is described as follows. A
-graph of operations that represent a DNN is passed to OnSRAM-Static as an
-input. The vertexes of the graph are the operations to be executed, e.g matrix
-multiply, and the edges represent input and output tensors.  All input and
-output data tensors of each node is analyzed for the start time, end time,
-number of reuses, distance between reuses, and size of the tensor. These
-properties are then used to determine the optmial pinning scheme to minimize
-memory transfers. Each of these properties are considered with weights on how
-important each property is and the tensors are psuedo-sorted in cost order;
-they are psuedo-sorted since tensors that don't overlap in their lifetimes need
-not be sorted relative to each other. These sorted tensors are then considered
-in a greedy fashion where tensors of the highest cost are considered for
-pinning first and the rest are considered to be pinned if and only if it can be
-accommodated in spite of the higher cost tensor being pinned. Tensors are only
-considered for pinning if they can be pinned for their entire duration of their
-lifetime and can fit on the SPM with the other inputs and outputs for every
-operation they are pinned for.
+% re-explain static graphs
+% how dnn graph structures create reuse oppurtunities
+% how reuse oppurunities translates into pinning model
+% how Onsram actually does the allocations and pinning
+
+% "effective management of the on-chip SPM across the nodes or layers of a DNN,
+% i.e., retaining the activations produced by a given layer on the on-chip
+% scratchpad so as to eliminate writes/reads to/from external memory when they
+% are reused in subsequent layers. "
+
+% Inter-node SPM management is relatively easy in the context of earlier DNN
+% topologies which were sequential in nature (e.g., AlexNet and VGG), i.e., with
+% every layer connected only to the layer succeeding it. In such cases, the
+% output activation of each layer (if fits) is held on-chip for one additional
+% step during which it is consumed and discarded. However, two recent trends in
+% modern DNN research make this an interesting and challenging issue.  — Complex
+% Topologies. Recent DNN topologies such as ResNets [38], Inception [28],
+% DenseNet [43], Multi-Head Attention [90], Neural Architecture Search (NAS)
+% [104] and others rely on complex connections across layers (e.g., re-convergent
+% paths) to achieve superior accuracy. Such topologies require
+% sophisticated management of the finite on-chip memory, balancing the tradeoffs
+% between the benefits of improving reuse by retaining acti- vations on-chip vs.
+% sacrificing reuse on other activations due to capacity limits.
+
+% Based on these observations, we propose OnSRAM, a compiler extension that
+% integrates within DL frameworks to manage the on-chip memory of AI
+% accelerators for the end-to-end application.  Without burdening the end-user
+% to manage the SPM, based on the hardware parameters and constraints, OnSRAM
+% provides hardware-aware software optimizations to meet the memory bandwidth
+% requirements across all the layers of the DNNs
+
+As previously described, computational graphs consist of nodes that represent
+operations and the edges represent data-dependencies between operations. During
+execution, each operation is loaded from main memory by the host device into
+the accelerator's SPM along with the operation's required weights and input
+tensors. Each transfer of data between main and on-chip memory incurs DMA
+transfer costs exacerbated by the bandwidth of the bus. Similarly, when a DLA
+executes an operation, the resulting output tensor is placed onto on-chip
+memory and again transferred back to main memory.  When two connected nodes,
+ie. an output of one operation is the input of the next, are scheduled
+sequentially, a reuse opportunity exists: the output tensor of the first
+operation can be pinned on the SPM without being transferred back and used
+immediately by the next operation, thereby eliminating unnecessary transfer
+costs. OnSRAM creates an SPM management framework to minimize inference runs
+by creating an optimal pinning tensors onto the SPM.
+
+OnSRAM-Static, the static DNN graph based SPM manager is described as follows.
+A graph of operations that represents a DNN is passed to OnSRAM-Static as an
+input. All input and output data tensors of each node is analyzed for the start
+time, end time, number of reuses, distance between reuses, and size of the
+tensor. A weighted sum of these properties is calculated for each tensor to
+determine a metric for the cost incurred should a tensor be saved back to main
+memory and reloaded onto the SPM again. Based on the graph execution schedule,
+the tensors are psuedo-sorted in cost order. They are psuedo-sorted since
+tensors that do not overlap in their lifetimes do not need to be sorted relative to
+each other. These sorted tensors are then considered in a greedy fashion where
+tensors of the highest cost are considered for pinning first. Tensors are only
+pinned if they can be pinned for the entire duration of their lifetime without
+obstructing tensors needed for other operations before their next reuse.
 
 OnSRAM-Static only applies to input and output tensors, not weights. This is
 due to the fact that weights are single use objects that are only needed for
@@ -90,13 +141,13 @@ well.
 
 Another aspect that OnSRAM does not consider is applicability towards training.
 The assumptions of the problem change when considering training and
-significantly increase the difficulty and search space. This requires 
-separate compiler extension implementations to be designed into separate
-portions of the framework. Further, batched training, partitioned accelerators,
-distributed systems, and large reuse distances due to backward passes and
-batched data \cite{onsram} bring significant design challenges that are not present in
-inference. Thus we have also chosen not to extend this work in this regard as
-well.
+significantly increase the difficulty and search space for an optimal solution.
+This requires separate compiler extension implementations to be designed into
+separate portions of the framework. Further, batched training, partitioned
+accelerators, distributed systems, and large reuse distances due to backward
+passes and batched data \cite{onsram} bring significant design challenges that
+are not present in inference. Thus we have also chosen not to extend this work
+in this regard as well.
 
 %----------------------------------------------------------------------------------------
 %	SECTION 2
@@ -106,15 +157,15 @@ well.
 % how important is this question? should we just be saying what we used
 
 Differences in hardware and simulators don't affect the relative performance of
-a non-pinning compiler compared to a pinning compiler, however there are some
-important environment variables that will consequently affect repeatability and
-benchmark performance. Most notably, the simulator and hardware architecture in
-use.
+a non-pinning compiler compared to a pinning compiler if the model, inputs,
+framework, and hardware stay constant. However there are some important
+environment variables that will consequently affect repeatability and benchmark
+performance. Most notably, the simulator and hardware architecture in use.
 
 OnSRAM uses a cycle accurate simulator to model and assess the performance of
 their algorithm \cite{onsram}.  We have opted to use the SMAUG\cite{smaug}
-framework that depends on the Aladdin\cite{aladdin} system to model our
-accelerator and the gem5 simulator\cite{gem5} to implement our experiments.
+framework that depends on the gem5 Aladdin\cite{aladdin} system to model our
+accelerator and implement our experiments.
 While gem5 is not cycle accurate, it still advertises a close to cycle accurate
 performance metrics and creates a relative base of comparison between base
 models and our optimized model.
@@ -124,15 +175,14 @@ models and our optimized model.
 
 Intra-node optimizations that both simulators do but may not do the same way
 that may affect performance comparisons: loop tiling, loop ordering, unrolling,
-and pipelined DMA operations for maximizing intra-node reuse.
+node re-ordering, and pipelined DMA operations for maximizing intra-node reuse.
 
 % architectural differences
 We use the default SMAUG provided accelerator inspired by NVDLA\cite{smaug}.
 The accelerator contains eight PEs, multiply accumalate (MACC) arrays, and
 contains 3 scratchpad memories\cite{smaug}. Two scratchpads are configured to
-be used as inputs and one for output.
-
-% do we need to specify onsram architecture?
+be used as inputs and one for output. Each scratchpad is sized at 32Kb as a default
+configuration.
 
 %----------------------------------------------------------------------------------------
 %	SECTION 3
@@ -147,7 +197,7 @@ be used as inputs and one for output.
 \subsection{OnSRAM Limitations}
 
 While OnSRAM has contributed a novel SPM management scheme that no framework
-has explored \cite{onsram}, there are limitations that don't allow it to
+has explored to date \cite{onsram}, there are limitations that do not allow it to
 generalize in a hardware agnostic scenario. This is due to its assumption that
 the accelerator contains only one shared scratchpad for input and output
 tensors. A consequence of this is that the greedy algorithm proposed to map
@@ -166,16 +216,22 @@ transfer.
 
 Consider the computational graph of in figure 1. The graph clearly shows that
 node 0's output will be reused as inputs to node 1 and 2. In a single SPM case,
-we can see how the tensors would be mapped for each timestep. Clearly, the leftover
-space of the SPM is what we can use as leftover pinning space between operations.
-However, in the case of a multi-SPM architecture, this is not the case as tensors
-cannot be split over different SPMs. The other main point is that, to reach an optimal
-or close to optimal mapping of pinned tensors, the strategy must consider which SPM
-to pin it on if multiple SPMs have enough space. Once an SPM has been pinned, the
-mapping of other inputs, outputs, and future pins will then be affect the availble
-space and ability to maximize the nubmer of pinned tensors. The choice of where to
-map each input, output, and pinned tensor per operation creates a combinatorial
-explosion in the search space. A toy model is illustrated in figure 3.
+we can see how the tensors would be mapped for each timestep. Clearly, the
+leftover space of the SPM is what we can use as leftover pinning space between
+operations. However, in the case of a multi-SPM architecture, this is not the
+case as tensors cannot be split over different SPMs. The other main point is
+that, to reach an optimal or close to optimal mapping of pinned tensors, the
+strategy must consider which SPM to pin it on if multiple SPMs have enough
+space. Once tensor has been pinned to a particular SPM, the mapping of other
+inputs and outputs will then be affect the available space and ability to
+maximize the number of future pinned tensors. The choice of where to map each
+input, output, and pinned tensor per operation is a new problem consideration
+not present in a single scratchpad case. In the single scratchpad case,
+location of where a tensor was pinned was not a necessary optimization. Transfer
+costs and size were the only determining factor of how a pinned tensor could affect
+the pin opportunities of future tensors. This new consideration creates a
+combinatorial explosion in the search space. A toy model is illustrated in
+figure 3.
 
 Utilizing a greedy approach in the context of multiple SPMs, i.e., initially
 pinning an item and remapping the inputs and outputs accordingly, essentially
