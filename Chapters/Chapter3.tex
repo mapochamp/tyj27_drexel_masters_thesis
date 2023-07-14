@@ -279,7 +279,7 @@ optimal strategy for a multi-scratchpad architecture.
 To do this we first take an optimized computational graph and create a final
 schedule of operators that will be ran. Using this schedule of operators, we
 then aggregate all tensors that are used in the DNN. Each input and output
-tensor is annotated with the operator from which it was created from and all
+tensor is annotated with the operator from which it was created and all
 operators that require it as a dependency. All tensor sizes, number of SPMs,
 and the size of the SPMs are gathered as well. Using this information an
 initial naive mapping scheme can be created where all inputs and outputs are
