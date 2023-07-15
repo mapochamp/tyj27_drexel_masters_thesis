@@ -1,0 +1,36 @@
+\chapter{Evaluation Method} % Main chapter title
+
+\label{Chapter5} % Change X to a consecutive number; for referencing this chapter elsewhere, use \ref{ChapterX}
+
+\section{Data Collection}
+To do evaluation, we first gather baseline performance data from SMAUG. The DLA architecture we
+choose to use is the DLA provided by SMAUG: a NVDLA-inspired convolution engine with
+32-way mutiply-accumulate (MACC) arrays and three SPMs. We configure and test our DLA with
+a constant three SPM configuration with varying sizes. We test on 32Kb, 64Kb, 128Kb, 256Kb,
+512Kb, 1024Kb, 2048Kb size variations. For each configuration, the following models were
+evaluated on: VGG, Lenet5, Minerva, Resnet, Cifar-CNN, elu, large-elu, and LSTM.
+
+The baseline performance for a non-optimized SPM managmenet strategy is
+collected by running the simulation in SMAUG and reading the total accelerator
+and DMA cycles used to run inference. The DMA cycles are included in the total accelerator cycles, so we can calculate the fraction of inference time spent on DMA transfers and hence get a 
+metric of how memory bound a particular DNN model is.
+\[
+    Memory\ Boundness = (total\ accelerator\ cycles - DMA\ cycles) / total\ accelerator\ cycles
+\]
+
+The upper bound of potential speedup from memory transfer savings is given by
+
+\[
+    Potential\ Speedup = 1/(1 - Memory\ Boundness)
+\]
+
+Such a speed up is only possible when there are no memory transfers at all and all
+inputs and weights are preloaded from the beginning.
+
+For each of the models, we gather the total accelerator cycles and DMA cycles
+used to run an inference run.
+
+The number of data transfers from the each SPM management strategy is obtained
+by summing over the number of transitions in the mapping matrix. We compare the
+two sums between the non-optimized and optimized strategies to estimate a speed
+up and DMA transfers saved factor.
