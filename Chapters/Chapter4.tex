@@ -208,4 +208,11 @@ We now describe the following set of constraints on the model:
 
 \end{itemize}
 
-This model description can now be used to find the exact solution to the SPM mapping problem.
+\subsection{Solver}
+This model description can now be used to find the exact solution to the SPM
+mapping problem. We use the Gurobi ILP solver and the Python API to create our
+optimized mapping matrix. The listed constraints can be used as is and the
+original $X$ variable is initialized with the naive mapping matrix.
+A %TODO FIGURE%
+of the optimized matrix is show in figure 7. This new matrix can be used 
+to integrate a pinning strategy in the framework.
