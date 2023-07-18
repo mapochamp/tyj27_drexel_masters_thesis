@@ -149,6 +149,23 @@ passes and batched data \cite{onsram} bring significant design challenges that
 are not present in inference. Thus we have also chosen not to extend this work
 in this regard as well.
 
+
+\begin{figure}[th]
+\centering
+\includegraphics[scale=0.7]{Figures/reuse_example_graph.png}
+\decoRule
+\caption[reuseGraph]{Example of a graph with data reuse}
+\label{fig:Saved}
+\end{figure}
+
+\begin{figure}[th]
+\centering
+\includegraphics[scale=0.5]{Figures/onsram_stack.png}
+\decoRule
+\caption[onsramStack]{Overview of OnSRAM}
+\label{fig:onsram_stack}
+\end{figure}
+
 %----------------------------------------------------------------------------------------
 %	SECTION 2
 %----------------------------------------------------------------------------------------
@@ -266,6 +283,24 @@ allocation problem.
 
 Choosing an optimal pinning strategy to minimize the amount of data transfers
 within this search space is the goal of this work.
+
+
+\begin{figure}[th]
+\centering
+\includegraphics[scale=0.7]{Figures/reuse_example_pin_map_fail_1.png}
+\decoRule
+\caption[pin_naive]{Example of a un-optimal pinning strategy}
+\label{fig:pin_naive}
+\end{figure}
+
+
+\begin{figure}[th]
+\centering
+\includegraphics[scale=0.7]{Figures/reuse_example_pin_all.png}
+\decoRule
+\caption[pin_optimal]{Example of an optimal pinning strategy}
+\label{fig:pin_optimal}
+\end{figure}
 
 \subsection{Proposed Approach}
 % we do everything in the 3 spm case

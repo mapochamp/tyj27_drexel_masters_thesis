@@ -43,6 +43,19 @@ received back into main memory. The backend contains all the accelerator
 kernels and are invoked every time the runtime dispatches an operator. Kernels
 can be either written in native gem5 or using Aladdin.
 
+\lstinputlisting[label={minerva_model_desc}language=Python, caption=Model
+description example, basicstyle=\ttfamily\scriptsize]{Figures/minerva_network.py}
+
+
+
+\begin{figure}[th]
+\centering
+\includegraphics[scale=0.7]{Figures/smaug_stack.png}
+\decoRule
+\caption[Saved]{Overview of SMAUG framework stack}
+\label{fig:Saved}
+\end{figure}
+
 % TODO: figure of framework stack
 % TODO: figure of a model description
 
@@ -90,6 +103,17 @@ it is used in.
 
 %TODO: figure of graph -> operator schedule -> data reuse graph
 
+
+\begin{figure}[th]
+\centering
+\includegraphics[scale=0.6]{Figures/graph_to_schedule.png}
+\decoRule
+\caption[Saved]{Illustration of a DNN graph being converted to a schedule}
+\label{fig:Saved}
+\end{figure}
+
+
+
 \subsection{SPM Mapping Representation}
 
 The way an SPM mapping is represented is a three dimensional array in which one
@@ -100,6 +124,32 @@ is mapped to what SPM during what operation. We build such a matrix after the
 static analysis phase to formulate an initial naive SPM mapping representation
 that would be executed by default on SMAUG. Figure 6 %TODO: FIGURE %
 illustrates in two dimensions the resulting naive SPM mapping matrix.
+
+\begin{figure}[th]
+\centering
+\includegraphics[scale=0.5]{Figures/naive_matrix_mapping.png}
+\decoRule
+\caption[Saved]{Naive SPM mapping matrix representation as an input to the ILP solver}
+\label{fig:Saved}
+\end{figure}
+
+
+\begin{figure}[th]
+\centering
+\includegraphics[scale=0.55]{Figures/optimal_matrix_mapping.png}
+\decoRule
+\caption[Saved]{Optimal SPM mapping matrix representation as an input to the ILP solver}
+\label{fig:Saved}
+\end{figure}
+
+
+\begin{figure}[th]
+\centering
+\includegraphics[scale=0.7]{Figures/mapping_matrix_cube.png}
+\decoRule
+\caption[Saved]{Illustration of mapping matrix}
+\label{fig:Saved}
+\end{figure}
 
 %----------------------------------------------------------------------------------------
 %	SECTION 2

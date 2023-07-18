@@ -57,6 +57,15 @@ that eviction and caching schemes are implemented in a heuristic manner
 repeatable workloads and are used in many embedded devices \cite{graphColoring}
 and DLAs \cite{onsram}.
 
+
+\begin{figure}[th]
+\centering
+\includegraphics[scale=0.5]{Figures/nvdla.png}
+\decoRule
+\caption[Reduction]{Architecture of SMAUG's NVDLA-inspired DLA}
+\label{fig:Reduction}
+\end{figure}
+
 \subsection{Scratchpad Memory Management Schemes}
 Because SPMs do not contain any hardware logic that deals with pinning and
 eviction, all memory transfers between main memory and on-chip-scratchpad-memory
@@ -125,6 +134,19 @@ Similarly, by considering an SPM with fixed size partitions to emulate registers
 an Integer Linear Program (ILP) made to solve the register allocation problem can
 be extended to find an optimal strategy for an SPM as discussed in \cite{verma}.
 
+
+\begin{figure}[th]
+\centering
+\includegraphics[scale=0.5]{Figures/graph_coloring_example.png}
+\decoRule
+\caption[graphColoring]{Example of graph coloring. Not all tensors can be
+mapped to the SPM at the same time so an interference graph is created
+based on their lifetimes and colored accordingly. The resulting mapping on the 
+right contains partitions for tensors based on their lifetime and colors such that
+all tensors fit on the SPM without contention.}
+\label{fig:graph_color}
+\end{figure}
+
 \section{Deep Learning Frameworks}
 \subsection{Introduction}
 In order to create to run a DL model, a programmer must describe the
@@ -162,6 +184,19 @@ managed by the framework. A framework that enables the deployment of a deep
 learning model onto hardware from only a high level language description is
 called an end to end framework.
 
+
+\lstinputlisting[label={tensorflow_desc}language=Python, caption=Model
+description example, basicstyle=\ttfamily\scriptsize]{Figures/high_level_model_description.py}
+
+\begin{figure}[th]
+\centering
+\includegraphics[scale=0.5]{Figures/framework_stack.png}
+\decoRule
+\caption[dlFramework]{Overview of deep learning framework stacks}
+\label{fig:dlFramework}
+\end{figure}
+
+
 %Computational graphs
 \subsection{Computational Graphs}
 % TODO: use the toplib explanation of differnt operators that make up a graph
@@ -198,6 +233,34 @@ middle-end to apply.
 % TODO: figure of Matrix operations -> DAG -> kernel code
 
 % TODO: figure of NN -> DAG
+
+
+
+\begin{figure}[th]
+\centering
+\includegraphics[scale=0.3]{Figures/cnn_smv_dataflow_graph.png}
+\decoRule
+\caption[cnn]{Computational graph of Cifar-CNN10}
+\label{fig:comp_graph_cnn}
+\end{figure}
+
+\begin{figure}[th]
+\centering
+\includegraphics[scale=0.1]{Figures/lstm_dataflow.png}
+\decoRule
+\caption[lstm]{Computational graph of LSTM}
+\label{fig:comp_graph_lstm}
+\end{figure}
+
+
+\begin{figure}[th]
+\centering
+\includegraphics[scale=0.5]{Figures/operator_to_kernel.png}
+\decoRule
+\caption[operatorKernel]{Estimated \% of data transfers saved for varying scratchpad sizes and models using the optimal pinning strategy}
+\label{fig:OperatorKernel}
+\end{figure}
+
 
 %IR
 \subsection{IR}
