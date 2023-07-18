@@ -38,6 +38,16 @@ constraints so as to maximize compute speed in cloud clusters. In contrast, gene
 purpose hardware are not able to meet power management needs of many workloads
 or cannot compute inference fast enough to meet timing requirements. Examples
 of DLAs used are TPUs from Google \cite{tensorflow}, NVDIA's NVDLA \cite{nvdla}, and Intel NNP \cite{nnp}.
+An example of an NVDLA based architecture is show in figure \ref{fig:nvdla}.
+
+
+\begin{figure}[thb!]
+\centering
+\includegraphics[scale=0.5]{Figures/nvdla.png}
+\decoRule
+\caption[Reduction]{Architecture of SMAUG's NVDLA-inspired DLA}
+\label{fig:nvdla}
+\end{figure}
 
 A key factor that determines the compute and power efficiency of a DLA is how
 well its Scratchpad Memory (SPM) is managed. Scratchpad memory is an on-chip
@@ -56,15 +66,6 @@ that eviction and caching schemes are implemented in a heuristic manner
 \cite{manyCore}. As a result, SPMs are highly popular for predictable and
 repeatable workloads and are used in many embedded devices \cite{graphColoring}
 and DLAs \cite{onsram}.
-
-
-\begin{figure}[th]
-\centering
-\includegraphics[scale=0.5]{Figures/nvdla.png}
-\decoRule
-\caption[Reduction]{Architecture of SMAUG's NVDLA-inspired DLA}
-\label{fig:Reduction}
-\end{figure}
 
 \subsection{Scratchpad Memory Management Schemes}
 Because SPMs do not contain any hardware logic that deals with pinning and
@@ -114,7 +115,7 @@ three main techniques explored in the compiler space: graph coloring, Integer
 Linear Programming (ILP), and heuristic based approaches.
 
 Graph coloring for SPMs comes from using graph coloring for the register
-allocation problem \cite{registerAllocation} \cite{graphColoring}.  A compiler
+allocation problem \cite{registerAllocation} \cite{graphColoring}. A compiler
 can decide what variables should be kept in what registers during their
 lifetimes and how often they should be swapped between main memory.  The
 objective of register allocations are the same as scratchpad management
@@ -128,14 +129,15 @@ is partitioned into psuedo-register files \cite{graphColoring}. Applying this
 to deep learning workloads is non-trivial as the tensor sizes are variable and
 can be larger than the size of the scratchpad. \cite{toplib} discusses graph
 coloring implantations for deep learning workloads in the context of maximizing
-SPM utilization within kernel code.
+SPM utilization within kernel code. Figure \ref{fig:graph_color} shows an example
+of how TopLib \cite{toplib} uses a graph coloring register allocation strategy
+to fit intermediate tensors onto a scratchpad in a kernel.
 
 Similarly, by considering an SPM with fixed size partitions to emulate registers,
 an Integer Linear Program (ILP) made to solve the register allocation problem can
 be extended to find an optimal strategy for an SPM as discussed in \cite{verma}.
 
-
-\begin{figure}[th]
+\begin{figure}[thb!]
 \centering
 \includegraphics[scale=0.5]{Figures/graph_coloring_example.png}
 \decoRule
@@ -161,7 +163,7 @@ must optimize the same model for runtime and memory efficiency on a diverse set
 of available hardware that all have different memory hierarchies, number of PEs,
 % TODO: fix this run on
 and supported operations. Frameworks must be able to decipher model
-descriptions in high level languages such as Python, apply hardware agnostic
+descriptions in high level languages such as Python \ref{lst:tensorflow_desc}, apply hardware agnostic
 optimizations, and map operations to a specific hardware to create an executable
 that will run the model to completion device.
 
@@ -185,20 +187,28 @@ learning model onto hardware from only a high level language description is
 called an end to end framework.
 
 
-\lstinputlisting[label={tensorflow_desc}language=Python, caption=Model
-description example, basicstyle=\ttfamily\scriptsize]{Figures/high_level_model_description.py}
-
-\begin{figure}[th]
-\centering
-\includegraphics[scale=0.5]{Figures/framework_stack.png}
-\decoRule
-\caption[dlFramework]{Overview of deep learning framework stacks}
-\label{fig:dlFramework}
-\end{figure}
-
+\lstinputlisting[language=Python, label={lst:tensorflow_desc}, caption={Python model
+description example}, basicstyle=\ttfamily\scriptsize]{Figures/high_level_model_description.py}
 
 %Computational graphs
 \subsection{Computational Graphs}
+
+\begin{figure}[th]
+\centering
+\includegraphics[scale=0.3]{Figures/cnn_smv_dataflow_graph.png}
+\decoRule
+\caption[cnn]{Computational graph of Cifar-CNN10}
+\label{fig:comp_graph_cnn}
+\end{figure}
+
+\begin{figure}[th]
+\centering
+\includegraphics[scale=0.1]{Figures/lstm_dataflow.png}
+\decoRule
+\caption[lstm]{Computational graph of LSTM}
+\label{fig:comp_graph_lstm}
+\end{figure}
+
 % TODO: use the toplib explanation of differnt operators that make up a graph
 % to explain this part
 A common interface used by most DL frameworks is the computational graph
@@ -224,7 +234,8 @@ memory hierarchy. A tensor is a multi-dimensional array that can take on many
 types (eg., floating point, int8) and are the inputs and outputs of operations.
 Tensors are what are passed along edges of the graph. The dataflow represented
 by a graph can be used to infer dependencies and possible optimizations for the
-middle-end to apply.
+middle-end to apply. Examples of computational graphs are shown in figure
+~\ref{fig:comp_graph_cnn} and figure ~\ref{fig:comp_graph_lstm}.
 
 % TODO: algorthim of a one hiddle layer sigmoid like in CNTK
 
@@ -233,33 +244,6 @@ middle-end to apply.
 % TODO: figure of Matrix operations -> DAG -> kernel code
 
 % TODO: figure of NN -> DAG
-
-
-
-\begin{figure}[th]
-\centering
-\includegraphics[scale=0.3]{Figures/cnn_smv_dataflow_graph.png}
-\decoRule
-\caption[cnn]{Computational graph of Cifar-CNN10}
-\label{fig:comp_graph_cnn}
-\end{figure}
-
-\begin{figure}[th]
-\centering
-\includegraphics[scale=0.1]{Figures/lstm_dataflow.png}
-\decoRule
-\caption[lstm]{Computational graph of LSTM}
-\label{fig:comp_graph_lstm}
-\end{figure}
-
-
-\begin{figure}[th]
-\centering
-\includegraphics[scale=0.5]{Figures/operator_to_kernel.png}
-\decoRule
-\caption[operatorKernel]{Estimated \% of data transfers saved for varying scratchpad sizes and models using the optimal pinning strategy}
-\label{fig:OperatorKernel}
-\end{figure}
 
 
 %IR
@@ -313,7 +297,9 @@ The front end of frameworks are responsible for breaking down the high level
 descriptions of a DL model, typically in Python or C++ \cite{tensorflow}, and
 converting them into computation graphs or IR. These lower level abstractions
 allow the framework to more easily apply optimizations for memory and runtime
-efficiency.
+efficiency. A high level overview of how the front end fits into the software
+stack of an end to end framework, as well as the middle and backend, are shown
+in figure \ref{dlFramework}.
 
 %middle end
 \subsection{Middle End}
@@ -417,4 +403,22 @@ hierarchy, data layout, and intrinsics. Kernels are created either via code
 generation or supplied by a vendor library. Kernel tuning optimizations are
 % TODO: explain what these means probably
 handled by the backend.  This includes loop unrolling, caching, loop
-reordering, and tiling.
+reordering, and tiling. An example of what a kernel for a specific operator
+looks like is illustrated in figure \ref{fig:OperatorKernel}
+
+\begin{figure}[th]
+\centering
+\includegraphics[scale=0.5]{Figures/operator_to_kernel.png}
+\decoRule
+\caption[operatorKernel]{Estimated \% of data transfers saved for varying scratchpad sizes and models using the optimal pinning strategy}
+\label{fig:OperatorKernel}
+\end{figure}
+
+\begin{figure}[th]
+\centering
+\includegraphics[scale=0.5]{Figures/framework_stack.png}
+\decoRule
+\caption[dlFramework]{Overview of deep learning framework stacks}
+\label{fig:dlFramework}
+\end{figure}
+

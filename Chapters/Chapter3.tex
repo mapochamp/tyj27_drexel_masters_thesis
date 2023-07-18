@@ -110,13 +110,22 @@ the accelerator's SPM along with the operation's required weights and input
 tensors. Each transfer of data between main and on-chip memory incurs DMA
 transfer costs exacerbated by the bandwidth of the bus. Similarly, when a DLA
 executes an operation, the resulting output tensor is placed onto on-chip
-memory and again transferred back to main memory.  When two connected nodes,
+memory and again transferred back to main memory. When two connected nodes,
 ie. an output of one operation is the input of the next, are scheduled
 sequentially, a reuse opportunity exists: the output tensor of the first
 operation can be pinned on the SPM without being transferred back and used
 immediately by the next operation, thereby eliminating unnecessary transfer
-costs. OnSRAM creates an SPM management framework to minimize inference runs
+costs \ref{fig:reuseGraph} . OnSRAM creates an SPM management framework to minimize inference runs
 by creating an optimal pinning tensors onto the SPM.
+
+
+\begin{figure}[thb!]
+\centering
+\includegraphics[scale=0.7]{Figures/reuse_example_graph.png}
+\decoRule
+\caption[reuseGraph]{Example of a graph with data reuse}
+\label{fig:reuseGraph}
+\end{figure}
 
 OnSRAM-Static, the static DNN graph based SPM manager is described as follows.
 A graph of operations that represents a DNN is passed to OnSRAM-Static as an
@@ -130,7 +139,18 @@ tensors that do not overlap in their lifetimes do not need to be sorted relative
 each other. These sorted tensors are then considered in a greedy fashion where
 tensors of the highest cost are considered for pinning first. Tensors are only
 pinned if they can be pinned for the entire duration of their lifetime without
-obstructing tensors needed for other operations before their next reuse.
+obstructing tensors needed for other operations before their next reuse. Figure
+\ref{fig:onsram_stack} shows an overview of how OnSRAM fits as a compiler extension
+into deep learning frameworks.
+
+\begin{figure}[thb]
+\centering
+\includegraphics[scale=0.5]{Figures/onsram_stack.png}
+\decoRule
+\caption[onsramStack]{Overview of OnSRAM}
+\label{fig:onsram_stack}
+\end{figure}
+
 
 OnSRAM-Static only applies to input and output tensors, not weights. This is
 due to the fact that weights are single use objects that are only needed for
@@ -148,23 +168,6 @@ accelerators, distributed systems, and large reuse distances due to backward
 passes and batched data \cite{onsram} bring significant design challenges that
 are not present in inference. Thus we have also chosen not to extend this work
 in this regard as well.
-
-
-\begin{figure}[th]
-\centering
-\includegraphics[scale=0.7]{Figures/reuse_example_graph.png}
-\decoRule
-\caption[reuseGraph]{Example of a graph with data reuse}
-\label{fig:Saved}
-\end{figure}
-
-\begin{figure}[th]
-\centering
-\includegraphics[scale=0.5]{Figures/onsram_stack.png}
-\decoRule
-\caption[onsramStack]{Overview of OnSRAM}
-\label{fig:onsram_stack}
-\end{figure}
 
 %----------------------------------------------------------------------------------------
 %	SECTION 2
