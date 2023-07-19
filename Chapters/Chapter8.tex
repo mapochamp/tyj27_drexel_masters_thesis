@@ -1,0 +1,28 @@
+\chapter{Future Work and Conclusion} % Main chapter title
+
+\label{Chapter8} % Change X to a consecutive number; for referencing this chapter elsewhere, use \ref{ChapterX}
+
+\section{Conclusion}
+As DNN model sizes continue to grow and DLAs become more prevalent, it becomes
+necessary to remove the software bottlenecks through good programming. We
+provide a solution via a memory management technique for scratchpads on an
+inter-node level for DLAs.
+
+\section{Future Work}
+% graph reconstructor for tiling 
+	% graph reconstructor for tiling so that we can do 2spm and 1spm case
+% integrate into smaug for more accurate results
+
+% compare with exact ILP solution for graph coloring
+% compare to graph coloring heursitcs
+% compare to heursitics apporach
+
+\begin{enumerate}
+	\item A graph reconstructor to account for tiling so tensors that are
+		larger than the SPM will be modelled more accurately than being
+		size capped to the SPM size.
+	\item Integration and testing into SMAUG or a full compiler extension
+		that is interoperable with other computational graph frameworks
+	\item Comparing the ILP solution to graph coloring and heursitic
+		approaches for the many scratchpad case.
+\end{enumerate}

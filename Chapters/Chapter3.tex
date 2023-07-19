@@ -1,22 +1,132 @@
 % Chapter Template
 
-\chapter{Proposed approach} % Main chapter title
+\chapter{Related Work} % Main chapter title
 
 \label{Chapter3} % Change X to a consecutive number; for referencing this chapter elsewhere, use \ref{ChapterX}
 
 %----------------------------------------------------------------------------------------
 %	SECTION 1
 %----------------------------------------------------------------------------------------
+\section{End-to-End Framework Optimizations for Deep Learning Accelerators}
+There exist many end to end deep learning frameworks that allow
+high level DSL programmers to create models that will be optimized to run
+on a given hardware. Because memory management is such a significant
+factor in runtime performance, all frameworks employ their own specialized
+optimization methods based on their unique model representation forms.
 
-\section{OnSRAM}
-% do we need to talk about all the new accels that come out and why they are needed to run DL workloads instead of CPUs?
+\subsection{IR based Optimizations}
+DLVM \cite{DLVM} (Wei et al. 2018) lowers a model into a domain specific IR
+such that modern compiler optimizations could be performed on the operations
+and simplified before LLVM IR is code generated for a backend to create
+individual kernels. Deep learning compilers \cite{tensorflow} \cite{torch}
+prior to this work would take a computational graph of operations and use off
+the shelf vendor provided kernels to implement them. While the kernels
+themselves are highly tuned, further optimizations could be made such as
+algebra implication, kernel fusion, and other modern compiler techniques such
+as dead code elimination and sub expression elimination could be applied to
+further increase performance. By reducing the amount of operations needed to be
+applied by analyzing which linear algebra operations could be simplified and
+applying further parallelization optimizations once it is lowered into LLVM IR,
+DLVM is able to minimize the amount of data transfer needed for kernels and how
+much data is needed to run the kernels themselves.
 
-% TODO: talk about how this thing is a compiler extension that can be plugged
-% into frameworks and we like this since it isn't re-optimizing and fighting
-% for the same intrano de optimizations every other framework is doing and
-% doesn't require reimagingin how to make a computation graph or IR for the
-% millionth time. So this is attractive because its an actual unsolved problem
-% compared to the rest
+After DLVM, Cyphers, Bansal, et al. 2018 at Intel created nGraph \cite{nGraph},
+another IR based deep learning framework that takes an approach of using its
+own IR. Instead of lowering a domain specific IR into LLVM after optimization
+passes, nGraph takes the IR and passes it to a transformer, a code generator
+that produces optimized backend code or code to be linked to a specific
+backend's kernels. The goal was to create a more flexible IR that better supported
+tensor based instructions and could be compiled in a more targeted fashion compared
+to generic LLVM IR. Transformers also remove the dependency of backends having
+to support LLVM.
+
+\subsection{Graph based Optimizations}
+TVM by Chen, et al. 2018 is a graph based end to end framework. 
+TVM aims to create a framework that targets
+multiple backends and accelerator architectures while still applying
+fine grained optimizations for both intra and inter operator computations.
+The main problem Chen et al. solved was the problem of existing deep learning
+compiler frameworks only applying high level graph optimizations that did
+not allow for tuning in operator specific implementations and left that to
+the backends. However, the existing frameworks only supported a small handful
+of GPU and CPU based backends. Creating support for new hardware backends
+requires significant manual effort and there was no automated solution that 
+existed. TVM allows for multiple backends to be supported while also
+applying high graph level and operator implementation level optimizations
+within its framework. Optimizations include operator fusion, SPM management via
+operator rescheduling, pipelined memory access, and machine learning (ML) based
+cost modeling for code generation. 
+Operator rescheduling is the rescheduling of operators based
+on data flow dependencies to maximize reuse by placing operators whose
+inputs are outputs of another next to each other. Pipelined memory accesses are
+when memory access instructions are executed without compute instructions having
+been completed yet so that the next compute instruction does not need to wait
+for the next memory instruction to complete. TVM also introduces an ML
+based modeling method that estimates the performance cost of different
+code generated and generates the lowest cost code to compile into the backed.
+This means that the search space of parameters such as loop tiling size and 
+loop unrolling factors are automated and decided based on the ML model.
+
+
+
+\section{Scratchpad Memory Management Techniques}
+
+\subsection{Graph Coloring}
+
+\subsection{Integer Linear Programming}
+Verma et al. \cite{verma} introduce an ILP approach to the same register
+allocation problem for single dimensional arrays as the work Li et al. extend
+for DNNs. Verma et al. reformulate the graph coloring problem into an ILP form
+where constraints are added to ensure that tensors with overlapping lifetimes
+are not allocated the same partition. The objective function is created to
+maximize the number of data transfers saved. By using an ILP model over a
+greedy algorithm, an optimal solution can be found. However, again, this
+approach is not trivial to apply towards large variable tensors in DL workloads
+due to assumptions the model takes of fixed size psuedo-registers and single
+dimensional arrays.
+
+% many core architecture
+The problem of using more than one SPM is an issue that has mostly been ignored
+until the work of Tao et  al. 2021 where they solve for an optimal data size
+granularity to transfer between scratchpads and main memory to maximize performance
+using a linear programming model for multicore architectures. The paper achieves
+this via compiler-directed SPM data transfer model to formulate an allocation
+scheme in a heterogeneous many-core architecture and then use the same allocations
+to determine the optimal data transfer granularity to maximize performance.
+The data transfer granularity is solved using ILP.
+
+\section{End-to-End Framework SPM Management Optimizations for DLAs}
+
+\subsection{Intra-node SPM Management Optimizations}
+% Toplib
+Li et al. 2020 introduced TOpLib \cite{toplib}: a compiler-assisted operator
+template library for DNN accelerators that focused on automated kernel
+generation with optimized memory management using graph coloring. TOpLib builds
+on the graph coloring solution to the register allocation problem applied to
+SPM management for embedded devices but for DNNs. The key difference is that in
+non-DL workloads, allocations are targeted for single dimensional arrays whose
+sizes are known statically. Meanwhile, for DL workloads, tensors are high
+dimensional, variable sized, and can often be larger than the size of the SPM
+itself.  This requires an approach to dynamically partition the SPM into
+variable sized psuedo-registers rather than equal sizing. The general concept
+that they apply is as follows. A static walk through of kernel code for a given
+operator is applied to analyze the liveness of each tensor used within it.  The
+liveness of each tensor can then be used to create an interference graph of
+tensors where tensors on an interference graph have overlapping lifetimes.
+This graph can then be used to apply a graph coloring strategy to cluster
+tensors with non-overlapping lifetimes onto the same partition of the SPM,
+while overlapping lifetimes will be allocated separate partitions. The paper
+proved that such an automated solution reached close to or exceeded hand
+written assembly kernels and reach on average a 90\% speed up over
+non-optimized kernel code.  While this approach could have been generalized to
+the overall DNN case from the kernel case, this work applies a different
+approach similar to the work presented by Verma et al. 2004 using an ILP model.
+However, Li et al. demonstrate that a greedy graph coloring approach can reach
+close to optimal performance across a multitude of operators.
+
+
+\subsection{Inter-node SPM Management Optimizations}
+% on sram
 
 IBM's OnSRAM (Subhankar, et al. 2022) introduces the notion of two types of
 runtime performance optimizations that can be done on computational graphs:
@@ -58,16 +168,13 @@ based compilers to apply internode optimizations to maximize SPM utilization.
 %architectures, including matrix multiplication and convolution operations.
 
 OnSRAM achieves its goal of maximizing SPM utilization by analyzing inter-node
-data-dependencies in computational graphs and using identified data reuse opportunities
-to create an optimal data allocation scheme for on-chip memory of the target DLA. OnSRAM
-shows that there exists a potential of up to 5.2x speedup opportunity for DL inference
-after integrating their SPM management in the runtime of Tensorflow \cite{onsram}.
+data-dependencies in computational graphs and using identified data reuse
+opportunities to create an optimal data allocation scheme for on-chip memory of
+the target DLA. OnSRAM shows that there exists a potential of up to 5.2x
+speedup opportunity for DL inference after integrating their SPM management in
+the runtime of Tensorflow \cite{onsram}.
 
-%-----------------------------------
-%	SUBSECTION 1
-%-----------------------------------
 
-\subsection{Static Graph Execution}
 % TODO: graph node reuse opportunities explained
 % TODO: explain what pinning (avoids incurring data transfer costs)
 % TODO: graph figure
@@ -115,17 +222,8 @@ ie. an output of one operation is the input of the next, are scheduled
 sequentially, a reuse opportunity exists: the output tensor of the first
 operation can be pinned on the SPM without being transferred back and used
 immediately by the next operation, thereby eliminating unnecessary transfer
-costs \ref{fig:reuseGraph} . OnSRAM creates an SPM management framework to minimize inference runs
+costs. OnSRAM creates an SPM management framework to minimize inference runs
 by creating an optimal pinning tensors onto the SPM.
-
-
-\begin{figure}[thb!]
-\centering
-\includegraphics[scale=0.7]{Figures/reuse_example_graph.png}
-\decoRule
-\caption[reuseGraph]{Example of a graph with data reuse}
-\label{fig:reuseGraph}
-\end{figure}
 
 OnSRAM-Static, the static DNN graph based SPM manager is described as follows.
 A graph of operations that represents a DNN is passed to OnSRAM-Static as an
@@ -169,158 +267,10 @@ passes and batched data \cite{onsram} bring significant design challenges that
 are not present in inference. Thus we have also chosen not to extend this work
 in this regard as well.
 
-%----------------------------------------------------------------------------------------
-%	SECTION 2
-%----------------------------------------------------------------------------------------
 
-\section{Simulation and Architecture}
-% how important is this question? should we just be saying what we used
+% IR based ones (ngraph and DLVM)
+% simplify shit to remove unnessary datamovement by creating smaller or fused
+% kernels so that you don't have to have to jam together a bunch of complex
+% kernels to complete your dataflow. 
+% graph based ones (smaug and TVM)
 
-Differences in hardware and simulators don't affect the relative performance of
-a non-pinning compiler compared to a pinning compiler if the model, inputs,
-framework, and hardware stay constant. However there are some important
-environment variables that will consequently affect repeatability and benchmark
-performance. Most notably, the simulator and hardware architecture in use.
-
-OnSRAM uses a cycle accurate simulator to model and assess the performance of
-their algorithm \cite{onsram}.  We have opted to use the SMAUG\cite{smaug}
-framework that depends on the gem5 Aladdin\cite{aladdin} system to model our
-accelerator and implement our experiments.
-While gem5 is not cycle accurate, it still advertises a close to cycle accurate
-performance metrics and creates a relative base of comparison between base
-models and our optimized model.
-
-% TODO: explain smaug more. like what it is and stuff and like other stuff from
-% the paper
-
-Intra-node optimizations that both simulators do but may not do the same way
-that may affect performance comparisons: loop tiling, loop ordering, unrolling,
-node re-ordering, and pipelined DMA operations for maximizing intra-node reuse.
-
-% architectural differences
-We use the default SMAUG provided accelerator inspired by NVDLA\cite{smaug}.
-The accelerator contains eight PEs, multiply accumalate (MACC) arrays, and
-contains 3 scratchpad memories\cite{smaug}. Two scratchpads are configured to
-be used as inputs and one for output. Each scratchpad is sized at 32Kb as a default
-configuration.
-
-%----------------------------------------------------------------------------------------
-%	SECTION 3
-%----------------------------------------------------------------------------------------
-
-\section{Extensions}
-
-%-----------------------------------
-%	SUBSECTION 1
-%-----------------------------------
-
-\subsection{OnSRAM Limitations}
-
-While OnSRAM has contributed a novel SPM management scheme that no framework
-has explored to date \cite{onsram}, there are limitations that do not allow it to
-generalize in a hardware agnostic scenario. This is due to its assumption that
-the accelerator contains only one shared scratchpad for input and output
-tensors. A consequence of this is that the greedy algorithm proposed to map
-possible pin candidates is non-trivial to apply to an accelerator with more
-than one scratchpad. Further, because of the heuristic approach, OnSRAM is not
-able to achieve the optimal memory mappings with respect to minimizing memory
-transfer.
-
-%-----------------------------------
-%	SUBSECTION 2
-%-----------------------------------
-
-\subsection{Motivating Example}
-
-% explain how onsram does the thing
-
-Consider the computational graph of in figure 1. The graph clearly shows that
-node 0's output will be reused as inputs to node 1 and 2. In a single SPM case,
-we can see how the tensors would be mapped for each timestep. Clearly, the
-leftover space of the SPM is what we can use as leftover pinning space between
-operations. However, in the case of a multi-SPM architecture, this is not the
-case as tensors cannot be split over different SPMs. To effectively navigate
-the optimal mapping of pinned tensors, what SPM a tensor is pinned on greatly
-affects the accumulated number of data transfers because of its effect on the
-mapping of future tensors to an SPM. Once a tensor is pinned to a particular
-SPM, mappings of inputs and outputs associated to other operations must be
-remapped in accordance to the remaining capacity of all SPMs. This issue can be
-compared to the bin-packing problem where the SPMs are bins and the tensors are
-the items. Hence, for every possible mapping of a particular tensor to a SPM,
-there exists new mapping for all other tensors that will exist for that
-particular operation and future operations relative to the position of the
-pinned tensor. The combinatorial explosion of possible mappings of tensors,
-how long each one is mapped for, and where they are mapped is a search space
-that grows with the depth of the deep learning model. A model of such
-a mapping problem is shown in figure 3.
-
-Notably, the single SPM case does not involve the concern of the exact location for
-pinning a tensor. Rather, the decision making process in such a case is guided
-solely by a tesnor's relative cost, its size, and the degree of overlap it has
-with other tensors in terms of liveness. These factors shape how a pinned
-tensor could influence future pinning opportunities for other tensors.
-Due to these new considerations, simply porting the OnSRAM greedy algorithm 
-leads to inefficient results since only a single scratchpad in the DLA can
-be used for pinning.
-
-Rather than porting the OnSRAM approach; utilizing a naively greedy approach in
-the context of multiple SPMs, i.e., initially pinning an item to whatever SPM
-has the most space and remapping the inputs and outputs accordingly, has also
-been considered. This process involves pinning outputs of every operation and
-evicting the tensors when the pinned tensor cannot accommodate all other
-necessary tensors for an operation, or when the output of the present operation
-is of higher importance. The initial decision of selecting an SPM to pin an
-item, which depends on the primary remapping of inputs and outputs around a
-pinned tensor, can considerably influence the pinnability of future items. This
-might, in certain instances, lead to the unpinned state of items immediately
-prior to their reuse.
-
-In such an approach, the system may not adequately identify opportunities for
-reuse, leading to unpredictable decision-making and near-suboptimal results.
-This limitation persists, albeit in a reduced form, even when the size of the
-SPMs are increased. Therefore, to devise an algorithm that meticulously analyzes
-possible decisions and maps tensors in a manner that effectively encourages
-reuse, one could implement techniques such as graph coloring or ILP, which are
-similar to the methods used in solving the pseudo-register SPM register
-allocation problem.
-
-Choosing an optimal pinning strategy to minimize the amount of data transfers
-within this search space is the goal of this work.
-
-
-\begin{figure}[th]
-\centering
-\includegraphics[scale=0.7]{Figures/reuse_example_pin_map_fail_1.png}
-\decoRule
-\caption[pin_naive]{Example of a un-optimal pinning strategy}
-\label{fig:pin_naive}
-\end{figure}
-
-
-\begin{figure}[th]
-\centering
-\includegraphics[scale=0.7]{Figures/reuse_example_pin_all.png}
-\decoRule
-\caption[pin_optimal]{Example of an optimal pinning strategy}
-\label{fig:pin_optimal}
-\end{figure}
-
-\subsection{Proposed Approach}
-% we do everything in the 3 spm case
-% goal is to mitigate data transfers between SPMs and main memory
-% In order to analyze the possible mapping
-In order to analyze the search space and create a pin mapping for all tensors
-such that the number of data transfers between SPMs and main memory on an
-inter-node graph level are minimized, we propose an ILP model to create an
-optimal strategy for a multi-scratchpad architecture.
-
-To do this we first take an optimized computational graph and create a final
-schedule of operators that will be ran. Using this schedule of operators, we
-then aggregate all tensors that are used in the DNN. Each input and output
-tensor is annotated with the operator from which it was created and all
-operators that require it as a dependency. All tensor sizes, number of SPMs,
-and the size of the SPMs are gathered as well. Using this information an
-initial naive mapping scheme can be created where all inputs and outputs are
-mapped to a designated input SPM and output SPM. All outputs are assumed to be
-saved back to memory and reloaded when needed. We then use the initial mapping
-as an input into the ILP solver to realize the optimal strategy.

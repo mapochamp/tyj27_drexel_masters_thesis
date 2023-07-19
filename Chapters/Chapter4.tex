@@ -1,268 +1,201 @@
 % Chapter Template
 
-\chapter{Implementation} % Main chapter title
+\chapter{Proposed approach} % Main chapter title
 
 \label{Chapter4} % Change X to a consecutive number; for referencing this chapter elsewhere, use \ref{ChapterX}
+
 %----------------------------------------------------------------------------------------
 %	SECTION 1
 %----------------------------------------------------------------------------------------
-\section{Static Graph Analysis}
-\subsection{SMAUG}
 
-We first describe the simulation and compiler framework we work with in order
-to show how tensors and mappings are obtained. SMAUG \cite{smaug} is an end to
-end full stack simulation framework for deep learning work loads. As an
-end-to-end framework SMAUG allows for a high level DSL to be used in order to
-describe a model so that many deep learning architectures can be evaluated very
-quickly. Further, SMAUG leverages the gem5-Aladdin \cite{aladdin} simulation
-framework to describe custom hardware architectures, easily change their
-configurations, all without the need for a dedicated backend compiler for each
-custom architecture. This allows researchers to iterate and evaluate on many
-deep learning workloads, and tune every layer of the stack without the need for
-RTL design and laborious backed integrations. To the best of our knowledge, no
-other simulation framework allows for the accurate performance analysis and
-provides end-to-end configuration support.
+% do we need to talk about all the new accels that come out and why they are needed to run DL workloads instead of CPUs?
 
-From SMAUG we can understand the amount of time and cycles being spent on compute time
-over DMA transfers. Different deep learning models call for different operators that
-result in diverse levels of memory and compute boundedness. Being able to
-analyze operator level differences in DMA and compute times allow us to weight tensors
-more heavily towards memory bound operations in the final ILP model.
+% TODO: talk about how this thing is a compiler extension that can be plugged
+% into frameworks and we like this since it isn't re-optimizing and fighting
+% for the same intrano de optimizations every other framework is doing and
+% doesn't require reimagingin how to make a computation graph or IR for the
+% millionth time. So this is attractive because its an actual unsolved problem
+% compared to the rest
 
-SMAUG is divided into a Python front end used to describe DL topologies, a
-runtime middle end that handles execution, and a backend of kernels. Models are
-created using Python APIs that describe what operations, hardware
-configuration, weights and input data, and which set of acerbated kernels a
-user wants to use. The front end takes this model description and serialized it
-into a form the runtime can read and create an execution context around. The
-runtime takes the serialized model description and creates a computation graph.
-The graph is used to perform tiling optimizations and an operator schedule.
-Once an operator schedule is created, the runtime executes each operation
-sequentially by dispatching each operation as previous operator outputs are
-received back into main memory. The backend contains all the accelerator
-kernels and are invoked every time the runtime dispatches an operator. Kernels
-can be either written in native gem5 or using Aladdin.
-
-\lstinputlisting[label={minerva_model_desc}language=Python, caption=Model
-description example, basicstyle=\ttfamily\scriptsize]{Figures/minerva_network.py}
-
-
-
-\begin{figure}[th]
-\centering
-\includegraphics[scale=0.7]{Figures/smaug_stack.png}
-\decoRule
-\caption[Saved]{Overview of SMAUG framework stack}
-\label{fig:Saved}
-\end{figure}
-
-% TODO: figure of framework stack
-% TODO: figure of a model description
-
-% TODO: explain how backends are invoked and how hardware is described and configured
-% TODO: explain the pipeline of tracing -> simulation for data gathering
-
-\subsection{Static Analysis}
-
-Like OnSRAM, we use the computational graph provided by the SMAUG runtime
-implemented in C++ to run our static analysis on tensors to devise a SPM
-management framework. We allow SMAUG to apply its optimizations and graph
-preprocessing to create a final operator schedule. This schedule is what we use
-to analyze operator data dependencies and tensor meta information. In SMAUG,
-each operation is represented as a class has a list of associated input
-tensors, a list of output tensors, and what computation the operation requires.
-Each tensor is also represented as a class that holds relevant information such
-as tensor size, dimensions, and dimension layout.
-
-
-% dict of inputs nad outputs per op for a scheudle list enumerate operations in
-% the scheudle and create a mapping of a paritcular operation to the sequence
-% number in the execution schedule
-
-% create list of unique tensors
-% create map of unique tensor to a unique tensor #
-
-% create list of tensor size indexed by tensor #
-
-% create map of tensor # to opreations sequence #'s its used in. The first element is the 
-% operation # in which it is created and the last operation # is the final operation it is used in
-
-We iterate through the schedule of operators and create a map where an
-operation name is mapped to its sequence number in the operator schedule, i.e
-matrix-multiply-0 is mapped to operation sequence number 0 for Minerva as shown
-in figure 5. % TODO FIGURE % For each operator we encounter for each iteration
-of the schedule, we take note of the operators input and output tensors. These inputs
-and outputs are used to create an array of unique tensors. This array of
-tensors is then used to create a mapping of each tensor to a tensor number
-where every tensor number is the index of the tensor in the array. A map of 
-tensor numbers to the corresponding tensor size is also created. We then
-build a map of tensor numbers to an array of operation sequence numbers they are
-required in where the first element of the array represents the operation that
-the tensor is created and the last element represents the final operation
-it is used in.
-
-%TODO: figure of graph -> operator schedule -> data reuse graph
-
-
-\begin{figure}[th]
-\centering
-\includegraphics[scale=0.6]{Figures/graph_to_schedule.png}
-\decoRule
-\caption[Saved]{Illustration of a DNN graph being converted to a schedule}
-\label{fig:Saved}
-\end{figure}
-
-
-
-\subsection{SPM Mapping Representation}
-
-The way an SPM mapping is represented is a three dimensional array in which one
-dimension represents time i.e the operation sequence number, another represents
-the unique tensors, and the final dimension represents what scratchpad they
-belong to. Using the dimensions we can show the relationship between what tensor
-is mapped to what SPM during what operation. We build such a matrix after the
-static analysis phase to formulate an initial naive SPM mapping representation
-that would be executed by default on SMAUG. Figure 6 %TODO: FIGURE %
-illustrates in two dimensions the resulting naive SPM mapping matrix.
-
-\begin{figure}[th]
-\centering
-\includegraphics[scale=0.5]{Figures/naive_matrix_mapping.png}
-\decoRule
-\caption[Saved]{Naive SPM mapping matrix representation as an input to the ILP solver}
-\label{fig:Saved}
-\end{figure}
-
-
-\begin{figure}[th]
-\centering
-\includegraphics[scale=0.55]{Figures/optimal_matrix_mapping.png}
-\decoRule
-\caption[Saved]{Optimal SPM mapping matrix representation as an input to the ILP solver}
-\label{fig:Saved}
-\end{figure}
-
-
-\begin{figure}[th]
-\centering
-\includegraphics[scale=0.7]{Figures/mapping_matrix_cube.png}
-\decoRule
-\caption[Saved]{Illustration of mapping matrix}
-\label{fig:Saved}
-\end{figure}
+%-----------------------------------
+%	SUBSECTION 1
+%-----------------------------------
 
 %----------------------------------------------------------------------------------------
 %	SECTION 2
 %----------------------------------------------------------------------------------------
-\section{Model Formulation}
+%----------------------------------------------------------------------------------------
+%	SECTION 3
+%----------------------------------------------------------------------------------------
 
-We now describe our ILP model to solve the SPM mapping optimization problem. The goal is to minimize
-the amount of cost weighted data transfers as much as possible by pinning as many re-usable tensors
-as possible. As described in the previous section, we can breakdown a DNN graph into the following variables.
+\section{Extending OnSRAM}
 
-% describe how we structure our matrix
-% data trasnfers costs are proportional the size of the tensor being transported because of the limited bandwidth of hte bus, therefore
-% tensors with larger sizes will be weighted as a higher cost. The overall transfer itself can be modelled as data entering the SPM and being
-% offloaded from the SPM to main memory. This is done by represneting whether a tensor is on teh SPM with a binary variable: 0 for the tensor is in main
-% memory and 1 to represnte hte tensor is in the SPM. A tensor being loaded into the SPM from main memory is modelled as a 0 to 1 in the tenosr column. 
-% A tensor being saved to main memory is modelled as 1 to 0 in teh tensor time column x[m][k][n] = 1 x[m+1][k][n] = 0
+%-----------------------------------
+%	SUBSECTION 1
+%-----------------------------------
 
-There exists a set of tensors required as inputs and outputs per operation and a unique list of tensors can be constructed.\\
-\\
-Let $N \coloneqq \{ n \text{ }  | \text{ } n   \text{ represents a tensor ID used in the DNN graph}\}$\\
+\subsection{OnSRAM Limitations}
 
-For each DLA architecture, there exists at least 1 scratchpad with a corresponding size. To refer to each scratchpad and its size on the DLA:\\
-\\
-Let $K \coloneqq \{ k \text{ }  | \text{ } k   \text{ represents a scratchpad ID}\}$\\
-Let $Q \coloneqq \{ q \text{ }| \text{ } \text{where } Q_k \text{ represents the size of Scratchpad$_k \in K$}\}$\\
+While OnSRAM has contributed a novel SPM management scheme that no framework
+has explored to date \cite{onsram}, there are limitations that do not allow it to
+generalize in a hardware agnostic scenario. This is due to its assumption that
+the accelerator contains only one shared scratchpad for input and output
+tensors. A consequence of this is that the greedy algorithm proposed to map
+possible pin candidates is non-trivial to apply to an accelerator with more
+than one scratchpad. Further, because of the heuristic approach, OnSRAM is not
+able to achieve the optimal memory mappings with respect to minimizing memory
+transfer.
 
-Once a graph has been scheduled, each operation can be referenced by its sequence number.\\
-\\
-Let $M \coloneqq \{ m \text{ }  | \text{ } m   \text{ represents an operation in the DNN graph}\}$\\
+\subsection{Simulation and Architecture}
+% how important is this question? should we just be saying what we used
 
-Due to limited bus bandwidth, tensors with different sizes will require
-different amounts of DMA transfers proportional to their size. In order to keep
-track of the sizes so that we can weight each tensor with a certain cost:\\
-\\
-Let $S \coloneqq \{ s \text{ }| \text{ } \text{where } S_n \text{ represents the size of tensor$_n \in N$}\}$\\
+Differences in hardware and simulators don't affect the relative performance of
+a non-pinning compiler compared to a pinning compiler if the model, inputs,
+framework, and hardware stay constant. However there are some important
+environment variables that will consequently affect repeatability and benchmark
+performance. Most notably, the simulator and hardware architecture in use.
+
+OnSRAM uses a cycle accurate simulator to model and assess the performance of
+their algorithm \cite{onsram}.  We have opted to use the SMAUG\cite{smaug}
+framework that depends on the gem5 Aladdin\cite{aladdin} system to model our
+accelerator and implement our experiments.
+While gem5 is not cycle accurate, it still advertises a close to cycle accurate
+performance metrics and creates a relative base of comparison between base
+models and our optimized model.
+
+% TODO: explain smaug more. like what it is and stuff and like other stuff from
+% the paper
+
+Intra-node optimizations that both simulators do but may not do the same way
+that may affect performance comparisons: loop tiling, loop ordering, unrolling,
+node re-ordering, and pipelined DMA operations for maximizing intra-node reuse.
+
+% architectural differences
+We use the default SMAUG provided accelerator inspired by NVDLA\cite{smaug}.
+The accelerator contains eight PEs, multiply accumalate (MACC) arrays, and
+contains 3 scratchpad memories\cite{smaug}. Two scratchpads are configured to
+be used as inputs and one for output. Each scratchpad is sized at 32Kb as a default
+configuration.
 
 
-So the mapping matrix can be described as a three dimensional matrix where every position is a binary variable such that\\
-\\
-$x[n][k][m] \in \{0, 1\} \forall n,k,m $\\
-$x[n][k][m] = 1$ represents a tensor $n$ that occupies scratchpad $k$ at operation $m$ \\
-$x[n][k][m] = 0$ represents a tensor $n$ does not exist on scratchpad $k$ at operation $m$\\
-
-If $x[n][k][m] = 0 \forall k$ then it means that tensor $n$ is saved to main memory at operation $m$.
+%-----------------------------------
+%	SUBSECTION 2
+%-----------------------------------
 
 
-\subsection{Objective Function}
-The objective function we would like to solve for such that we minimize the
-amount of cost weighted data transfers is the following:\\
-\\
-\[
-min(\sum_n \sum_k \sum_m S_n * (|x[n][k][m+1] - x[n][k][m]|))
-\]
-\\
+\section{Overview of Approach}
+\subsection{Motivating Example}
 
-A difference between $|x[n][k][m+1] - x[n][k][m]|$ represents either a data
-transfer of tensor $n$ from SPM $k$ to main memory if $x[n][k][m+1] -
-x[n][k][m] = -1$ or main memory to SPM if $x[n][k][m+1] - x[n][k][m] = 1$.
-$|x[n][k][m+1] - x[n][k][m]|$ shows that either a tensor $n$ remains on SPM $k$
-between operations $m$ and $m+1$ or stays in main memory.
+% explain how onsram does the thing
 
-By minimizing the sum of total data transfers multiplied by the tensor size, we
-minimize on a cost basis the amount of DMA loads and stores and maximize
-tensors being reused on the SPM. However, the absolute value in the objective function
-would make it non-linear. Thus, we add auxiliary variables to remove the absolute values
-and reformulate the objective function as:\\
-\\
-\[
-min(\sum_n \sum_k \sum_m y[n][k][m])
-\]
+\begin{figure}[thb!]
+\centering
+\includegraphics[scale=0.7]{Figures/reuse_example_graph.png}
+\decoRule
+\caption[reuseGraph]{Example of a graph with data reuse}
+\label{fig:reuseGraph}
+\end{figure}
 
-\subsection{Constraints}
-We now describe the following set of constraints on the model:
-\begin{itemize}
-	\item All necessary input and output tensors for a given operation will be present on the SPMs\\
+Consider the computational graph of in figure \ref{fig:reuseGraph}. The graph clearly shows that
+node 1's output will be reused as inputs to node 2 and 3. In a single SPM case,
+we can see how the tensors would be mapped for each timestep. Clearly, the
+leftover space of the SPM is what we can use as leftover pinning space between
+operations. However, in the case of a multi-SPM architecture, this is not the
+case as tensors cannot be split over different SPMs. To effectively navigate
+the optimal mapping of pinned tensors, what SPM a tensor is pinned on greatly
+affects the accumulated number of data transfers because of its effect on the
+mapping of future tensors to an SPM. Once a tensor is pinned to a particular
+SPM, mappings of inputs and outputs associated to other operations must be
+remapped in accordance to the remaining capacity of all SPMs. This issue can be
+compared to the bin-packing problem where the SPMs are bins and the tensors are
+the items. Hence, for every possible mapping of a particular tensor to a SPM,
+there exists new mapping for all other tensors that will exist for that
+particular operation and future operations relative to the position of the
+pinned tensor. The combinatorial explosion of possible mappings of tensors,
+how long each one is mapped for, and where they are mapped is a search space
+that grows with the depth of the deep learning model. An example of 
+an un-optimal pinning strategy placing inputs and outputs without full consideration
+of all future tensor placement combinations is shown in figure \ref{fig:pin_naive}.
+In the figure, we can see that even though some tensors are able to be pinned,
+there is unnecessary wasted space in some of the operations as well as other tensors
+being written back and reloaded. Figure \ref{fig:pin_optimal} shows how a different
+combination of tensor placements yields more reuse and less write backs to main
+memory.
 
-		Let $A \coloneqq \{ a \text{ } | \text{ } \text{where } A[n] = 1\text{ represents a tensor$_n$ is required as an input or output for operation$_m$} \}$\\
-		\[
-			A[n][m] \in \{0, 1\} \forall n,m
-		\]
+Notably, the single SPM case does not involve the concern of the exact location for
+pinning a tensor. Rather, the decision making process in such a case is guided
+solely by a tesnor's relative cost, its size, and the degree of overlap it has
+with other tensors in terms of liveness. These factors shape how a pinned
+tensor could influence future pinning opportunities for other tensors.
+Due to these new considerations, simply porting the OnSRAM greedy algorithm 
+leads to inefficient results since only a single scratchpad in the DLA can
+be used for pinning.
 
-		\[
-			A[n][m] = 1 \implies \sum_{i \in K} x[n][i][m] = 1 
-		\]
+Rather than porting the OnSRAM approach; a naively greedy approach in the
+context of multiple SPMs has also been considered, i.e., initially pinning an
+item to whatever SPM has the most space and remapping the inputs and outputs
+accordingly. This process involves pinning outputs of every operation and
+evicting the tensors when the pinned tensor cannot accommodate all other
+necessary tensors for an operation, or when the output of the present operation
+is of higher importance. The initial decision of selecting an SPM to pin an
+item, which depends on the primary remapping of inputs and outputs around a
+pinned tensor, can considerably influence the pinnability of future items. This
+might, in certain instances, lead to the unpinned state of items immediately
+prior to their reuse.
 
-	\item All tensors mapped on an SPM$_k$ must fit on within the given scratchpad space\\
+In such an approach, the system may not adequately identify opportunities for
+reuse, leading to unpredictable decision-making and near-suboptimal results.
+This limitation persists, albeit in a reduced form, even when the size of the
+SPMs are increased. Therefore, to devise an algorithm that meticulously analyzes
+possible decisions and maps tensors in a manner that effectively encourages
+reuse, one could implement techniques such as graph coloring or ILP, which are
+similar to the methods used in solving the pseudo-register SPM register
+allocation problem.
 
-		$\sum_{i \in N} {x[i][k][m] * s[i]} \leq Q[k] \forall m,k$\\
+Choosing an optimal pinning strategy to minimize the amount of data transfers
+within this search space is the goal of this work.
 
-	\item Tensors are not mapped before the operation in which they're lifetime begins \\
 
-		Let $B \coloneqq \{ b_n \text{ } | \text{ }  b_n \text{represents the start time for tensor $n$}\}$ \\
+\begin{figure}[th]
+\centering
+\includegraphics[scale=0.7]{Figures/reuse_example_pin_map_fail_1.png}
+\decoRule
+\caption[pin_naive]{Example of a un-optimal pinning strategy. Arrows
+denote being pinned to the SPM and the crosses denote
+an SPM being evicted due to capacity constraints.
+Black denotes unused memory.}
+\label{fig:pin_naive}
+\end{figure}
 
-		$x[n][m][k] = 0 \forall m < B_m$
 
-	\item Tensors are not mapped after the operation in which they're lifetime ends \\
+\begin{figure}[th]
+\centering
+\includegraphics[scale=0.7]{Figures/reuse_example_pin_all.png}
+\decoRule
+\caption[pin_optimal]{Example of an optimal pinning strategy. Arrows
+denote being pinned to the SPM and the crosses denote
+an SPM being evicted due to capacity constraints. Red borders signify
+distinction between different tensors created from the same operation.
+Black denotes unused memory.}
+\label{fig:pin_optimal}
+\end{figure}
+% we do everything in the 3 spm case
+% goal is to mitigate data transfers between SPMs and main memory
+% In order to analyze the possible mapping
 
-		Let $E \coloneqq \{ e_n \text{ } | \text{ }  e_n \text{represents time for tensor $n$}\}$ \\
+\subsection{ILP based Multi-Scratchpad Allocation Strategy}
+In order to analyze the search space and create a pin mapping for all tensors
+such that the number of data transfers between SPMs and main memory on an
+inter-node graph level are minimized, we propose an ILP model to create an
+optimal strategy for a multi-scratchpad architecture.
 
-		$x[n][m][k]= 0 \forall m > E_m$
-
-	\item Absolute Value Constraints\\
-		Let $Y = \{ y[0][0][0], y[0][0][1], ... y[n][k][m]\prime\}$\\
-		$(x[n][k][m+1] - x[n][k][m]) * S_n <= y[n][k][m]$\\
-		$(x[n][k][m] - x[n][k][m + 1]) * S_n <= y[n][k][m]$\\
-
-\end{itemize}
-
-\subsection{Solver}
-This model description can now be used to find the exact solution to the SPM
-mapping problem. We use the Gurobi ILP solver and the Python API to create our
-optimized mapping matrix. The listed constraints can be used as is and the
-original $X$ variable is initialized with the naive mapping matrix.
-A %TODO FIGURE%
-of the optimized matrix is show in figure 7. This new matrix can be used 
-to integrate a pinning strategy in the framework.
+To do this we first take an optimized computational graph and create a final
+schedule of operators that will be ran. Using this schedule of operators, we
+then aggregate all tensors that are used in the DNN. Each input and output
+tensor is annotated with the operator from which it was created and all
+operators that require it as a dependency. All tensor sizes, number of SPMs,
+and the size of the SPMs are gathered as well. Using this information an
+initial naive mapping scheme can be created where all inputs and outputs are
+mapped to a designated input SPM and output SPM. All outputs are assumed to be
+saved back to memory and reloaded when needed. We then use the initial mapping
+as an input into the ILP solver to realize the optimal strategy.
