@@ -14,6 +14,7 @@ as tile reordering, tile chunk size tuning, loop unrolling, and pipelined DMA tr
 the metrics gathered using our pinning strategy are in effect on top of any gains made by
 intra-node optimizations.
 
+\section{Metrics}
 The metrics we consider most important to measure are the speedup and total
 data transfer reduction. We show total speedup to see how much of a practical
 performance gain we can obtain using an ideal pining strategy for all workloads.
@@ -94,7 +95,7 @@ to account for tiling.
 \centering
 \includegraphics[scale=0.5]{Figures/tiling_regraph.png}
 \decoRule
-\caption[tilingRegraph]{A graph reconverted to account for tiling}
+\caption[Graph Reconstruction for Tiling]{A graph reconverted to account for tiling}
 \label{fig:tilingRegraph}
 \end{figure}
 

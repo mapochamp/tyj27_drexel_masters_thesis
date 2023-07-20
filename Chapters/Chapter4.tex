@@ -92,7 +92,7 @@ configuration.
 \centering
 \includegraphics[scale=0.7]{Figures/reuse_example_graph.png}
 \decoRule
-\caption[reuseGraph]{Example of a graph with data reuse}
+\caption[Example of a Graph with Data Reuse]{Example of a graph with data reuse}
 \label{fig:reuseGraph}
 \end{figure}
 
@@ -124,7 +124,7 @@ memory.
 
 Notably, the single SPM case does not involve the concern of the exact location for
 pinning a tensor. Rather, the decision making process in such a case is guided
-solely by a tesnor's relative cost, its size, and the degree of overlap it has
+solely by a tensor's relative cost, its size, and the degree of overlap it has
 with other tensors in terms of liveness. These factors shape how a pinned
 tensor could influence future pinning opportunities for other tensors.
 Due to these new considerations, simply porting the OnSRAM greedy algorithm 
@@ -160,7 +160,7 @@ within this search space is the goal of this work.
 \centering
 \includegraphics[scale=0.7]{Figures/reuse_example_pin_map_fail_1.png}
 \decoRule
-\caption[pin_naive]{Example of a un-optimal pinning strategy. Arrows
+\caption[Naive Pinning Example]{Example of a un-optimal pinning strategy. Arrows
 denote being pinned to the SPM and the crosses denote
 an SPM being evicted due to capacity constraints.
 Black denotes unused memory.}
@@ -172,7 +172,7 @@ Black denotes unused memory.}
 \centering
 \includegraphics[scale=0.7]{Figures/reuse_example_pin_all.png}
 \decoRule
-\caption[pin_optimal]{Example of an optimal pinning strategy. Arrows
+\caption[Optimal Pinning Example]{Example of an optimal pinning strategy. Arrows
 denote being pinned to the SPM and the crosses denote
 an SPM being evicted due to capacity constraints. Red borders signify
 distinction between different tensors created from the same operation.

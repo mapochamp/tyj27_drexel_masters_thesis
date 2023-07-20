@@ -22,12 +22,24 @@ deep learning workloads, and tune every layer of the stack without the need for
 RTL design and laborious backed integrations. To the best of our knowledge, no
 other simulation framework allows for the accurate performance analysis and
 provides end-to-end configuration support.
+\begin{figure}[thb!]
+\centering
+\includegraphics[scale=0.7]{Figures/smaug_stack.png}
+\decoRule
+\caption[Overview of SMAUG]{Overview of SMAUG framework stack}
+\label{fig:SmaugStack}
+\end{figure}
+
 
 From SMAUG we can understand the amount of time and cycles being spent on compute time
 over DMA transfers. Different deep learning models call for different operators that
 result in diverse levels of memory and compute boundedness. Being able to
 analyze operator level differences in DMA and compute times allow us to weight tensors
 more heavily towards memory bound operations in the final ILP model.
+
+\lstinputlisting[language=Python, caption={Model
+description example},label={lst:minerva_model_desc}, basicstyle=\ttfamily\scriptsize]{Figures/minerva_network.py}
+
 
 SMAUG is divided into a Python front end used to describe DL topologies, a
 runtime middle end that handles execution, and a backend of kernels. An overview
@@ -45,18 +57,6 @@ as previous operator outputs are received back into main memory. The backend
 contains all the accelerator kernels and are invoked every time the runtime
 dispatches an operator. Kernels can be either written in native gem5 or using
 Aladdin.
-
-\lstinputlisting[language=Python, caption={Model
-description example},label={lst:minerva_model_desc}, basicstyle=\ttfamily\scriptsize]{Figures/minerva_network.py}
-
-\begin{figure}[thb!]
-\centering
-\includegraphics[scale=0.7]{Figures/smaug_stack.png}
-\decoRule
-\caption[Saved]{Overview of SMAUG framework stack}
-\label{fig:SmaugStack}
-\end{figure}
-
 % TODO: figure of framework stack
 % TODO: figure of a model description
 
@@ -64,6 +64,15 @@ description example},label={lst:minerva_model_desc}, basicstyle=\ttfamily\script
 % TODO: explain the pipeline of tracing -> simulation for data gathering
 
 \subsection{Static Analysis}
+
+\begin{figure}[thb!]
+\centering
+\includegraphics[scale=0.6]{Figures/graph_to_schedule.png}
+\decoRule
+\caption[Computational Graph to Schedule Conversion]{Illustration of a DNN graph being converted to a schedule}
+\label{fig:graphToSchedule}
+\end{figure}
+
 Like OnSRAM, we use the computational graph provided by the SMAUG runtime
 implemented in C++ to run our static analysis on tensors to devise a SPM
 management framework. We allow SMAUG to apply its optimizations and graph
@@ -77,15 +86,6 @@ class has a list of associated input tensors, a list of output tensors, and
 what computation the operation requires.  Each tensor is also represented as a
 class that holds relevant information such as tensor size, dimensions, and
 dimension layout.
-
-\begin{figure}[thb!]
-\centering
-\includegraphics[scale=0.6]{Figures/graph_to_schedule.png}
-\decoRule
-\caption[graphToSchedule]{Illustration of a DNN graph being converted to a schedule}
-\label{fig:graphToSchedule}
-\end{figure}
-
 
 
 % dict of inputs nad outputs per op for a scheudle list enumerate operations in
@@ -116,6 +116,24 @@ it is used in.
 %TODO: figure of graph -> operator schedule -> data reuse graph
 
 
+
+\begin{figure}[thb!]
+\centering
+\includegraphics[scale=0.7]{Figures/mapping_matrix_cube.png}
+\decoRule
+\caption[3D Tensor Mapping Matrix]{Illustration of mapping matrix}
+\label{fig:mappingCube}
+\end{figure}
+
+
+\begin{figure}[thb!]
+\centering
+\includegraphics[scale=0.5]{Figures/naive_matrix_mapping.png}
+\decoRule
+\caption[2D Tensor Mapping Matrix]{Naive SPM mapping matrix representation as an input to the ILP solver}
+\label{fig:naiveSPM2D}
+\end{figure}
+
 \subsection{SPM Mapping Representation}
 
 The way an SPM mapping is represented is a three dimensional array in which one
@@ -129,24 +147,6 @@ illustrates in two dimensions the resulting naive SPM mapping matrix.
 
 % TODO: remake the matrix cube where we blow up a element to show a tensor and
 % like a mapping to the grpah or something
-
-\begin{figure}[thb!]
-\centering
-\includegraphics[scale=0.7]{Figures/mapping_matrix_cube.png}
-\decoRule
-\caption[Cube]{Illustration of mapping matrix}
-\label{fig:mappingCube}
-\end{figure}
-
-
-\begin{figure}[thb!]
-\centering
-\includegraphics[scale=0.5]{Figures/naive_matrix_mapping.png}
-\decoRule
-\caption[naive2d]{Naive SPM mapping matrix representation as an input to the ILP solver}
-\label{fig:naiveSPM2D}
-\end{figure}
-
 %----------------------------------------------------------------------------------------
 %	SECTION 2
 %----------------------------------------------------------------------------------------
@@ -266,7 +266,7 @@ This new matrix can be used to integrate a pinning strategy in the framework.
 \centering
 \includegraphics[scale=0.55]{Figures/optimal_matrix_mapping.png}
 \decoRule
-\caption[optimal2d]{Optimal SPM mapping matrix representation as an input to the ILP solver}
+\caption[Optimal Mapping 2D Matrix]{Optimal SPM mapping matrix representation as an input to the ILP solver}
 \label{fig:optimalSPM2D}
 \end{figure}
 

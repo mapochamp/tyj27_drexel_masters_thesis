@@ -8,40 +8,46 @@
 %----------------------------------------------------------------------------------------
 \section{End-to-End Deep Learning Frameworks}
 
-In order to create to run a DL model, a programmer must describe the
-architecture, its input and output layers, and the inputs that will be passed
-to the model. Beyond these properties, the implementation and challenges
-associated with deploying such a model on a DLA or distributed system is
-handled by deep learning frameworks. Deep learning frameworks abstract the
-implementation and execution details from the programmer such that the
-programmer may focus on the model creation only. The abstraction of such
-details forces the trade-off of performance and generality as the frameworks
+In order to create a DL model, a programmer must describe the architecture
+through the layers of operations that will be performed, and the inputs that
+will be passed to the model. Beyond these properties, the implementation and
+challenges associated with deploying such a model on a DLA or distributed
+system is handled by deep learning frameworks. Deep learning frameworks
+abstract the implementation and execution details from the programmer such that
+the programmer may focus solely on model creation. The abstraction of such
+details forces a trade-off between performance and generality as the frameworks
 must optimize the same model for runtime and memory efficiency on a diverse set
-of available hardware that all have different memory hierarchies, number of PEs,
+of available hardware. These hardware options all have different memory hierarchies, number of
+processing elements (PEs),
 % TODO: fix this run on
 and supported operations. Frameworks must be able to decipher model
-descriptions in high level languages such as Python \ref{lst:tensorflow_desc}, apply hardware agnostic
-optimizations, and map operations to a specific hardware to create an executable
-that will run the model to completion device.
+descriptions in high level languages such as Python, e.g \ref{lst:tensorflow_desc},
+apply hardware agnostic optimizations, and map operations to a specific
+hardware to create an executable that will run the model to completion.
 
-Conventional compilers (eg. Clang) typically take a high level language down to
+Conventional compilers (eg., Clang) typically take a high level language down to
 an intermediate representation (IR) to then machine code that can run on a
-device.  The front end is responsible for what parses and lexes the high level
-code into a control flow graph, the middle end is responsible for lowering it
+device.  The front end is responsible for parsing and lexing the high level
+code into a control flow graph. The middle-end is responsible for lowering it
 to IR and running optimization passes on the IR, and the backend lowers the IR
 further into machine code. Similarly, DL frameworks can be broken down into a
-front-end, middle-end, and backend. However, there are major differences in the
-role of each section and how they are performed.  Deep learning frameworks
-deal with a small set of operations that are highly parallelizable but with
-variable-sized data \cite{nGraph}. Some operations include: sigmoid, matrix
-multiply, vectorsum, L1 Norm, element wise multiply, and dropout among others
-\cite{cntk}. Further, a programmer for a given deep learning framework will
-work with a domain specific language (DSL) such as Tensorflow
-\cite{tensorflow}. Because DSLs only concern with the description of deep
-learning networks, the runtime execution, memory, and device management is
-managed by the framework. A framework that enables the deployment of a deep
-learning model onto hardware from only a high level language description is
-called an end to end framework.
+front-end, middle-end, and backend with similar functionality.
+
+Deep learning frameworks deal with a small set of operations that are highly
+parallelizable but with variable-sized data \cite{nGraph}. Some operations
+include: sigmoid, matrix multiply, vectorsum, L1 Norm, element wise multiply,
+and dropout among others \cite{cntk}. Further, a programmer for a given deep
+learning framework will work with a domain specific language (DSL) such as
+Tensorflow \cite{tensorflow}. A front-end for a DL framework will take a model
+description written in a DSL and create either IR or a computational graph that
+represents the operations necessary to be ran on hardware. The middle-end will
+take this IR or graph and apply hardware agnostic optimization passes. The
+optimized graph or IR will then be integrated into a runtime the framework
+creates, where operator scheduling, execution, and memory management are dealt
+with. The final runtime context will be passed to a backend to create a
+runnable executable for a target hardware architecture.  A framework that
+performs all the steps with a high level mode description as its only input is
+called an end-to-end framework.
 
 
 \lstinputlisting[language=Python, label={lst:tensorflow_desc}, caption={Python model
@@ -54,7 +60,7 @@ description example}, basicstyle=\ttfamily\scriptsize]{Figures/high_level_model_
 \centering
 \includegraphics[scale=0.3]{Figures/cnn_smv_dataflow_graph.png}
 \decoRule
-\caption[cnn]{Computational graph of Cifar-CNN10}
+\caption[Computational Graph of CNN]{Computational graph of Cifar-CNN10}
 \label{fig:comp_graph_cnn}
 \end{figure}
 
@@ -62,7 +68,7 @@ description example}, basicstyle=\ttfamily\scriptsize]{Figures/high_level_model_
 \centering
 \includegraphics[scale=0.1]{Figures/lstm_dataflow.png}
 \decoRule
-\caption[lstm]{Computational graph of LSTM}
+\caption[Computational Graph of LSTM]{Computational graph of LSTM}
 \label{fig:comp_graph_lstm}
 \end{figure}
 
@@ -71,11 +77,11 @@ description example}, basicstyle=\ttfamily\scriptsize]{Figures/high_level_model_
 A common interface used by most DL frameworks is the computational graph
 \cite{tensorflow} \cite{cntk} that represents a network of operations needed to
 run a DL model. Each DL model can be broken down into a series of discrete
-computational operations that can be applied to an input to describe a given
+computational operations that, applied to an input, can describe a given
 model. A graph made up of vertices and edges where the vertices represent an
 operation and the edges represent tensors that flow from one operation to the
 next can be used to fully describe a DL model. Computational graphs are
-directed acyclic graphs (DAG).  Each vertex can have between zero and two
+directed acyclic graphs (DAGs).  Each vertex can have between zero and two
 % TODO: we need to explain how deep leraning models archs look like to describe
 % how the concept of layers and "stacking" works to make this explaniation work
 % TODO: create a figure of DL computational graph
@@ -83,12 +89,12 @@ inputs and zero to one outputs. So for each model, each node in each layer can
 be broken down into an operation that maps to a node in the graph. An operation
 is a particular computation that must be ran with a set of inputs and outputs.
 The implementation of the operation is defined by a kernel. A kernel is
-specific to a hardware architecture and are mapped to each operation by the
+specific to a hardware architecture and is mapped to each operation by the
 backend. For example a matrix multiply operation is an essential operation
 that reoccurs frequently in computation graphs; the implementation of a matrix
 multiply will depend on how many processing elements (PE) the DLA has and its
 memory hierarchy. A tensor is a multi-dimensional array that can take on many
-types (eg., floating point, int8) and are the inputs and outputs of operations.
+types (eg., floating point, int8) and represents the inputs and outputs of operations.
 Tensors are what are passed along edges of the graph. The dataflow represented
 by a graph can be used to infer dependencies and possible optimizations for the
 middle-end to apply. Examples of computational graphs are shown in figure
@@ -113,7 +119,7 @@ modularity that IR provides may lead to more optimization opportunities
 \cite{DLVM}. In a computation graph, each kernel can be tuned to maximize its
 performance in isolation. Outside of manual kernel turning, performance gains
 come from the reordering of schedules and changing the access pattern of
-tensors.  In IR based frameworks, the same types of optimizations can be done
+tensors. In IR-based frameworks, the same types of optimizations can be applied
 to each instruction that maps to a kernel. However, the kernels in IR are not
 picked from a set of pre-made kernels in a supported backend, but rather code
 generated into LLVM IR or another lower level IR based on the framework. This
@@ -124,46 +130,51 @@ in a more efficient way than sequentially ordering kernels as done in
 computational graph based frameworks. Further, different IRs may come with
 a wider range of operations that may be supported than the set of operations in
 a computational graph that allow the compiler and code generator to manipulate
-the DAG in more ways.
+the DAG in more ways. The main benefit to IR based frameworks is that the
+representation allows for the application of many traditional compiler
+optimizations that otherwise are unavailable in computational graph based
+compilers.
 
-Once a DL model is lowered into IR and its optimization passes are done, the IR
-is passed into a code generator as backend code or a more supported IR such as
-LLVM IR. A transformer will transform the framework IR into code formatted for
-a particular backend. There must be a transformer made for every backend. Otherwise,
-in the case of LLVM based IR transformations, only backends that support LLVM
-IR are able to be used to generate a final binary.
+Once a DL model is lowered into IR and its optimization passes are completed, the IR
+is passed into a code generator, called a transformer, as backend code or a
+more widely supported IR such as LLVM IR. A transformer will transform the framework
+IR into code formatted for a particular backend. There must be a transformer
+made for every backend. Otherwise, in the case of LLVM based IR
+transformations, only backends that support LLVM
+IR can be used to generate a final binary.
+
 \subsection{Front End}
 % TODO: talk more about DSLs and how they are used and why they need to be
 % broken up into expressions -> graph 
-The front end of frameworks are responsible for breaking down the high level
+The front end of frameworks is responsible for breaking down the high level
 descriptions of a DL model, typically in Python or C++ \cite{tensorflow}, and
-converting them into computation graphs or IR. These lower level abstractions
+converting them into computation graphs or IR. These lower-level abstractions
 allow the framework to more easily apply optimizations for memory and runtime
 efficiency. 
 
 \subsection{Middle End}
-Most optimizations that occur and the engineering focus of end to end
-frameworks lie in the middle end. Middle ends must have a diverse set of
+Most optimizations that occur and the primary engineering focus of end to end
+frameworks lie in the middle-end. The middle-end must consider a diverse set of
 backends in mind and be hardware agnostic. In order to achieve this, an IR or
 computational graph representation of a DL model is received from the front
-end. Once a constructed dataflow graph in either computational graph or IR
-form is passed, several passes of static analysis and optimization occur
+end. Once a constructed dataflow graph, in either computational graph or IR
+form, is passed, several passes of static analysis and optimization occur
 \cite{TVM} \cite{DLVM} \cite{tensorflow}. Once a completely optimized dataflow
 graph is created, it must then be formatted to be compatible to a particular
 backend. This can either mean serializing a computational graph into a one
 that a backend can read or applying a transform to the optimized IR to generate
 code that is compatible with a backend. Backends are vendor specific compilers
-that deal with the device level details for kernel implementations and tuning.
+that handle device level details for kernel implementations and tuning.
 Back-ends will support a subset of formats (ie either serialized computational
-graphs or a specific IR) and to that end, there must be significant engineering
-effort to support a backend for a given middlend. Consequently, most frameworks
-only support a handful or backends such as Nvidia's CUDA backend or BLAS for
-CPUs. For supported backends, the middlend must be sure to create a final
+graphs or a specific IR), requiring significant engineering
+effort to support a backend for a given middle-end. Consequently, most frameworks
+only support a handful of backends such as Nvidia's CUDA backend or BLAS for
+CPUs. For supported backends, the middle-end must ensure to create a final
 computational graph or set of IR modules that do not contain operations or
-instructions that are not supported by the predefined kernels in the vendor
+instructions that are unsupported by the predefined kernels in the vendor
 provided library of a backend \cite{TVM}.
 
-Optimizations in the middle end can be separated into IR specific and
+Optimizations in the middle-end can be separated into IR specific and
 computational graph specific optimizations. For graph level optimizations,
 they are typically higher level than kernel tuning and involve graph
 restructuring and fusing of subgraphs. Specific optimizations include
@@ -194,7 +205,7 @@ graph. As the number of operators on a network grows, the number of possible
 operators that can be fused also grows with it combinatorially \cite{TVM}.
 This is exacerbated with the number of supported data layouts, data types, 
 and DLA intrinsics. To this end, a large fused operator
-cannot be created such that memory transfer costs are fully hidden optimally.
+cannot be created such that memory transfer costs are completely hidden.
 
 Data layout transformations are the reformatting of how tensors are passed
 to a DLA based on the specific memory hierarchy that the DLA has. To exploit
@@ -216,7 +227,7 @@ and an element-wise add \cite{DLVM}.
 \subsection{Back End}
 A backend is typically not something that is component of a framework
 but a vendor provided compiler for a DLA that may be hooked into a compatible
-middle end. A backend may support a small set of input formats that describe
+middle-end. A backend may support a small set of input formats that describe
 a DL model in the form an optimized version of a computational graph or IR.
 At this point, all optimizations and transforms that have occurred have
 only been applied to the DL model description provided by the programmer.
@@ -227,7 +238,7 @@ a runtime environment.
 A backend like TensorRT \cite{tensorRT} consists of two phases: a build phase
 and runtime phase. During the build phase a kernel search is done to map
 available kernels to the operators in the dataflow graph that was passed from
-the middle end. A serialized version of the graph is then statically analyzed to
+the middle-end. A serialized version of the graph is then statically analyzed to
 be used as context to generate code for the execution context and runtime
 engine.  An engine is a representation of the optimized model with a scheduler,
 memory manager, a network of operators, their inputs and outputs, and meta data
@@ -248,7 +259,7 @@ looks like is illustrated in figure \ref{fig:OperatorKernel}
 \centering
 \includegraphics[scale=0.5]{Figures/operator_to_kernel.png}
 \decoRule
-\caption[operatorKernel]{Estimated \% of data transfers saved for varying scratchpad sizes and models using the optimal pinning strategy}
+\caption[Simple Operator Kernel]{Estimated \% of data transfers saved for varying scratchpad sizes and models using the optimal pinning strategy}
 \label{fig:OperatorKernel}
 \end{figure}
 
@@ -256,26 +267,34 @@ looks like is illustrated in figure \ref{fig:OperatorKernel}
 \section{Deep Learning Accelerators}
 
 \subsection{Overview of Deep Learning Accelerators}
-DNN workloads are made up of millions of
-parameters, dozens of different operations that work on multi dimensional data
-structures made of thousands of floating point units. However, because of the
-finite set of primitive operations that are needed to support the computation
-of these models, the repetitive nature of these operations, and type of data
-they work with; DL models are highly parallelizable and specialized hardware
-can be built to exploit this with maximum efficiency. Some exist to be power
-efficient and work in embedded devices while others are made to have no power
-constraints so as to maximize compute speed in cloud clusters. In contrast, general
-purpose hardware are not able to meet power management needs of many workloads
-or cannot compute inference fast enough to meet timing requirements. Examples
-of DLAs used are TPUs from Google \cite{tensorflow}, NVDIA's NVDLA \cite{nvdla}, and Intel NNP \cite{nnp}.
-An example of an NVDLA based architecture is show in figure \ref{fig:nvdla}.
+
+DNN workloads involve complex computations on multi-dimensional data
+structures, consisting of thousands of floating point units and millions of
+parameters. These computations comprise dozens of different operations.
+However, due to the finite set of primitive operations required to compute
+these models and the repetitive nature of these operations, DNN workloads are
+highly parallelizable. This characteristic allows for the development of
+specialized hardware, designed to exploit this parallelizability with maximum
+efficiency.
+
+Different types of hardware are built with specific use cases in mind. Some are
+designed to be power efficient for use in embedded devices, while others are
+built without power constraints, aiming to maximize computation speed in cloud
+clusters. This is in contrast to general-purpose hardware, which often cannot
+meet the power management needs of many workloads or compute inference quickly
+enough to meet timing requirements.
+
+Several companies have developed specialized hardware known as Deep Learning
+Accelerators (DLAs), which are optimized for such operations. Examples of DLAs
+include Google's TPUs \cite{tensorflow}, NVIDIA's NVDLA \cite{nvdla}, and Intel's NNP \cite{nnp}. Figure \ref{fig:nvdla}
+shows an example of an architecture based on NVIDIA's NVDLA.
 
 
 \begin{figure}[thb!]
 \centering
 \includegraphics[scale=0.5]{Figures/nvdla.png}
 \decoRule
-\caption[Reduction]{Architecture of SMAUG's NVDLA-inspired DLA}
+\caption[NVDLA Inspired DLA Architecture Diagram]{Architecture of SMAUG's NVDLA-inspired DLA}
 \label{fig:nvdla}
 \end{figure}
 
@@ -358,29 +377,11 @@ to be placed in separate registers. An interference graph can then be used to
 apply a greedy graph coloring algorithm where the number of registers maps to
 the number of colors to determine the optimal register allocation scheme.
 Scratchpad management can be done by extending this idea where the scratchpad
-is partitioned into psuedo-register files \cite{graphColoring}. Applying this
-to deep learning workloads is non-trivial as the tensor sizes are variable and
-can be larger than the size of the scratchpad. \cite{toplib} discusses graph
-coloring implantations for deep learning workloads in the context of maximizing
-SPM utilization within kernel code. Figure \ref{fig:graph_color} shows an example
-of how TopLib \cite{toplib} uses a graph coloring register allocation strategy
-to fit intermediate tensors onto a scratchpad in a kernel.
+is partitioned into psuedo-register files \cite{graphColoring}. 
 
 Similarly, by considering an SPM with fixed size partitions to emulate registers,
 an Integer Linear Program (ILP) made to solve the register allocation problem can
 be extended to find an optimal strategy for an SPM as discussed in \cite{verma}.
-
-\begin{figure}[thb!]
-\centering
-\includegraphics[scale=0.5]{Figures/graph_coloring_example.png}
-\decoRule
-\caption[graphColoring]{Example of graph coloring. Not all tensors can be
-mapped to the SPM at the same time so an interference graph is created
-based on their lifetimes and colored accordingly. The resulting mapping on the 
-right contains partitions for tensors based on their lifetime and colors such that
-all tensors fit on the SPM without contention.}
-\label{fig:graph_color}
-\end{figure}
 %----------------------------------------------------------------------------------------
 %	SECTION 2
 %----------------------------------------------------------------------------------------

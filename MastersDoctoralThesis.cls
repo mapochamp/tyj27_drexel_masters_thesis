@@ -312,7 +312,7 @@ KOMA-script documentation for details.}]{fancyhdr}
 \DeclareDocumentCommand\cleardoublepage{}{\clearpage\if@twoside \ifodd\c@page\else
 	\hbox{}
 	\thispagestyle{\blank@p@gestyle}
-	\newpage
+	%\newpage
 	\if@twocolumn\hbox{}\newpage\fi\fi\fi%
 }
 
@@ -359,15 +359,15 @@ KOMA-script documentation for details.}]{fancyhdr}
 		#1%added to be able to have abstract more than one page long
 		\thispagestyle{plain}
 		\begin{center}
-			{\normalsize \MakeUppercase{\univname} \par}% University name in capitals
-			\bigskip
+			%{\normalsize \MakeUppercase{\univname} \par}% University name in capitals
+			%\bigskip
 			{\huge\textit{\abstractname} \par}
 			\bigskip
-			{\normalsize \facname \par}% Faculty name
-			{\normalsize \deptname \par}% Department name
-			\bigskip
-			{\normalsize \degreename\par}% Degree name
-			\bigskip
+			%{\normalsize \facname \par}% Faculty name
+			%{\normalsize \deptname \par}% Department name
+			%\bigskip
+			%{\normalsize \degreename\par}% Degree name
+			%\bigskip
 			{\normalsize\bfseries \@title \par}% Thesis title
 			\medskip
 			{\normalsize \byname{} \authorname \par}% Author name

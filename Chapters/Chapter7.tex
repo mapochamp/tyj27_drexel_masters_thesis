@@ -20,7 +20,7 @@ per scratchpad for some models.
 \centering
 \includegraphics[scale=0.7]{Figures/speedup_factor.png}
 \decoRule
-\caption[Speedup]{Estimated speedup for varying scratchpad sizes and models using the optimal pinning strategy}
+\caption[Speedup Results]{Estimated speedup for varying scratchpad sizes and models using the optimal pinning strategy}
 \label{fig:speedup}
 \end{figure}
 
@@ -47,7 +47,7 @@ for the best case.
 		Resnet    & 41.50\%          & 70.95\%             & 48.01\%              & 43.10\%        \\ \hline
 		VGG       & 44.12\%          & 78.95\%             & 53.65\%              & 43.71\%        \\ \hline
 	\end{tabular}
-	\caption{Memory Boundness, upper bound of speedup if no DMA transfers were needed at all, the speedup possible from an SPM with infinite capacity, the average
+	\caption[Comparison of Speedup Acheived and Upper Bound Speedup]{Memory Boundness, upper bound of speedup if no DMA transfers were needed at all, the speedup possible from an SPM with infinite capacity, the average
 	speedup for all capacities tested on for each model}
 	\label{tab:memory_bound}
 \end{table}
@@ -65,7 +65,7 @@ LSTM, Minerva, Lenet5, and CNN for SPM sizes of at least 128Kb.
 \centering
 \includegraphics[scale=0.7]{Figures/max_acheived.png}
 \decoRule
-\caption[max]{How much of the theoretical speedup from an infinite sized SPM was achieved in (\%) for each SPM capacity}
+\caption[Percentage of Max Speedup Obtained]{How much of the theoretical speedup from an infinite sized SPM was achieved in (\%) for each SPM capacity}
 \label{fig:max}
 \end{figure}
 
@@ -99,7 +99,7 @@ Minerva and obtains a higher overall speedup to VGG.
 \centering
 \includegraphics[scale=0.5]{Figures/reduction_factor.png}
 \decoRule
-\caption[Reduction]{Estimated \% of data transfers saved for varying scratchpad sizes and models using the optimal pinning strategy}
+\caption[Results of Data Transfer Costs Saved]{Estimated \% of data transfers saved for varying scratchpad sizes and models using the optimal pinning strategy}
 \label{fig:Reduction}
 \end{figure}
 
@@ -108,7 +108,7 @@ Minerva and obtains a higher overall speedup to VGG.
 \centering
 \includegraphics[scale=0.7]{Figures/max_saved.png}
 \decoRule
-\caption[Saved]{Percentage of total DMA transfers incurred versus the minimum achievable DMA transfers incurred by an infinite capacity SPM for each SPM size tested}
+\caption[Percentage of Max Data Transfers Saved]{Percentage of total DMA transfers incurred versus the minimum achievable DMA transfers incurred by an infinite capacity SPM for each SPM size tested}
 \label{fig:Saved}
 \end{figure}
 

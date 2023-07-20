@@ -4,9 +4,21 @@
 
 \section{Conclusion}
 As DNN model sizes continue to grow and DLAs become more prevalent, it becomes
-necessary to remove the software bottlenecks through good programming. We
-provide a solution via a memory management technique for scratchpads on an
-inter-node level for DLAs.
+necessary to remove the software bottlenecks through good programming.  This
+thesis covers end-to-end frameworks, the infrastructure that allows for an
+optimized model to be ran efficiently and the various techniques used to
+achieve it. Further, we saw how scratchpad management can be a major bottleneck
+of DLAs if programmed inefficiently. While there are several ways frameworks
+can approach the scratchpad management problem, we show an optimal ILP approach
+for a many scratchpad case that is hardware agnostic and can be integrated into
+end-to-end frameworks as an extension.
+
+We show that our model successfully analyzes large DL model graphs and creates
+an efficient mapping scheme that has the potential to reach close to optimal
+or optimal efficiency for most cases through detailed cycle analysis on the SMAUG
+simulator. We estimate that we achieve at a minimum a 20\% increase in absolute
+performance and reach 40\% of the maximum possible performance on our baseline
+configurations.
 
 \section{Future Work}
 % graph reconstructor for tiling 
@@ -17,12 +29,32 @@ inter-node level for DLAs.
 % compare to graph coloring heursitcs
 % compare to heursitics apporach
 
-\begin{enumerate}
-	\item A graph reconstructor to account for tiling so tensors that are
-		larger than the SPM will be modelled more accurately than being
-		size capped to the SPM size.
-	\item Integration and testing into SMAUG or a full compiler extension
-		that is interoperable with other computational graph frameworks
-	\item Comparing the ILP solution to graph coloring and heursitic
-		approaches for the many scratchpad case.
-\end{enumerate}
+This thesis has provided a foundation for a complete and interoperable compiler
+extension to end-to-end graph based frameworks to provide an optimal scratchpad
+management scheme. For the work to be extended such that the extension can be readily
+available to use the following extension can be made:
+
+\begin{description}
+	\item [A graph reconstructor to account for tiling]
+		Currently, tensors that are larger than the SPM will be capped
+		at the SPM size so that the model constraints are not broken.
+		By reconstructing the computational graph such that a single
+		operation is broken up into many operations where the input and
+		output sizes match the tiling size, the ILP model can be
+		applied correctly without change.
+	\item [Integration and testing into SMAUG]
+		As of now, the results we have are estimates of ideal performance
+		metrics. In order to gain a clearer picture on how our model
+		performs, we would need to evaluate it on many more hardware
+		architectures on a more diverse set of DL workloads. To do this,
+		integration of the pinning strategy requires an extension to
+		the framework's runtime and kernel code generator. Both a runtime
+		memory manager to actually direct the pinning is required and 
+		a code generator to create kernels that that can take pinning
+		directives.
+	\item [Comparing against graph coloring and heuristic approaches]
+		While our results show that our methods are effective, it would
+		be worth investigating how it performs relative to a graph
+		coloring or heuristic based approach using the same framework,
+		models, and hardware to gain accurate result metrics.
+\end{description}

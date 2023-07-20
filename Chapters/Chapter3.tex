@@ -10,9 +10,14 @@
 \section{End-to-End Framework Optimizations for Deep Learning Accelerators}
 There exist many end to end deep learning frameworks that allow
 high level DSL programmers to create models that will be optimized to run
-on a given hardware. Because memory management is such a significant
-factor in runtime performance, all frameworks employ their own specialized
-optimization methods based on their unique model representation forms.
+on a given hardware. Because of the diversity of hardware architectures that
+must be supported and different types of memory layouts, frameworks must 
+apply hardware agnostic optimizations before the backend creates architecture
+specific kernels to cover general and repeated issues. In order to do this,
+most frameworks implement their own unique model representation forms such
+as specialized IR to enable the specific optimizations a framework can apply.
+We discuss a survey of general memory focused optimizations that have been
+developed by frameworks in this section.
 
 \subsection{IR based Optimizations}
 DLVM \cite{DLVM} (Wei et al. 2018) lowers a model into a domain specific IR
@@ -72,6 +77,15 @@ loop unrolling factors are automated and decided based on the ML model.
 \section{Scratchpad Memory Management Techniques}
 
 \subsection{Graph Coloring}
+Li et al. \cite{graphColoring} introduced the first approach to using graph coloring
+as a scratchpad management technique to automatically and dynamically allocate data
+structures like arrays in C programs. They partition the SPM space into pseudo-register
+files so that the existing register based graph coloring allocator can be applied.
+However, unlike scalar data in register based programs, array based data structures
+contain longer live ranges or may not fit on the entire scratchpad. In such a case
+the arrays are either tiled or arrays are split into sub-arrays such that the 
+sub-arrays have different liveness with each other. This way, large arrays can
+be accounted for in smaller chunks to fit on the SPM. 
 
 \subsection{Integer Linear Programming}
 Verma et al. \cite{verma} introduce an ILP approach to the same register
@@ -87,7 +101,7 @@ dimensional arrays.
 
 % many core architecture
 The problem of using more than one SPM is an issue that has mostly been ignored
-until the work of Tao et  al. 2021 where they solve for an optimal data size
+until the work of Tao et al. 2021 \cite{manyCore} where they solve for an optimal data size
 granularity to transfer between scratchpads and main memory to maximize performance
 using a linear programming model for multicore architectures. The paper achieves
 this via compiler-directed SPM data transfer model to formulate an allocation
@@ -96,6 +110,17 @@ to determine the optimal data transfer granularity to maximize performance.
 The data transfer granularity is solved using ILP.
 
 \section{End-to-End Framework SPM Management Optimizations for DLAs}
+
+IBM's OnSRAM (Subhankar, et al. 2022) introduces the notion of two types of
+runtime performance optimizations that can be done on computational graphs:
+intra-node and inter-node optimizations \cite{onsram}. Intra node optimizations
+are those that are focused on optimizing the operation kernel that the node
+specifies. This means tiling in favorable sizes and across specific dimensions,
+loop ordering, and DMA pipelining between tiles \cite{aladdin}.
+Inter node optimizations are optimizations concerning the overall structure 
+of the graph and the relationship between node connections. This includes
+operator fusion and node reordering\cite{onsram}. In this section, we discuss
+intra-node and inter-node optimizations specific to SPM management for DLAs.
 
 \subsection{Intra-node SPM Management Optimizations}
 % Toplib
@@ -124,19 +149,25 @@ approach similar to the work presented by Verma et al. 2004 using an ILP model.
 However, Li et al. demonstrate that a greedy graph coloring approach can reach
 close to optimal performance across a multitude of operators.
 
+\begin{figure}[thb!]
+\centering
+\includegraphics[scale=0.5]{Figures/graph_coloring_example.png}
+\decoRule
+\caption[SPM Allocation Using Graph Coloring]{Example of graph coloring. Not all tensors can be
+mapped to the SPM at the same time so an interference graph is created
+based on their lifetimes and colored accordingly. The resulting mapping on the 
+right contains partitions for tensors based on their lifetime and colors such that
+all tensors fit on the SPM without contention.}
+\label{fig:graph_color}
+\end{figure}
+
+Figure \ref{fig:graph_color} shows an example of how TopLib \cite{toplib} uses
+a graph coloring register allocation strategy to fit intermediate tensors onto
+a scratchpad in a kernel.
+
 
 \subsection{Inter-node SPM Management Optimizations}
 % on sram
-
-IBM's OnSRAM (Subhankar, et al. 2022) introduces the notion of two types of
-runtime performance optimizations that can be done on computational graphs:
-intra-node and inter-node optimizations \cite{onsram}. Intra node optimizations
-are those that are focused on optimizing the operation kernel that the node
-specifies. This means tiling in favorable sizes and across specific dimensions,
-loop ordering, and DMA pipelining between tiles \cite{aladdin}.
-Inter node optimizations are optimizations concerning the overall structure 
-of the graph and the relationship between node connections. This includes
-operator fusion and node reordering\cite{onsram}. 
 
 Existing deep learning frameworks are not modular like modern programming
 language compilers \cite{tensorflow} \cite{TVM} \cite{nGraph}. Differences in
@@ -245,7 +276,7 @@ into deep learning frameworks.
 \centering
 \includegraphics[scale=0.5]{Figures/onsram_stack.png}
 \decoRule
-\caption[onsramStack]{Overview of OnSRAM}
+\caption[Overview of OnSRAM]{Overview of OnSRAM}
 \label{fig:onsram_stack}
 \end{figure}
 
