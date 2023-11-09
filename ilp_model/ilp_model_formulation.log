@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022/Arch Linux) (preloaded format=pdflatex 2023.3.15)  18 MAY 2023 10:42
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022/Arch Linux) (preloaded format=pdflatex 2023.3.7)  4 JUN 2023 15:31
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -370,7 +370,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 59--60
 [2] (./ilp_model_formulation.aux) ) 
 Here is how much of TeX's memory you used:
  4355 strings out of 478238
- 69818 string characters out of 5850456
+ 69818 string characters out of 5850457
  376924 words of memory out of 5000000
  22537 multiletter control sequences out of 15000+600000
  505718 words of font info for 64 fonts, out of 8000000 for 9000
@@ -387,7 +387,7 @@ b></usr/share/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></usr/share/texmf-dist
 mr12.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmr17.pfb></usr/share/tex
 mf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/share/texmf-dist/fonts/type1/pub
 lic/lm/lmsy7.pfb>
-Output written on ilp_model_formulation.pdf (2 pages, 132057 bytes).
+Output written on ilp_model_formulation.pdf (2 pages, 131553 bytes).
 PDF statistics:
  64 PDF objects out of 1000 (max. 8388607)
  40 compressed objects within 1 object stream

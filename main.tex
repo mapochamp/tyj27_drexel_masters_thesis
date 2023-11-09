@@ -49,6 +49,7 @@ headsepline, % Uncomment to get a line under the header
 \usepackage{mathtools, nccmath}
 \usepackage{listings}
 \usepackage{xcolor}
+\usepackage{pdfpages}
 %\usepackage{inkscapeformat=png}{svg}
 
 \usepackage[backend=bibtex,style=numeric,citestyle=ieee,natbib=true]{biblatex} % Use the bibtex backend with the authoryear citation style (which resembles APA)
@@ -96,6 +97,7 @@ headsepline, % Uncomment to get a line under the header
 }
 
 \begin{document}
+\includepdf[pages={1}]{thesis_approval.pdf}
 
 \frontmatter % Use roman page numbering style (i, ii, iii, iv...) for the pre-content pages
 
@@ -175,6 +177,10 @@ headsepline, % Uncomment to get a line under the header
 
 \begin{acknowledgements}
 \addchaptertocentry{\acknowledgementname} % Add the acknowledgements to the table of contents
+I want to acknowledge and thank my advisor Dr. Anup Das for guiding me through this thesis
+and taking the role of my advisor. Thank you Dr. Shackleford and Dr. Boady
+for advice and support throughout the thesis as well. Thank you to all my friends who supported
+me throughout my time spent on this thesis.
 \end{acknowledgements}
 
 
@@ -182,7 +188,7 @@ headsepline, % Uncomment to get a line under the header
 %	DEDICATION
 %----------------------------------------------------------------------------------------
 
-\dedicatory{For/Dedicated to/To my\ldots} 
+\dedicatory{Dedicated to my parents who supported me every step of the way.} 
 %----------------------------------------------------------------------------------------
 %	LIST OF CONTENTS/FIGURES/TABLES PAGES
 %----------------------------------------------------------------------------------------

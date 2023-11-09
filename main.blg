@@ -5,6 +5,11 @@ The style file: biblatex.bst
 A level-1 auxiliary file: Chapters/Chapter1.aux
 A level-1 auxiliary file: Chapters/Chapter2.aux
 A level-1 auxiliary file: Chapters/Chapter3.aux
+A level-1 auxiliary file: Chapters/Chapter4.aux
+A level-1 auxiliary file: Chapters/Chapter5.aux
+A level-1 auxiliary file: Chapters/Chapter6.aux
+A level-1 auxiliary file: Chapters/Chapter7.aux
+A level-1 auxiliary file: Chapters/Chapter8.aux
 Reallocated glb_str_ptr (elt_size=8) to 20 items from 10.
 Reallocated global_strs (elt_size=200001) to 20 items from 10.
 Reallocated glb_str_end (elt_size=8) to 20 items from 10.
@@ -25,44 +30,44 @@ Database file #2: bibliography.bib
 Biblatex version: 3.17
 Reallocated wiz_functions (elt_size=8) to 9000 items from 6000.
 Reallocated singl_function (elt_size=8) to 100 items from 50.
-You've used 2 entries,
+You've used 20 entries,
             6399 wiz_defined-function locations,
-            1216 strings with 9710 characters,
-and the built_in function-call counts, 8606 in all, are:
-= -- 620
-> -- 176
-< -- 26
-+ -- 232
-- -- 69
-* -- 570
-:= -- 1149
+            1349 strings with 21700 characters,
+and the built_in function-call counts, 383081 in all, are:
+= -- 36184
+> -- 3535
+< -- 640
++ -- 15376
+- -- 1673
+* -- 26678
+:= -- 52434
 add.period$ -- 0
-call.type$ -- 2
-change.case$ -- 7
-chr.to.int$ -- 45
-cite$ -- 2
-duplicate$ -- 725
-empty$ -- 752
-format.name$ -- 63
-if$ -- 1754
+call.type$ -- 20
+change.case$ -- 329
+chr.to.int$ -- 53
+cite$ -- 38
+duplicate$ -- 43454
+empty$ -- 28561
+format.name$ -- 2850
+if$ -- 71381
 int.to.chr$ -- 0
-int.to.str$ -- 2
+int.to.str$ -- 47
 missing$ -- 0
-newline$ -- 55
-num.names$ -- 38
-pop$ -- 391
+newline$ -- 1469
+num.names$ -- 876
+pop$ -- 9610
 preamble$ -- 1
-purify$ -- 13
+purify$ -- 742
 quote$ -- 0
-skip$ -- 241
+skip$ -- 4381
 stack$ -- 0
-substring$ -- 1204
-swap$ -- 155
-text.length$ -- 46
+substring$ -- 68342
+swap$ -- 4783
+text.length$ -- 636
 text.prefix$ -- 0
 top$ -- 1
-type$ -- 56
+type$ -- 667
 warning$ -- 0
-while$ -- 157
+while$ -- 6870
 width$ -- 0
-write$ -- 54
+write$ -- 1450

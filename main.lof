@@ -1,4 +1,29 @@
 \babel@toc {english}{}\relax 
 \addvspace {10\p@ }
+\contentsline {figure}{\numberline {1.1}{\ignorespaces Overview of Deep Learning Frameworks}}{5}{figure.caption.8}%
 \addvspace {10\p@ }
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Computational Graph of CNN}}{7}{figure.caption.38}%
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Computational Graph of LSTM}}{8}{figure.caption.39}%
+\contentsline {figure}{\numberline {2.3}{\ignorespaces Simple Operator Kernel}}{11}{figure.caption.43}%
+\contentsline {figure}{\numberline {2.4}{\ignorespaces NVDLA Inspired DLA Architecture Diagram}}{12}{figure.caption.46}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces SPM Allocation Using Graph Coloring}}{18}{figure.caption.58}%
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Overview of OnSRAM}}{19}{figure.caption.60}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Example of a Graph with Data Reuse}}{22}{figure.caption.67}%
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Naive Pinning Example}}{23}{figure.caption.68}%
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Optimal Pinning Example}}{24}{figure.caption.69}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {5.1}{\ignorespaces Overview of SMAUG}}{26}{figure.caption.74}%
+\contentsline {figure}{\numberline {5.2}{\ignorespaces Computational Graph to Schedule Conversion}}{27}{figure.caption.106}%
+\contentsline {figure}{\numberline {5.3}{\ignorespaces 3D Tensor Mapping Matrix}}{28}{figure.caption.107}%
+\contentsline {figure}{\numberline {5.4}{\ignorespaces 2D Tensor Mapping Matrix}}{29}{figure.caption.108}%
+\contentsline {figure}{\numberline {5.5}{\ignorespaces Optimal Mapping 2D Matrix}}{31}{figure.caption.114}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {6.1}{\ignorespaces Graph Reconstruction for Tiling}}{34}{figure.caption.119}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {7.1}{\ignorespaces Speedup Results}}{35}{figure.caption.122}%
+\contentsline {figure}{\numberline {7.2}{\ignorespaces Percentage of Max Speedup Obtained}}{37}{figure.caption.124}%
+\contentsline {figure}{\numberline {7.3}{\ignorespaces Results of Data Transfer Costs Saved}}{37}{figure.caption.126}%
+\contentsline {figure}{\numberline {7.4}{\ignorespaces Percentage of Max Data Transfers Saved}}{38}{figure.caption.127}%
 \addvspace {10\p@ }

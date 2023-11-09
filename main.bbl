@@ -17,45 +17,1557 @@
 \endgroup
 
 \datalist[entry]{none/global//global/global}
-  \entry{onsram}{article}{}
-    \name{author}{2}{}{%
-      {{hash=WCE}{%
-         family={Wieman},
-         familyi={W\bibinitperiod},
-         given={Carl\bibnamedelima E.},
-         giveni={C\bibinitperiod\bibinitdelim E\bibinitperiod},
+  \entry{nGraph}{misc}{}
+    \name{author}{21}{}{%
+      {{hash=CS}{%
+         family={Cyphers},
+         familyi={C\bibinitperiod},
+         given={Scott},
+         giveni={S\bibinitperiod},
       }}%
-      {{hash=HL}{%
-         family={Hollberg},
-         familyi={H\bibinitperiod},
-         given={Leo},
+      {{hash=BAK}{%
+         family={Bansal},
+         familyi={B\bibinitperiod},
+         given={Arjun\bibnamedelima K.},
+         giveni={A\bibinitperiod\bibinitdelim K\bibinitperiod},
+      }}%
+      {{hash=BA}{%
+         family={Bhiwandiwalla},
+         familyi={B\bibinitperiod},
+         given={Anahita},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=BJ}{%
+         family={Bobba},
+         familyi={B\bibinitperiod},
+         given={Jayaram},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=BM}{%
+         family={Brookhart},
+         familyi={B\bibinitperiod},
+         given={Matthew},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=CA}{%
+         family={Chakraborty},
+         familyi={C\bibinitperiod},
+         given={Avijit},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=CW}{%
+         family={Constable},
+         familyi={C\bibinitperiod},
+         given={Will},
+         giveni={W\bibinitperiod},
+      }}%
+      {{hash=CC}{%
+         family={Convey},
+         familyi={C\bibinitperiod},
+         given={Christian},
+         giveni={C\bibinitperiod},
+      }}%
+      {{hash=CL}{%
+         family={Cook},
+         familyi={C\bibinitperiod},
+         given={Leona},
          giveni={L\bibinitperiod},
       }}%
+      {{hash=KO}{%
+         family={Kanawi},
+         familyi={K\bibinitperiod},
+         given={Omar},
+         giveni={O\bibinitperiod},
+      }}%
+      {{hash=KR}{%
+         family={Kimball},
+         familyi={K\bibinitperiod},
+         given={Robert},
+         giveni={R\bibinitperiod},
+      }}%
+      {{hash=KJ}{%
+         family={Knight},
+         familyi={K\bibinitperiod},
+         given={Jason},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=KN}{%
+         family={Korovaiko},
+         familyi={K\bibinitperiod},
+         given={Nikolay},
+         giveni={N\bibinitperiod},
+      }}%
+      {{hash=KV}{%
+         family={Kumar},
+         familyi={K\bibinitperiod},
+         given={Varun},
+         giveni={V\bibinitperiod},
+      }}%
+      {{hash=LY}{%
+         family={Lao},
+         familyi={L\bibinitperiod},
+         given={Yixing},
+         giveni={Y\bibinitperiod},
+      }}%
+      {{hash=LCR}{%
+         family={Lishka},
+         familyi={L\bibinitperiod},
+         given={Christopher\bibnamedelima R.},
+         giveni={C\bibinitperiod\bibinitdelim R\bibinitperiod},
+      }}%
+      {{hash=MJ}{%
+         family={Menon},
+         familyi={M\bibinitperiod},
+         given={Jaikrishnan},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=MJ}{%
+         family={Myers},
+         familyi={M\bibinitperiod},
+         given={Jennifer},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=NSA}{%
+         family={Narayana},
+         familyi={N\bibinitperiod},
+         given={Sandeep\bibnamedelima Aswath},
+         giveni={S\bibinitperiod\bibinitdelim A\bibinitperiod},
+      }}%
+      {{hash=PA}{%
+         family={Procter},
+         familyi={P\bibinitperiod},
+         given={Adam},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=WTJ}{%
+         family={Webb},
+         familyi={W\bibinitperiod},
+         given={Tristan\bibnamedelima J.},
+         giveni={T\bibinitperiod\bibinitdelim J\bibinitperiod},
+      }}%
     }
-    \keyw{Diode Laser}
-    \strng{namehash}{WCEHL1}
-    \strng{fullhash}{WCEHL1}
+    \strng{namehash}{CSBAKBA+1}
+    \strng{fullhash}{CSBAKBABJBMCACWCCCLKOKRKJKNKVLYLCRMJMJNSAPAWTJ1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \verb{eprint}
+    \verb 1801.08058
+    \endverb
+    \field{title}{Intel nGraph: An Intermediate Representation, Compiler, and
+  Executor for Deep Learning}
+    \field{eprinttype}{arXiv}
+    \field{eprintclass}{cs.DC}
+    \field{year}{2018}
+  \endentry
+
+  \entry{cntk}{report}{}
+    \name{author}{28}{}{%
+      {{hash=YD}{%
+         family={Yu},
+         familyi={Y\bibinitperiod},
+         given={Dong},
+         giveni={D\bibinitperiod},
+      }}%
+      {{hash=EA}{%
+         family={Eversole},
+         familyi={E\bibinitperiod},
+         given={Adam},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=SM}{%
+         family={Seltzer},
+         familyi={S\bibinitperiod},
+         given={Mike},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=YK}{%
+         family={Yao},
+         familyi={Y\bibinitperiod},
+         given={Kaisheng},
+         giveni={K\bibinitperiod},
+      }}%
+      {{hash=KO}{%
+         family={Kuchaiev},
+         familyi={K\bibinitperiod},
+         given={Oleksii},
+         giveni={O\bibinitperiod},
+      }}%
+      {{hash=ZY}{%
+         family={Zhang},
+         familyi={Z\bibinitperiod},
+         given={Yu},
+         giveni={Y\bibinitperiod},
+      }}%
+      {{hash=SF}{%
+         family={Seide},
+         familyi={S\bibinitperiod},
+         given={Frank},
+         giveni={F\bibinitperiod},
+      }}%
+      {{hash=HZ}{%
+         family={Huang},
+         familyi={H\bibinitperiod},
+         given={Zhiheng},
+         giveni={Z\bibinitperiod},
+      }}%
+      {{hash=GB}{%
+         family={Guenter},
+         familyi={G\bibinitperiod},
+         given={Brian},
+         giveni={B\bibinitperiod},
+      }}%
+      {{hash=WH}{%
+         family={Wang},
+         familyi={W\bibinitperiod},
+         given={Huaming},
+         giveni={H\bibinitperiod},
+      }}%
+      {{hash=DJ}{%
+         family={Droppo},
+         familyi={D\bibinitperiod},
+         given={Jasha},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=ZG}{%
+         family={Zweig},
+         familyi={Z\bibinitperiod},
+         given={Geoffrey},
+         giveni={G\bibinitperiod},
+      }}%
+      {{hash=RC}{%
+         family={Rossbach},
+         familyi={R\bibinitperiod},
+         given={Chris},
+         giveni={C\bibinitperiod},
+      }}%
+      {{hash=GJ}{%
+         family={Gao},
+         familyi={G\bibinitperiod},
+         given={Jie},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=SA}{%
+         family={Stolcke},
+         familyi={S\bibinitperiod},
+         given={Andreas},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=CJ}{%
+         family={Currey},
+         familyi={C\bibinitperiod},
+         given={Jon},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=SM}{%
+         family={Slaney},
+         familyi={S\bibinitperiod},
+         given={Malcolm},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=CG}{%
+         family={Chen},
+         familyi={C\bibinitperiod},
+         given={Guoguo},
+         giveni={G\bibinitperiod},
+      }}%
+      {{hash=AA}{%
+         family={Agarwal},
+         familyi={A\bibinitperiod},
+         given={Amit},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=BC}{%
+         family={Basoglu},
+         familyi={B\bibinitperiod},
+         given={Chris},
+         giveni={C\bibinitperiod},
+      }}%
+      {{hash=PM}{%
+         family={Padmilac},
+         familyi={P\bibinitperiod},
+         given={Marko},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=KA}{%
+         family={Kamenev},
+         familyi={K\bibinitperiod},
+         given={Alexey},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=IV}{%
+         family={Ivanov},
+         familyi={I\bibinitperiod},
+         given={Vladimir},
+         giveni={V\bibinitperiod},
+      }}%
+      {{hash=CS}{%
+         family={Cypher},
+         familyi={C\bibinitperiod},
+         given={Scott},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=PH}{%
+         family={Parthasarathi},
+         familyi={P\bibinitperiod},
+         given={Hari},
+         giveni={H\bibinitperiod},
+      }}%
+      {{hash=MB}{%
+         family={Mitra},
+         familyi={M\bibinitperiod},
+         given={Bhaskar},
+         giveni={B\bibinitperiod},
+      }}%
+      {{hash=PB}{%
+         family={Peng},
+         familyi={P\bibinitperiod},
+         given={Baolin},
+         giveni={B\bibinitperiod},
+      }}%
+      {{hash=HX}{%
+         family={Huang},
+         familyi={H\bibinitperiod},
+         given={Xuedong},
+         giveni={X\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Microsoft Research}%
+    }
+    \strng{namehash}{YDEASM+1}
+    \strng{fullhash}{YDEASMYKKOZYSFHZGBWHDJZGRCGJSACJSMCGAABCPMKAIVCSPHMBPBHX1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
     \field{abstract}{%
-    We present a review of the use of diode lasers in atomic physics with an
-  extensive list of references. We discuss the relevant characteristics of
-  diode lasers and explain how to purchase and use them. We also review the
-  various techniques that have been used to control and narrow the spectral
-  outputs of diode lasers. Finally we present a number of examples illustrating
-  the use of diode lasers in atomic physics experiments. Review of Scientific
-  Instruments is copyrighted by The American Institute of Physics.%
+    We introduce computational network (CN), a unified framework for describing
+  arbitrary learning machines, such as deep neural networks (DNNs),
+  convolutional neural networks (CNNs), recurrent neural networks (RNNs), long
+  short term memory (LSTM), logistic regression, and maximum entropy model,
+  that can be illustrated as a series of computational steps. A CN is a
+  directed graph in which each leaf node represents an input value or a
+  parameter and each non-leaf node represents a matrix operation upon its
+  children. We describe algorithms to carry out forward computation and
+  gradient calculation in CN and introduce most popular computation node types
+  used in a typical CN. We further introduce the computational network toolkit
+  (CNTK), an implementation of CN that supports both GPU and CPU. We describe
+  the architecture and the key components of the CNTK, the command line options
+  to use CNTK, and the network definition and model editing language, and
+  provide sample setups for acoustic model, language model, and spoken language
+  understanding. We also describe the Argon speech recognition decoder as an
+  example to integrate with CNTK.%
     }
-    \field{number}{1}
-    \field{pages}{1\bibrangedash 20}
-    \field{title}{Using Diode Lasers for Atomic Physics}
+    \field{number}{MSR-TR-2014-112}
+    \field{title}{An Introduction to Computational Networks and the
+  Computational Network Toolkit}
     \verb{url}
-    \verb http://link.aip.org/link/?RSI/62/1/1
+    \verb https://www.microsoft.com/en-us/research/publication/an-introduction-
+    \verb to-computational-networks-and-the-computational-network-toolkit/
     \endverb
-    \field{volume}{62}
-    \field{journaltitle}{Review of Scientific Instruments}
-    \field{month}{01}
-    \field{year}{1991}
+    \field{type}{techreport}
+    \field{year}{2014}
+    \warn{\item Invalid format of field 'month'}
+  \endentry
+
+  \entry{tensorflow}{misc}{}
+    \name{author}{40}{}{%
+      {{hash=AM}{%
+         family={Abadi},
+         familyi={A\bibinitperiod},
+         given={Martín},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=AA}{%
+         family={Agarwal},
+         familyi={A\bibinitperiod},
+         given={Ashish},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=BP}{%
+         family={Barham},
+         familyi={B\bibinitperiod},
+         given={Paul},
+         giveni={P\bibinitperiod},
+      }}%
+      {{hash=BE}{%
+         family={Brevdo},
+         familyi={B\bibinitperiod},
+         given={Eugene},
+         giveni={E\bibinitperiod},
+      }}%
+      {{hash=CZ}{%
+         family={Chen},
+         familyi={C\bibinitperiod},
+         given={Zhifeng},
+         giveni={Z\bibinitperiod},
+      }}%
+      {{hash=CC}{%
+         family={Citro},
+         familyi={C\bibinitperiod},
+         given={Craig},
+         giveni={C\bibinitperiod},
+      }}%
+      {{hash=CGS}{%
+         family={Corrado},
+         familyi={C\bibinitperiod},
+         given={Greg\bibnamedelima S.},
+         giveni={G\bibinitperiod\bibinitdelim S\bibinitperiod},
+      }}%
+      {{hash=DA}{%
+         family={Davis},
+         familyi={D\bibinitperiod},
+         given={Andy},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=DJ}{%
+         family={Dean},
+         familyi={D\bibinitperiod},
+         given={Jeffrey},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=DM}{%
+         family={Devin},
+         familyi={D\bibinitperiod},
+         given={Matthieu},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=GS}{%
+         family={Ghemawat},
+         familyi={G\bibinitperiod},
+         given={Sanjay},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=GI}{%
+         family={Goodfellow},
+         familyi={G\bibinitperiod},
+         given={Ian},
+         giveni={I\bibinitperiod},
+      }}%
+      {{hash=HA}{%
+         family={Harp},
+         familyi={H\bibinitperiod},
+         given={Andrew},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=IG}{%
+         family={Irving},
+         familyi={I\bibinitperiod},
+         given={Geoffrey},
+         giveni={G\bibinitperiod},
+      }}%
+      {{hash=IM}{%
+         family={Isard},
+         familyi={I\bibinitperiod},
+         given={Michael},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=JY}{%
+         family={Jia},
+         familyi={J\bibinitperiod},
+         given={Yangqing},
+         giveni={Y\bibinitperiod},
+      }}%
+      {{hash=JR}{%
+         family={Jozefowicz},
+         familyi={J\bibinitperiod},
+         given={Rafal},
+         giveni={R\bibinitperiod},
+      }}%
+      {{hash=KL}{%
+         family={Kaiser},
+         familyi={K\bibinitperiod},
+         given={Lukasz},
+         giveni={L\bibinitperiod},
+      }}%
+      {{hash=KM}{%
+         family={Kudlur},
+         familyi={K\bibinitperiod},
+         given={Manjunath},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=LJ}{%
+         family={Levenberg},
+         familyi={L\bibinitperiod},
+         given={Josh},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=MD}{%
+         family={Mane},
+         familyi={M\bibinitperiod},
+         given={Dan},
+         giveni={D\bibinitperiod},
+      }}%
+      {{hash=MR}{%
+         family={Monga},
+         familyi={M\bibinitperiod},
+         given={Rajat},
+         giveni={R\bibinitperiod},
+      }}%
+      {{hash=MS}{%
+         family={Moore},
+         familyi={M\bibinitperiod},
+         given={Sherry},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=MD}{%
+         family={Murray},
+         familyi={M\bibinitperiod},
+         given={Derek},
+         giveni={D\bibinitperiod},
+      }}%
+      {{hash=OC}{%
+         family={Olah},
+         familyi={O\bibinitperiod},
+         given={Chris},
+         giveni={C\bibinitperiod},
+      }}%
+      {{hash=SM}{%
+         family={Schuster},
+         familyi={S\bibinitperiod},
+         given={Mike},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=SJ}{%
+         family={Shlens},
+         familyi={S\bibinitperiod},
+         given={Jonathon},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=SB}{%
+         family={Steiner},
+         familyi={S\bibinitperiod},
+         given={Benoit},
+         giveni={B\bibinitperiod},
+      }}%
+      {{hash=SI}{%
+         family={Sutskever},
+         familyi={S\bibinitperiod},
+         given={Ilya},
+         giveni={I\bibinitperiod},
+      }}%
+      {{hash=TK}{%
+         family={Talwar},
+         familyi={T\bibinitperiod},
+         given={Kunal},
+         giveni={K\bibinitperiod},
+      }}%
+      {{hash=TP}{%
+         family={Tucker},
+         familyi={T\bibinitperiod},
+         given={Paul},
+         giveni={P\bibinitperiod},
+      }}%
+      {{hash=VV}{%
+         family={Vanhoucke},
+         familyi={V\bibinitperiod},
+         given={Vincent},
+         giveni={V\bibinitperiod},
+      }}%
+      {{hash=VV}{%
+         family={Vasudevan},
+         familyi={V\bibinitperiod},
+         given={Vijay},
+         giveni={V\bibinitperiod},
+      }}%
+      {{hash=VF}{%
+         family={Viegas},
+         familyi={V\bibinitperiod},
+         given={Fernanda},
+         giveni={F\bibinitperiod},
+      }}%
+      {{hash=VO}{%
+         family={Vinyals},
+         familyi={V\bibinitperiod},
+         given={Oriol},
+         giveni={O\bibinitperiod},
+      }}%
+      {{hash=WP}{%
+         family={Warden},
+         familyi={W\bibinitperiod},
+         given={Pete},
+         giveni={P\bibinitperiod},
+      }}%
+      {{hash=WM}{%
+         family={Wattenberg},
+         familyi={W\bibinitperiod},
+         given={Martin},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=WM}{%
+         family={Wicke},
+         familyi={W\bibinitperiod},
+         given={Martin},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=YY}{%
+         family={Yu},
+         familyi={Y\bibinitperiod},
+         given={Yuan},
+         giveni={Y\bibinitperiod},
+      }}%
+      {{hash=ZX}{%
+         family={Zheng},
+         familyi={Z\bibinitperiod},
+         given={Xiaoqiang},
+         giveni={X\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{AMAABP+1}
+  \strng{fullhash}{AMAABPBECZCCCGSDADJDMGSGIHAIGIMJYJRKLKMLJMDMRMSMDOCSMSJSBSITKTPVVVVVFVOWPWMWMYYZX1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \verb{eprint}
+    \verb 1603.04467
+    \endverb
+    \field{title}{TensorFlow: Large-Scale Machine Learning on Heterogeneous
+  Distributed Systems}
+    \field{eprinttype}{arXiv}
+    \field{eprintclass}{cs.DC}
+    \field{year}{2016}
+  \endentry
+
+  \entry{DLVM}{misc}{}
+    \name{author}{3}{}{%
+      {{hash=WR}{%
+         family={Wei},
+         familyi={W\bibinitperiod},
+         given={Richard},
+         giveni={R\bibinitperiod},
+      }}%
+      {{hash=SL}{%
+         family={Schwartz},
+         familyi={S\bibinitperiod},
+         given={Lane},
+         giveni={L\bibinitperiod},
+      }}%
+      {{hash=AV}{%
+         family={Adve},
+         familyi={A\bibinitperiod},
+         given={Vikram},
+         giveni={V\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{WRSLAV1}
+    \strng{fullhash}{WRSLAV1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \verb{eprint}
+    \verb 1711.03016
+    \endverb
+    \field{title}{DLVM: A modern compiler infrastructure for deep learning
+  systems}
+    \field{eprinttype}{arXiv}
+    \field{eprintclass}{cs.PL}
+    \field{year}{2018}
+  \endentry
+
+  \entry{ONNX}{misc}{}
+    \name{author}{11}{}{%
+      {{hash=JT}{%
+         family={Jin},
+         familyi={J\bibinitperiod},
+         given={Tian},
+         giveni={T\bibinitperiod},
+      }}%
+      {{hash=BGT}{%
+         family={Bercea},
+         familyi={B\bibinitperiod},
+         given={Gheorghe-Teodor},
+         giveni={G\bibinithyphendelim T\bibinitperiod},
+      }}%
+      {{hash=LTD}{%
+         family={Le},
+         familyi={L\bibinitperiod},
+         given={Tung\bibnamedelima D.},
+         giveni={T\bibinitperiod\bibinitdelim D\bibinitperiod},
+      }}%
+      {{hash=CT}{%
+         family={Chen},
+         familyi={C\bibinitperiod},
+         given={Tong},
+         giveni={T\bibinitperiod},
+      }}%
+      {{hash=SG}{%
+         family={Su},
+         familyi={S\bibinitperiod},
+         given={Gong},
+         giveni={G\bibinitperiod},
+      }}%
+      {{hash=IH}{%
+         family={Imai},
+         familyi={I\bibinitperiod},
+         given={Haruki},
+         giveni={H\bibinitperiod},
+      }}%
+      {{hash=NY}{%
+         family={Negishi},
+         familyi={N\bibinitperiod},
+         given={Yasushi},
+         giveni={Y\bibinitperiod},
+      }}%
+      {{hash=LA}{%
+         family={Leu},
+         familyi={L\bibinitperiod},
+         given={Anh},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=OK}{%
+         family={O'Brien},
+         familyi={O\bibinitperiod},
+         given={Kevin},
+         giveni={K\bibinitperiod},
+      }}%
+      {{hash=KK}{%
+         family={Kawachiya},
+         familyi={K\bibinitperiod},
+         given={Kiyokuni},
+         giveni={K\bibinitperiod},
+      }}%
+      {{hash=EAE}{%
+         family={Eichenberger},
+         familyi={E\bibinitperiod},
+         given={Alexandre\bibnamedelima E.},
+         giveni={A\bibinitperiod\bibinitdelim E\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{JTBGTLTD+1}
+    \strng{fullhash}{JTBGTLTDCTSGIHNYLAOKKKEAE1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \verb{eprint}
+    \verb 2008.08272
+    \endverb
+    \field{title}{Compiling ONNX Neural Network Models Using MLIR}
+    \field{eprinttype}{arXiv}
+    \field{eprintclass}{cs.PL}
+    \field{year}{2020}
+  \endentry
+
+  \entry{TVM}{article}{}
+    \name{author}{10}{}{%
+      {{hash=CT}{%
+         family={Chen},
+         familyi={C\bibinitperiod},
+         given={Tianqi},
+         giveni={T\bibinitperiod},
+      }}%
+      {{hash=MT}{%
+         family={Moreau},
+         familyi={M\bibinitperiod},
+         given={Thierry},
+         giveni={T\bibinitperiod},
+      }}%
+      {{hash=JZ}{%
+         family={Jiang},
+         familyi={J\bibinitperiod},
+         given={Ziheng},
+         giveni={Z\bibinitperiod},
+      }}%
+      {{hash=SH}{%
+         family={Shen},
+         familyi={S\bibinitperiod},
+         given={Haichen},
+         giveni={H\bibinitperiod},
+      }}%
+      {{hash=YEQ}{%
+         family={Yan},
+         familyi={Y\bibinitperiod},
+         given={Eddie\bibnamedelima Q.},
+         giveni={E\bibinitperiod\bibinitdelim Q\bibinitperiod},
+      }}%
+      {{hash=WL}{%
+         family={Wang},
+         familyi={W\bibinitperiod},
+         given={Leyuan},
+         giveni={L\bibinitperiod},
+      }}%
+      {{hash=HY}{%
+         family={Hu},
+         familyi={H\bibinitperiod},
+         given={Yuwei},
+         giveni={Y\bibinitperiod},
+      }}%
+      {{hash=CL}{%
+         family={Ceze},
+         familyi={C\bibinitperiod},
+         given={Luis},
+         giveni={L\bibinitperiod},
+      }}%
+      {{hash=GC}{%
+         family={Guestrin},
+         familyi={G\bibinitperiod},
+         given={Carlos},
+         giveni={C\bibinitperiod},
+      }}%
+      {{hash=KA}{%
+         family={Krishnamurthy},
+         familyi={K\bibinitperiod},
+         given={Arvind},
+         giveni={A\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{CTMTJZ+1}
+    \strng{fullhash}{CTMTJZSHYEQWLHYCLGCKA1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \verb{eprint}
+    \verb 1802.04799
+    \endverb
+    \field{title}{{TVM:} End-to-End Optimization Stack for Deep Learning}
+    \verb{url}
+    \verb http://arxiv.org/abs/1802.04799
+    \endverb
+    \field{volume}{abs/1802.04799}
+    \field{journaltitle}{CoRR}
+    \field{eprinttype}{arXiv}
+    \field{year}{2018}
+  \endentry
+
+  \entry{tensorRT}{misc}{}
+    \field{labeltitlesource}{title}
+    \field{howpublished}{\url{https://docs.nvidia.com/tensorrt/index.html}}
+    \field{note}{Accessed: 2022-11-05}
+    \field{title}{NVIDIA TensorRT Docs Hub}
+  \endentry
+
+  \entry{nvdla}{misc}{}
+    \field{labeltitlesource}{title}
+    \field{howpublished}{\url{https://nvdla.org/}}
+    \field{note}{Accessed: 2022-11-05}
+    \field{title}{NVDLA Home Page}
+  \endentry
+
+  \entry{nnp}{article}{}
+    \name{author}{3}{}{%
+      {{hash=WO}{%
+         family={Wechsler},
+         familyi={W\bibinitperiod},
+         given={Ofri},
+         giveni={O\bibinitperiod},
+      }}%
+      {{hash=BM}{%
+         family={Behar},
+         familyi={B\bibinitperiod},
+         given={Michael},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=DB}{%
+         family={Daga},
+         familyi={D\bibinitperiod},
+         given={Bharat},
+         giveni={B\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{WOBMDB1}
+    \strng{fullhash}{WOBMDB1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{pages}{1\bibrangedash 12}
+    \field{title}{Spring Hill (NNP-I 1000) Intel’s Data Center Inference
+  Chip}
+    \field{journaltitle}{2019 IEEE Hot Chips 31 Symposium (HCS)}
+    \field{year}{2019}
+  \endentry
+
+  \entry{manyCore}{article}{}
+    \name{author}{4}{}{%
+      {{hash=TX}{%
+         family={Tao},
+         familyi={T\bibinitperiod},
+         given={Xiaohan},
+         giveni={X\bibinitperiod},
+      }}%
+      {{hash=PJ}{%
+         family={Pang},
+         familyi={P\bibinitperiod},
+         given={Jianmin},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=XJ}{%
+         family={Xu},
+         familyi={X\bibinitperiod},
+         given={Jinlong},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=ZY}{%
+         family={Zhu},
+         familyi={Z\bibinitperiod},
+         given={Yu},
+         giveni={Y\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{TXPJXJ+1}
+    \strng{fullhash}{TXPJXJZY1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \verb{doi}
+    \verb 10.1007/s11227-021-03853-x
+    \endverb
+    \field{title}{Compiler-directed scratchpad memory data transfer
+  optimization for multithreaded applications on a heterogeneous many-core
+  architecture}
+    \field{volume}{77}
+    \field{journaltitle}{The Journal of Supercomputing}
+    \field{month}{12}
+    \field{year}{2021}
+  \endentry
+
+  \entry{graphColoring}{article}{}
+    \name{author}{3}{}{%
+      {{hash=LL}{%
+         family={Li},
+         familyi={L\bibinitperiod},
+         given={Lian},
+         giveni={L\bibinitperiod},
+      }}%
+      {{hash=FH}{%
+         family={Feng},
+         familyi={F\bibinitperiod},
+         given={Hui},
+         giveni={H\bibinitperiod},
+      }}%
+      {{hash=XJ}{%
+         family={Xue},
+         familyi={X\bibinitperiod},
+         given={Jingling},
+         giveni={J\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Association for Computing Machinery}%
+    }
+    \keyw{software-managed cache, memory coloring, Scratchpad memory, graph
+  coloring, register coalescing, live range splitting, memory allocation}
+    \strng{namehash}{LLFHXJ1}
+    \strng{fullhash}{LLFHXJ1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{abstract}{%
+    Scratchpad memory (SPM), a fast on-chip SRAM managed by software, is widely
+  used in embedded systems. This article introduces a general-purpose compiler
+  approach, called memory coloring, to assign static data aggregates, such as
+  arrays and structs, in a program to an SPM. The novelty of this approach lies
+  in partitioning the SPM into a pseudo--register file (with interchangeable
+  and aliased registers), splitting the live ranges of data aggregates to
+  create potential data transfer statements between SPM and off-chip memory,
+  and finally, adapting an existing graph coloring algorithm for register
+  allocation to assign the data aggregates to the pseudo--register file. Our
+  experimental results using a set of 10 C benchmarks from MediaBench and
+  MiBench show that our methodology is capable of managing SPMs efficiently and
+  effectively for large embedded applications. In addition, our SPM allocator
+  can obtain close to optimal solutions when evaluated and compared against an
+  existing heuristics-based SPM allocator and an ILP-based SPM allocator.%
+    }
+    \verb{doi}
+    \verb 10.1145/1582710.1582711
+    \endverb
+    \field{issn}{1544-3566}
+    \field{number}{3}
+    \field{title}{Compiler-Directed Scratchpad Memory Management via Graph
+  Coloring}
+    \verb{url}
+    \verb https://doi.org/10.1145/1582710.1582711
+    \endverb
+    \field{volume}{6}
+    \list{location}{1}{%
+      {New York, NY, USA}%
+    }
+    \field{journaltitle}{ACM Trans. Archit. Code Optim.}
+    \field{year}{2009}
+    \warn{\item Invalid format of field 'month'}
+  \endentry
+
+  \entry{onsram}{article}{}
+    \name{author}{4}{}{%
+      {{hash=PS}{%
+         family={Pal},
+         familyi={P\bibinitperiod},
+         given={Subhankar},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=VS}{%
+         family={Venkataramani},
+         familyi={V\bibinitperiod},
+         given={Swagath},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=SV}{%
+         family={Srinivasan},
+         familyi={S\bibinitperiod},
+         given={Viji},
+         giveni={V\bibinitperiod},
+      }}%
+      {{hash=GK}{%
+         family={Gopalakrishnan},
+         familyi={G\bibinitperiod},
+         given={Kailash},
+         giveni={K\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Association for Computing Machinery}%
+    }
+    \keyw{Artificial intelligence, neural networks, compiler, hardware
+  acceleration, memory management}
+    \strng{namehash}{PSVSSV+1}
+    \strng{fullhash}{PSVSSVGK1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{abstract}{%
+    Hardware acceleration of Artificial Intelligence (AI) workloads has gained
+  widespread popularity with its potential to deliver unprecedented performance
+  and efficiency. An important challenge remains in how AI accelerators are
+  programmed to sustain high utilization without impacting end-user
+  productivity. Prior software optimizations start with an input graph and
+  focus on node-level optimizations, viz. dataflows and hierarchical tiling,
+  and graph-level optimizations such as operation fusion. However, little
+  effort has been devoted to inter-node on-chip scratchpad memory (SPM)
+  management in Deep Learning (DL) accelerators, whose significance is
+  bolstered by the recent trends in complex network topologies and the
+  emergence of eager execution in DL frameworks.We characterize and show that
+  there exists up to a 5.2\texttimes{} performance gap in DL inference to be
+  bridged using SPM management and propose OnSRAM, a novel SPM management
+  framework integrated with the compiler runtime of a DL accelerator. We
+  develop two variants, viz. &nbsp;OnSRAM-Static, which works on static graphs
+  to identify data structures that can be lucratively held on-chip based on
+  their size, liveness and significance, and OnSRAM-Eager, which targets an
+  eager execution model (no graph) and uses a history-based speculative scheme
+  to hold/discard data structures. We integrate OnSRAM &nbsp;with TensorFlow
+  and analyze it on multiple accelerator configurations. Across a suite of 12
+  images, objects, and language networks, on a 3&nbsp;TFLOP system with a
+  2&nbsp;MB SPM and 32&nbsp;GBps external memory bandwidth, OnSRAM-Static
+  &nbsp;and OnSRAM-Eager &nbsp;achieve 1.02–4.8\texttimes{} and
+  1.02–3.1\texttimes{} reduction in inference latency (batch size of 1), over
+  a baseline with no SPM management. In terms of energy savings, we observe
+  average reductions of 1.51\texttimes{} (up to 4.1\texttimes{}) and
+  1.23\texttimes{} (up to 2.9\texttimes{}) for the static and eager execution
+  scenarios, respectively.%
+    }
+    \verb{doi}
+    \verb 10.1145/3530909
+    \endverb
+    \field{issn}{1539-9087}
+    \field{number}{6}
+    \field{title}{OnSRAM: Efficient Inter-Node On-Chip Scratchpad Management in
+  Deep Learning Accelerators}
+    \verb{url}
+    \verb https://doi.org/10.1145/3530909
+    \endverb
+    \field{volume}{21}
+    \list{location}{1}{%
+      {New York, NY, USA}%
+    }
+    \field{journaltitle}{ACM Trans. Embed. Comput. Syst.}
+    \field{year}{2022}
+    \warn{\item Invalid format of field 'month'}
+  \endentry
+
+  \entry{memoryColoring}{inproceedings}{}
+    \name{author}{3}{}{%
+      {{hash=LL}{%
+         family={Li},
+         familyi={L\bibinitperiod},
+         given={Lian},
+         giveni={L\bibinitperiod},
+      }}%
+      {{hash=GL}{%
+         family={Gao},
+         familyi={G\bibinitperiod},
+         given={Lin},
+         giveni={L\bibinitperiod},
+      }}%
+      {{hash=XJ}{%
+         family={Xue},
+         familyi={X\bibinitperiod},
+         given={Jingling},
+         giveni={J\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{LLGLXJ1}
+    \strng{fullhash}{LLGLXJ1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{booktitle}{14th International Conference on Parallel Architectures
+  and Compilation Techniques (PACT'05)}
+    \verb{doi}
+    \verb 10.1109/PACT.2005.27
+    \endverb
+    \field{pages}{329\bibrangedash 338}
+    \field{title}{Memory coloring: a compiler approach for scratchpad memory
+  management}
+    \field{year}{2005}
+  \endentry
+
+  \entry{toplib}{article}{}
+    \name{author}{8}{}{%
+      {{hash=LJ}{%
+         family={Li},
+         familyi={L\bibinitperiod},
+         given={Jiansong},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=CW}{%
+         family={Cao},
+         familyi={C\bibinitperiod},
+         given={Wei},
+         giveni={W\bibinitperiod},
+      }}%
+      {{hash=DX}{%
+         family={Dong},
+         familyi={D\bibinitperiod},
+         given={Xiao},
+         giveni={X\bibinitperiod},
+      }}%
+      {{hash=LG}{%
+         family={Li},
+         familyi={L\bibinitperiod},
+         given={Guangli},
+         giveni={G\bibinitperiod},
+      }}%
+      {{hash=WX}{%
+         family={Wang},
+         familyi={W\bibinitperiod},
+         given={Xueying},
+         giveni={X\bibinitperiod},
+      }}%
+      {{hash=ZP}{%
+         family={Zhao},
+         familyi={Z\bibinitperiod},
+         given={Peng},
+         giveni={P\bibinitperiod},
+      }}%
+      {{hash=LL}{%
+         family={Liu},
+         familyi={L\bibinitperiod},
+         given={Lei},
+         giveni={L\bibinitperiod},
+      }}%
+      {{hash=FX}{%
+         family={Feng},
+         familyi={F\bibinitperiod},
+         given={Xiaobing},
+         giveni={X\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Kluwer Academic Publishers}%
+    }
+    \keyw{Template Library, DNN Accelerators, Address Space Management}
+    \strng{namehash}{LJCWDX+1}
+    \strng{fullhash}{LJCWDXLGWXZPLLFX1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{abstract}{%
+    Despite many dedicated accelerators are gaining popularity for their
+  performance and energy efficiency in the deep neural network (DNN) domain,
+  high-level programming support for these accelerators remains thin. In
+  contrast to existing researches targeting the whole DNNs, we choose to dive
+  into details and review this problem from a finer-grained level, operators.
+  Due to performance concerns, operator programmers may have to take
+  hand-written assembly as their first choice, which is error-prone and
+  involves many programming chores. To alleviate this problem, we propose
+  TOpLib, a compiler-assisted template library. By providing a unified
+  user-view abstraction, TOpLib allows programmers to express computational
+  kernels with high-level tensor primitives, which will be automatically
+  lowered into low-level intrinsic primitives via expression templates.
+  Moreover, considering memory management is performance-critical and the
+  optimization strategy of expression template is limited to enumeration based
+  rewriting rules, we implement TOpLib with a compiler-assisted approach. We
+  address the memory reuse challenges into the compiler, which allows TOpLib to
+  make full use of on-chip buffers and result in better performance.
+  Experiments over 55 typical DNN operators demonstrate that TOpLib can
+  generate scalable code with performance faster than or on par with
+  hand-written assembly versions.%
+    }
+    \verb{doi}
+    \verb 10.1007/s10766-021-00701-6
+    \endverb
+    \field{issn}{0885-7458}
+    \field{number}{5}
+    \field{pages}{628–645}
+    \field{title}{Compiler-Assisted Operator Template Library for DNN
+  Accelerators}
+    \verb{url}
+    \verb https://doi.org/10.1007/s10766-021-00701-6
+    \endverb
+    \field{volume}{49}
+    \list{location}{1}{%
+      {USA}%
+    }
+    \field{journaltitle}{Int. J. Parallel Program.}
+    \field{year}{2021}
+    \warn{\item Invalid format of field 'month'}
+  \endentry
+
+  \entry{registerAllocation}{article}{}
+    \name{author}{3}{}{%
+      {{hash=BP}{%
+         family={Briggs},
+         familyi={B\bibinitperiod},
+         given={Preston},
+         giveni={P\bibinitperiod},
+      }}%
+      {{hash=CKD}{%
+         family={Cooper},
+         familyi={C\bibinitperiod},
+         given={Keith\bibnamedelima D.},
+         giveni={K\bibinitperiod\bibinitdelim D\bibinitperiod},
+      }}%
+      {{hash=TL}{%
+         family={Torczon},
+         familyi={T\bibinitperiod},
+         given={Linda},
+         giveni={L\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Association for Computing Machinery}%
+    }
+    \keyw{register allocation, code generation, graph coloring}
+    \strng{namehash}{BPCKDTL1}
+    \strng{fullhash}{BPCKDTL1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{abstract}{%
+    We describe two improvements to Chaitin-style graph coloring register
+  allocators. The first, optimistic coloring, uses a stronger heuristic to find
+  a k-coloring for the interference graph. The second extends Chaitin's
+  treatment of rematerialization to handle a larger class of values. These
+  techniques are complementary. Optimistic coloring decreases the number of
+  procedures that require spill code and reduces the amount of spill code when
+  spilling is unavoidable. Rematerialization lowers the cost of spilling some
+  values. This paper describes both of the techniques and our experience
+  building and using register allocators that incorporate them. It provides a
+  detailed description of optimistic coloring and rematerialization. It
+  presents experimental data to show the performance of several versions of the
+  register allocator on a suite of FORTRAN programs. It discusses several
+  insights that we discovered only after repeated implementation of these
+  allocators.%
+    }
+    \verb{doi}
+    \verb 10.1145/177492.177575
+    \endverb
+    \field{issn}{0164-0925}
+    \field{number}{3}
+    \field{pages}{428–455}
+    \field{title}{Improvements to Graph Coloring Register Allocation}
+    \verb{url}
+    \verb https://doi.org/10.1145/177492.177575
+    \endverb
+    \field{volume}{16}
+    \list{location}{1}{%
+      {New York, NY, USA}%
+    }
+    \field{journaltitle}{ACM Trans. Program. Lang. Syst.}
+    \field{year}{1994}
+    \warn{\item Invalid format of field 'month'}
+  \endentry
+
+  \entry{verma}{inproceedings}{}
+    \name{author}{3}{}{%
+      {{hash=VM}{%
+         family={Verma},
+         familyi={V\bibinitperiod},
+         given={M.},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=WL}{%
+         family={Wehmeyer},
+         familyi={W\bibinitperiod},
+         given={L.},
+         giveni={L\bibinitperiod},
+      }}%
+      {{hash=MP}{%
+         family={Marweclel},
+         familyi={M\bibinitperiod},
+         given={P.},
+         giveni={P\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{VMWLMP1}
+    \strng{fullhash}{VMWLMP1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{booktitle}{International Conference on Hardware/Software Codesign
+  and System Synthesis, 2004. CODES + ISSS 2004.}
+    \field{pages}{104\bibrangedash 109}
+    \field{title}{Dynamic overlay of scratchpad memory for energy minimization}
+    \field{year}{2004}
+  \endentry
+
+  \entry{torch}{misc}{}
+    \name{author}{21}{}{%
+      {{hash=PA}{%
+         family={Paszke},
+         familyi={P\bibinitperiod},
+         given={Adam},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=GS}{%
+         family={Gross},
+         familyi={G\bibinitperiod},
+         given={Sam},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=MF}{%
+         family={Massa},
+         familyi={M\bibinitperiod},
+         given={Francisco},
+         giveni={F\bibinitperiod},
+      }}%
+      {{hash=LA}{%
+         family={Lerer},
+         familyi={L\bibinitperiod},
+         given={Adam},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=BJ}{%
+         family={Bradbury},
+         familyi={B\bibinitperiod},
+         given={James},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=CG}{%
+         family={Chanan},
+         familyi={C\bibinitperiod},
+         given={Gregory},
+         giveni={G\bibinitperiod},
+      }}%
+      {{hash=KT}{%
+         family={Killeen},
+         familyi={K\bibinitperiod},
+         given={Trevor},
+         giveni={T\bibinitperiod},
+      }}%
+      {{hash=LZ}{%
+         family={Lin},
+         familyi={L\bibinitperiod},
+         given={Zeming},
+         giveni={Z\bibinitperiod},
+      }}%
+      {{hash=GN}{%
+         family={Gimelshein},
+         familyi={G\bibinitperiod},
+         given={Natalia},
+         giveni={N\bibinitperiod},
+      }}%
+      {{hash=AL}{%
+         family={Antiga},
+         familyi={A\bibinitperiod},
+         given={Luca},
+         giveni={L\bibinitperiod},
+      }}%
+      {{hash=DA}{%
+         family={Desmaison},
+         familyi={D\bibinitperiod},
+         given={Alban},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=KA}{%
+         family={Köpf},
+         familyi={K\bibinitperiod},
+         given={Andreas},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=YE}{%
+         family={Yang},
+         familyi={Y\bibinitperiod},
+         given={Edward},
+         giveni={E\bibinitperiod},
+      }}%
+      {{hash=DZ}{%
+         family={DeVito},
+         familyi={D\bibinitperiod},
+         given={Zach},
+         giveni={Z\bibinitperiod},
+      }}%
+      {{hash=RM}{%
+         family={Raison},
+         familyi={R\bibinitperiod},
+         given={Martin},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=TA}{%
+         family={Tejani},
+         familyi={T\bibinitperiod},
+         given={Alykhan},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=CS}{%
+         family={Chilamkurthy},
+         familyi={C\bibinitperiod},
+         given={Sasank},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=SB}{%
+         family={Steiner},
+         familyi={S\bibinitperiod},
+         given={Benoit},
+         giveni={B\bibinitperiod},
+      }}%
+      {{hash=FL}{%
+         family={Fang},
+         familyi={F\bibinitperiod},
+         given={Lu},
+         giveni={L\bibinitperiod},
+      }}%
+      {{hash=BJ}{%
+         family={Bai},
+         familyi={B\bibinitperiod},
+         given={Junjie},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=CS}{%
+         family={Chintala},
+         familyi={C\bibinitperiod},
+         given={Soumith},
+         giveni={S\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{PAGSMF+1}
+    \strng{fullhash}{PAGSMFLABJCGKTLZGNALDAKAYEDZRMTACSSBFLBJCS1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \verb{eprint}
+    \verb 1912.01703
+    \endverb
+    \field{title}{PyTorch: An Imperative Style, High-Performance Deep Learning
+  Library}
+    \field{eprinttype}{arXiv}
+    \field{eprintclass}{cs.LG}
+    \field{year}{2019}
+  \endentry
+
+  \entry{aladdin}{article}{}
+    \name{author}{10}{}{%
+      {{hash=CT}{%
+         family={Chen},
+         familyi={C\bibinitperiod},
+         given={Tianqi},
+         giveni={T\bibinitperiod},
+      }}%
+      {{hash=MT}{%
+         family={Moreau},
+         familyi={M\bibinitperiod},
+         given={Thierry},
+         giveni={T\bibinitperiod},
+      }}%
+      {{hash=JZ}{%
+         family={Jiang},
+         familyi={J\bibinitperiod},
+         given={Ziheng},
+         giveni={Z\bibinitperiod},
+      }}%
+      {{hash=SH}{%
+         family={Shen},
+         familyi={S\bibinitperiod},
+         given={Haichen},
+         giveni={H\bibinitperiod},
+      }}%
+      {{hash=YEQ}{%
+         family={Yan},
+         familyi={Y\bibinitperiod},
+         given={Eddie\bibnamedelima Q.},
+         giveni={E\bibinitperiod\bibinitdelim Q\bibinitperiod},
+      }}%
+      {{hash=WL}{%
+         family={Wang},
+         familyi={W\bibinitperiod},
+         given={Leyuan},
+         giveni={L\bibinitperiod},
+      }}%
+      {{hash=HY}{%
+         family={Hu},
+         familyi={H\bibinitperiod},
+         given={Yuwei},
+         giveni={Y\bibinitperiod},
+      }}%
+      {{hash=CL}{%
+         family={Ceze},
+         familyi={C\bibinitperiod},
+         given={Luis},
+         giveni={L\bibinitperiod},
+      }}%
+      {{hash=GC}{%
+         family={Guestrin},
+         familyi={G\bibinitperiod},
+         given={Carlos},
+         giveni={C\bibinitperiod},
+      }}%
+      {{hash=KA}{%
+         family={Krishnamurthy},
+         familyi={K\bibinitperiod},
+         given={Arvind},
+         giveni={A\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{CTMTJZ+1}
+    \strng{fullhash}{CTMTJZSHYEQWLHYCLGCKA1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \verb{eprint}
+    \verb 1802.04799
+    \endverb
+    \field{title}{{TVM:} End-to-End Optimization Stack for Deep Learning}
+    \verb{url}
+    \verb http://arxiv.org/abs/1802.04799
+    \endverb
+    \field{volume}{abs/1802.04799}
+    \field{journaltitle}{CoRR}
+    \field{eprinttype}{arXiv}
+    \field{year}{2018}
+  \endentry
+
+  \entry{smaug}{misc}{}
+    \name{author}{6}{}{%
+      {{hash=XSL}{%
+         family={Xi},
+         familyi={X\bibinitperiod},
+         given={Sam\bibnamedelima Likun},
+         giveni={S\bibinitperiod\bibinitdelim L\bibinitperiod},
+      }}%
+      {{hash=YY}{%
+         family={Yao},
+         familyi={Y\bibinitperiod},
+         given={Yuan},
+         giveni={Y\bibinitperiod},
+      }}%
+      {{hash=BK}{%
+         family={Bhardwaj},
+         familyi={B\bibinitperiod},
+         given={Kshitij},
+         giveni={K\bibinitperiod},
+      }}%
+      {{hash=WP}{%
+         family={Whatmough},
+         familyi={W\bibinitperiod},
+         given={Paul},
+         giveni={P\bibinitperiod},
+      }}%
+      {{hash=WGY}{%
+         family={Wei},
+         familyi={W\bibinitperiod},
+         given={Gu-Yeon},
+         giveni={G\bibinithyphendelim Y\bibinitperiod},
+      }}%
+      {{hash=BD}{%
+         family={Brooks},
+         familyi={B\bibinitperiod},
+         given={David},
+         giveni={D\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{XSLYYBK+1}
+    \strng{fullhash}{XSLYYBKWPWGYBD1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \verb{eprint}
+    \verb 1912.04481
+    \endverb
+    \field{title}{SMAUG: End-to-End Full-Stack Simulation Infrastructure for
+  Deep Learning Workloads}
+    \field{eprinttype}{arXiv}
+    \field{eprintclass}{cs.LG}
+    \field{year}{2019}
   \endentry
 \enddatalist
 \endinput

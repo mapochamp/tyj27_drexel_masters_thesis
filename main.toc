@@ -1,23 +1,52 @@
 \babel@toc {english}{}\relax 
-\contentsline {chapter}{Declaration of Authorship}{iii}{section*.1}%
-\contentsline {chapter}{Abstract}{vii}{section*.2}%
-\contentsline {chapter}{Acknowledgements}{ix}{section*.3}%
-\contentsline {chapter}{\numberline {1}Deep Learning}{1}{chapter.8}%
-\contentsline {section}{\numberline {1.1}Deep Learning Architectures}{1}{section.9}%
-\contentsline {subsection}{\numberline {1.1.1}Perceptron}{1}{subsection.10}%
-\contentsline {subsection}{\numberline {1.1.2}CNN}{1}{subsection.11}%
-\contentsline {subsection}{\numberline {1.1.3}RNN}{1}{subsection.12}%
-\contentsline {subsection}{\numberline {1.1.4}LSTM}{1}{subsection.13}%
-\contentsline {section}{\numberline {1.2}Main Section 2}{1}{section.14}%
-\contentsline {chapter}{\numberline {2}Deep Learning Compilers}{3}{chapter.15}%
-\contentsline {section}{\numberline {2.1}Deep Learning Compilers}{3}{section.16}%
-\contentsline {section}{\numberline {2.2}Graph Level Frameworks}{3}{section.17}%
-\contentsline {subsection}{\numberline {2.2.1}TVM}{3}{subsection.18}%
-\contentsline {subsection}{\numberline {2.2.2}TensorFlow}{3}{subsection.19}%
-\contentsline {section}{\numberline {2.3}IR Level Frameworks}{3}{section.20}%
-\contentsline {chapter}{\numberline {3}OnSRAM}{5}{chapter.21}%
-\contentsline {section}{\numberline {3.1}Introduction}{5}{section.22}%
-\contentsline {subsection}{\numberline {3.1.1}Subsection 1}{5}{subsection.23}%
-\contentsline {subsection}{\numberline {3.1.2}Subsection 2}{5}{subsection.24}%
-\contentsline {section}{\numberline {3.2}Generalizing To Multiple Scratchpads}{5}{section.25}%
-\contentsline {chapter}{Bibliography}{7}{appendix*.26}%
+\contentsline {chapter}{Acknowledgements}{ii}{section*.1}%
+\contentsline {chapter}{Abstract}{2}{section*.6}%
+\contentsline {chapter}{\numberline {1}Introduction}{3}{chapter.7}%
+\contentsline {chapter}{\numberline {2}Background}{6}{chapter.9}%
+\contentsline {section}{\numberline {2.1}End-to-End Deep Learning Frameworks}{6}{section.10}%
+\contentsline {subsection}{\numberline {2.1.1}Graph vs IR based Deep Learning Frameworks}{7}{subsection.37}%
+\contentsline {subsection}{\numberline {2.1.2}Front End}{9}{subsection.40}%
+\contentsline {subsection}{\numberline {2.1.3}Middle End}{9}{subsection.41}%
+\contentsline {subsection}{\numberline {2.1.4}Back End}{11}{subsection.42}%
+\contentsline {section}{\numberline {2.2}Deep Learning Accelerators}{12}{section.44}%
+\contentsline {subsection}{\numberline {2.2.1}Overview of Deep Learning Accelerators}{12}{subsection.45}%
+\contentsline {subsection}{\numberline {2.2.2}Scratchpad Memory}{12}{subsection.47}%
+\contentsline {subsection}{\numberline {2.2.3}Scratchpad Memory Management}{13}{subsection.48}%
+\contentsline {chapter}{\numberline {3}Related Work}{15}{chapter.49}%
+\contentsline {section}{\numberline {3.1}End-to-End Framework Optimizations for Deep Learning Accelerators}{15}{section.50}%
+\contentsline {subsection}{\numberline {3.1.1}IR based Optimizations}{15}{subsection.51}%
+\contentsline {subsection}{\numberline {3.1.2}Graph based Optimizations}{16}{subsection.52}%
+\contentsline {section}{\numberline {3.2}Scratchpad Memory Management Techniques}{16}{section.53}%
+\contentsline {subsection}{\numberline {3.2.1}Graph Coloring}{16}{subsection.54}%
+\contentsline {subsection}{\numberline {3.2.2}Integer Linear Programming}{16}{subsection.55}%
+\contentsline {section}{\numberline {3.3}End-to-End Framework SPM Management Optimizations for DLAs}{17}{section.56}%
+\contentsline {subsection}{\numberline {3.3.1}Intra-node SPM Management Optimizations}{17}{subsection.57}%
+\contentsline {subsection}{\numberline {3.3.2}Inter-node SPM Management Optimizations}{18}{subsection.59}%
+\contentsline {chapter}{\numberline {4}Proposed approach}{21}{chapter.61}%
+\contentsline {section}{\numberline {4.1}Extending OnSRAM}{21}{section.62}%
+\contentsline {subsection}{\numberline {4.1.1}OnSRAM Limitations}{21}{subsection.63}%
+\contentsline {subsection}{\numberline {4.1.2}Simulation and Architecture}{21}{subsection.64}%
+\contentsline {section}{\numberline {4.2}Overview of Approach}{21}{section.65}%
+\contentsline {subsection}{\numberline {4.2.1}Motivating Example}{21}{subsection.66}%
+\contentsline {subsection}{\numberline {4.2.2}ILP based Multi-Scratchpad Allocation Strategy}{24}{subsection.70}%
+\contentsline {chapter}{\numberline {5}Implementation}{25}{chapter.71}%
+\contentsline {section}{\numberline {5.1}Static Graph Analysis}{25}{section.72}%
+\contentsline {subsection}{\numberline {5.1.1}SMAUG}{25}{subsection.73}%
+\contentsline {subsection}{\numberline {5.1.2}Static Analysis}{27}{subsection.105}%
+\contentsline {subsection}{\numberline {5.1.3}SPM Mapping Representation}{28}{subsection.109}%
+\contentsline {section}{\numberline {5.2}Model Formulation}{29}{section.110}%
+\contentsline {subsection}{\numberline {5.2.1}Objective Function}{30}{subsection.111}%
+\contentsline {subsection}{\numberline {5.2.2}Constraints}{30}{subsection.112}%
+\contentsline {subsection}{\numberline {5.2.3}Solver}{31}{subsection.113}%
+\contentsline {chapter}{\numberline {6}Evaluation Method}{32}{chapter.115}%
+\contentsline {section}{\numberline {6.1}Data Collection}{32}{section.116}%
+\contentsline {section}{\numberline {6.2}Metrics}{32}{section.117}%
+\contentsline {section}{\numberline {6.3}Limiting Factors}{33}{section.118}%
+\contentsline {chapter}{\numberline {7}Experiments and Results}{35}{chapter.120}%
+\contentsline {section}{\numberline {7.1}Speedup}{35}{section.121}%
+\contentsline {section}{\numberline {7.2}Reduction of DMA Transfers}{36}{section.125}%
+\contentsline {section}{\numberline {7.3}Discussion of Results}{38}{section.128}%
+\contentsline {chapter}{\numberline {8}Future Work and Conclusion}{40}{chapter.129}%
+\contentsline {section}{\numberline {8.1}Conclusion}{40}{section.130}%
+\contentsline {section}{\numberline {8.2}Future Work}{40}{section.131}%
+\contentsline {chapter}{Bibliography}{42}{appendix*.132}%
